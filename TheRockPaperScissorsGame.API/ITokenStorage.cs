@@ -7,6 +7,8 @@ namespace TheRockPaperScissorsGame.API
 {
     interface ITokenStorage
     {
-        
+        public string GenerateToken(string login);
+
+        public string GetLogin(string token);
     }
 }

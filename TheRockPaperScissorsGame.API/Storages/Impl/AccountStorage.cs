@@ -15,7 +15,6 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
 
         public bool Register(string login, string password)
         {
-           // var id = Guid.NewGuid().ToString();
             if (_accounts.Any(account => account.Login == login)) return false;
 
             _accounts.Add(new Account
@@ -35,7 +34,7 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
                 throw new ArgumentNullException(nameof(newAccount)); 
             }
 
-            if (_accounts.Any(account => account.Login == account.Login))
+            if (_accounts.Any(account => account.Login == newAccount.Login))
             {
                 return false;
             }
@@ -49,12 +48,6 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
             return _accounts.FirstOrDefault(account =>
                 account.Login == login &&
                 account.Password == password);
-        }
-
-        // Do we need this method??
-        public Account FindAccount(string login)
-        {
-            return _accounts.FirstOrDefault(account => account.Login == login);
         }
     }
 }

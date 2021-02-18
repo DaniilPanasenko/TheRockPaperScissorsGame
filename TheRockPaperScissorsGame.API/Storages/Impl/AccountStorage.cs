@@ -27,6 +27,7 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
         }
 
         // As we have already metioned, login will be as unique id, so I check login
+        //json worker : will be async
         public bool AddAccount(Account newAccount)
         {
             if (newAccount == null)

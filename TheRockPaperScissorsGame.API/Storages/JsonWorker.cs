@@ -1,11 +1,14 @@
 ﻿using System;
 using System.IO;
 using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace TheRockPaperScissorsGame.API.Storages
 {
     public class JsonWorker
     {
+        static SemaphoreSlim _lockSlim = new SemaphoreSlim(1, 1);
         private readonly string _path;
 
         public JsonWorker(string path)
@@ -13,40 +16,57 @@ namespace TheRockPaperScissorsGame.API.Storages
             _path = path;
         }
 
-        public T ReadDataFromFile<T>()
+        public async Task<T> ReadDataFromFile<T>()
         {
-            if (!File.Exists(_path))
+            await _lockSlim.WaitAsync();
+            try
             {
-                throw new FileNotFoundException();
+                if (!File.Exists(_path))
+                {
+                    throw new FileNotFoundException();
+                }
+
+                var json = await File.ReadAllTextAsync(_path);
+
+                var data = JsonSerializer.Deserialize<T>(json);
+
+                if (data == null)
+                {
+                    throw new ArgumentNullException();
+                }
+
+                return data;
             }
-
-            var json = File.ReadAllText(_path);
-            var data = JsonSerializer.Deserialize<T>(json);
-
-            if (data == null)
+            finally
             {
-                throw new ArgumentNullException();
+                _lockSlim.Release();
             }
-
-            return data;
         }
 
-        // hm.. obj seems to be a bad name
-        public void WriteDataIntoFile<T>(T obj)
+        public async Task WriteDataIntoFile<T>(T obj)
         {
-            if (!File.Exists(_path))
+            await _lockSlim.WaitAsync();
+            try
             {
-                File.Create(_path).Close();
+                if (!File.Exists(_path))
+                {
+                    File.Create(_path).Close();
+                }
+
+                var options = new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                };
+
+                var json = JsonSerializer.Serialize(obj, options);
+                await File.AppendAllTextAsync(_path, json);
             }
-
-            var options = new JsonSerializerOptions
+            finally
             {
-                WriteIndented = true,
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            };
-
-            var json = JsonSerializer.Serialize(obj, options);
-            File.WriteAllText(_path, json);
+                _lockSlim.Release();
+            }
         }
     }
 }
+

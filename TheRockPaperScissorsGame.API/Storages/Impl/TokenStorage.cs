@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Collections.Concurrent;
 
 namespace TheRockPaperScissorsGame.API.Storages.Impl
 {
     public class TokenStorage : ITokenStorage
     {
-        private readonly Dictionary<string, string> _tokens = new Dictionary<string, string>();
+        private readonly ConcurrentDictionary<string, string> _tokens = new ConcurrentDictionary<string, string>();
 
         public TokenStorage()
         {

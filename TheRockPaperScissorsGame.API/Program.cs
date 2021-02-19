@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace TheRockPaperScissorsGame.API
 {
@@ -21,6 +22,14 @@ namespace TheRockPaperScissorsGame.API
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });
+                })
+            .ConfigureLogging(loggerBuilder =>
+            {
+                loggerBuilder.ClearProviders();
+                loggerBuilder.AddSerilog(new LoggerConfiguration()
+                    .WriteTo.Console()
+                    .WriteTo.File("app.log")
+                    .CreateLogger());
+            });;
     }
 }

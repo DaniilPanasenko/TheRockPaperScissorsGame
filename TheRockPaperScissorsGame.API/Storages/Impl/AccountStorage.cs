@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using TheRockPaperScissorsGame.API.Models;
 
@@ -8,7 +9,8 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
 {
     internal class AccountStorage: IAccountStorage
     {
-        //we must do it cuncurency
+        static SemaphoreSlim _lockSlim = new SemaphoreSlim(1, 1);
+        
         private List<Account> _accounts = new List<Account>();
 
         private JsonWorker<Account> _jsonWorker;
@@ -40,33 +42,49 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
         //json worker : will be async
         public async Task<bool> AddAccountAsync(Account newAccount)
         {
-            if (newAccount == null)
-            { 
-                throw new ArgumentNullException(nameof(newAccount)); 
-            }
-            if (!_isUploaded)
+            await _lockSlim.WaitAsync();
+            try
             {
-                _accounts = await _jsonWorker.ReadDataFromFileAsync();
-                _isUploaded = true;
+                if (newAccount == null)
+                {
+                    throw new ArgumentNullException(nameof(newAccount));
+                }
+                if (!_isUploaded)
+                {
+                    _accounts = await _jsonWorker.ReadDataFromFileAsync();
+                    _isUploaded = true;
+                }
+                if (_accounts.Any(account => account.Login == newAccount.Login))
+                {
+                    return false;
+                }
+                _accounts.Add(newAccount);
+                await _jsonWorker.WriteDataIntoFileAsync(_accounts);
+                return true;
             }
-            if (_accounts.Any(account => account.Login == newAccount.Login))
+            finally
             {
-                return false;
+                _lockSlim.Release();
             }
-            _accounts.Add(newAccount);
-            await _jsonWorker.WriteDataIntoFileAsync(_accounts);
-            return true;
         }
 
         public async Task<Account> FindAccountAsync(string login)
         {
-            if (!_isUploaded)
+            await _lockSlim.WaitAsync();
+            try
             {
-                _accounts = await _jsonWorker.ReadDataFromFileAsync();
-                _isUploaded = true;
+                if (!_isUploaded)
+                {
+                    _accounts = await _jsonWorker.ReadDataFromFileAsync();
+                    _isUploaded = true;
+                }
+                return _accounts.FirstOrDefault(account =>
+                    account.Login == login);
             }
-            return _accounts.FirstOrDefault(account =>
-                account.Login == login);
+            finally
+            {
+                _lockSlim.Release();
+            }
         }
     }
 }

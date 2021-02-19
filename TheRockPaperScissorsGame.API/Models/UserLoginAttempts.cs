@@ -1,7 +1,7 @@
 ﻿using System;
 namespace TheRockPaperScissorsGame.API.Models
 {
-    public class UserLoginAttempts
+    internal class UserLoginAttempts
     {
         private TimeSpan _blockingTime = TimeSpan.FromMinutes(1);
 

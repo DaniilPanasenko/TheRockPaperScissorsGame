@@ -7,6 +7,7 @@ using System.Net.Mime;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using TheRockPaperScissorsGame.API.Models;
+using TheRockPaperScissorsGame.API.Services;
 
 namespace TheRockPaperScissorsGame.API.Controllers
 {
@@ -14,16 +15,18 @@ namespace TheRockPaperScissorsGame.API.Controllers
     [Route("api/users")]
     [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]
-    public class UsersController : ControllerBase
+    internal class UsersController : ControllerBase
     {
+        private readonly IAuthService _authService;
 
-        public UsersController()
+        public UsersController(IAuthService authService)
         {
+            _authService = authService;
         }
 
         [HttpPost]
         [Route("register")]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
+        //[ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<ActionResult<string>> RegisterAsync([FromBody] Account account)
         {
             return "";
@@ -31,7 +34,7 @@ namespace TheRockPaperScissorsGame.API.Controllers
 
         [HttpPost]
         [Route("login")]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
+        //[ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<ActionResult<string>> LoginAsync([FromBody] Account account)
         {
             return "";

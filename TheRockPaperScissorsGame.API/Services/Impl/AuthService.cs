@@ -7,16 +7,18 @@ using TheRockPaperScissorsGame.API.Storages;
 
 namespace TheRockPaperScissorsGame.API.Services.Impl
 {
-    class AuthService : IAuthService
+    internal class AuthService : IAuthService
     {
         private readonly IAccountStorage _accountStorage;
         private readonly ITokenStorage _tokenStorage;
+        private readonly IUserBlockingService _userBlockingService;
         // one more dependency?
        
-        public AuthService(IAccountStorage accountStorage, ITokenStorage tokenStorage)
+        public AuthService(IAccountStorage accountStorage, ITokenStorage tokenStorage, IUserBlockingService userBlockingService)
         {
             _accountStorage = accountStorage;
             _tokenStorage = tokenStorage;
+            _userBlockingService = userBlockingService;
         }
 
         // Hmm.. Is it should work something like this?
@@ -32,20 +34,46 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
         //}
 
         // TODO: finish it
-        public string Login(string login, string password)
+        /*
+        public async Task<string> Login(string login, string password)
         {
-            // Blocking and other stuff we need to add
-
-            var account = _accountStorage.FindAccount(login, password);
-            if (account == null) return null;
-
+            var account = await _accountStorage.FindAccountAsync(login, password);
+            if (account == null)
+            {
+                var accountByLogin = await _accountStorage.FindAccountAsync(login);
+                if (accountByLogin != null)
+                {
+                    _userBlockingService.NegativeLogin(login);
+                }
+                return null;
+            }
+            if (!_userBlockingService.TryPositiveLogin(login))
+            {
+                throw new Exception();
+            }
             return _tokenStorage.GenerateToken(account.Login);
+        }
+        */
+        public async Task<string> Login(string login, string password)
+        {
+            var account = await _accountStorage.FindAccountAsync(login);
 
+            if (account == null) return null;
+            if (account.Password != password)
+            {
+                _userBlockingService.NegativeLogin(login);
+                return null;
+            }
+            if (!_userBlockingService.TryPositiveLogin(login))
+            {
+                throw new Exception();//TODO: add exception
+            }
+            return _tokenStorage.GenerateToken(account.Login);
         }
 
-        public bool Register(string login, string password)
+        public async Task<bool> Register(string login, string password)
         {
-            return _accountStorage.AddAccount(new Account
+            return await _accountStorage.AddAccountAsync(new Account
             {
                 Login = login,
                 Password = password

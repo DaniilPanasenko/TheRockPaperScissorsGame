@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TheRockPaperScissorsGame.API.Storages
 {
-    public class JsonWorker<T> // can add a restriction like where T:class
+    internal class JsonWorker<T> // can add a restriction like where T:class
     {
         static SemaphoreSlim _lockSlim = new SemaphoreSlim(1, 1);
         private readonly string _path;
@@ -17,7 +17,7 @@ namespace TheRockPaperScissorsGame.API.Storages
             _path = path;
         }
 
-        public async Task<List<T>> ReadDataFromFile()
+        public async Task<List<T>> ReadDataFromFileAsync()
         {
             await _lockSlim.WaitAsync();
             try
@@ -44,7 +44,7 @@ namespace TheRockPaperScissorsGame.API.Storages
             }
         }
 
-        public async Task WriteDataIntoFile(T obj)
+        public async Task WriteDataIntoFileAsync(List<T> listObjects)
         {
             await _lockSlim.WaitAsync();
             try
@@ -60,7 +60,7 @@ namespace TheRockPaperScissorsGame.API.Storages
                     PropertyNamingPolicy = JsonNamingPolicy.CamelCase
                 };
 
-                var json = JsonSerializer.Serialize(obj, options);
+                var json = JsonSerializer.Serialize(listObjects, options);
                 await File.AppendAllTextAsync(_path, json);
             }
             finally

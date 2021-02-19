@@ -26,10 +26,23 @@ namespace TheRockPaperScissorsGame.API.Controllers
 
         [HttpPost]
         [Route("register")]
-        //[ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<ActionResult<string>> RegisterAsync([FromBody] Account account)
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult> RegisterAsync([FromBody] Account account)
         {
-            return "";
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            bool isRegistered = await _authService.Register(account);
+
+            if (isRegistered)
+            {
+                return Ok();
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         [HttpPost]
@@ -37,7 +50,22 @@ namespace TheRockPaperScissorsGame.API.Controllers
         //[ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<ActionResult<string>> LoginAsync([FromBody] Account account)
         {
-            return "";
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            try
+            {
+                string token = await _authService.Login(account.Login, account.Password);
+                if (token == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok();
+            }
+            catch (InvalidCastException)
+            {
+                return Conflict();
+            }
         }
     }
 }

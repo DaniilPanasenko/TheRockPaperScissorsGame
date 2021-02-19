@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 
 namespace TheRockPaperScissorsGame.API.Storages.Impl
 {
-    public class TokenStorage : ITokenStorage
+    internal class TokenStorage : ITokenStorage
     {
         private readonly ConcurrentDictionary<string, string> _tokens = new ConcurrentDictionary<string, string>();
 

@@ -5,6 +5,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using TheRockPaperScissorsGame.API.Models;
+using TheRockPaperScissorsGame.API.Services;
+using TheRockPaperScissorsGame.API.Services.Impl;
+using TheRockPaperScissorsGame.API.Storages;
+using TheRockPaperScissorsGame.API.Storages.Impl;
 
 namespace TheRockPaperScissorsGame.API
 {
@@ -21,11 +26,11 @@ namespace TheRockPaperScissorsGame.API
         // Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddSingleton<IStorage<Note>, Storage<Note>>();
-            //services.AddSingleton<IStorage<User>, Storage<User>>();
-
-            // Alternative way of IStorage<Note>, IStorage<User> registration :
-            //services.AddSingleton(typeof(IStorage<>), typeof(Storage<>));
+            services.AddSingleton<IAccountStorage, AccountStorage>();
+            services.AddSingleton<ITokenStorage, TokenStorage>();
+            services.AddSingleton<IUserBlockingService, UserBlockingService>();
+            services.AddSingleton<IAuthService, AuthService>();
+            services.AddSingleton(provider=>new JsonWorker<Account>("accountStorage.json"));
 
             services.AddControllers().ConfigureApiBehaviorOptions(options =>
             {

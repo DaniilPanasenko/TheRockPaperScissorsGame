@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 
 namespace TheRockPaperScissorsGame.API.Services
 {
-    interface IAuthService
+    internal interface IAuthService
     {
         // public string Authorize(string token);
 
-        public string Login(string login, string password);
+        public Task<string> Login(string login, string password);
 
-        public bool Register(string login, string password);
+        public Task<bool> Register(string login, string password);
     }
 }

@@ -30,6 +30,6 @@ namespace TheRockPaperScissorsGame.API
                     .WriteTo.Console()
                     .WriteTo.File("app.log")
                     .CreateLogger());
-            });;
+            });
     }
 }

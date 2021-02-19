@@ -1,10 +1,12 @@
-﻿using TheRockPaperScissorsGame.API.Models;
+﻿using System.Threading.Tasks;
+using TheRockPaperScissorsGame.API.Models;
 
 namespace TheRockPaperScissorsGame.API.Storages
 {
-    interface IAccountStorage
+    internal interface IAccountStorage
     {
-        Account FindAccount(string login, string password);
-        bool AddAccount(Account account);
+        Task<Account> FindAccountAsync(string login);
+
+        Task<bool> AddAccountAsync(Account account);
     }
 }

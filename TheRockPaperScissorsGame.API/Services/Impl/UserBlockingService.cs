@@ -5,7 +5,7 @@ using TheRockPaperScissorsGame.API.Models;
 
 namespace TheRockPaperScissorsGame.API.Services.Impl
 {
-    public class UserBlockingService : IUserBlockingService
+    internal class UserBlockingService : IUserBlockingService
     {
         private List<UserLoginAttempts> _userLoginAttemptsList;
 

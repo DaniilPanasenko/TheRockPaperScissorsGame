@@ -1,4 +1,6 @@
 ﻿using System;
+using TheRockPaperScissorsGame.API.Enums;
+
 namespace TheRockPaperScissorsGame.API.Services
 {
     public interface IRoundService

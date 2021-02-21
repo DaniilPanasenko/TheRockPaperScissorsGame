@@ -41,7 +41,7 @@ namespace TheRockPaperScissorsGame.API.Controllers
             }
             else
             {
-                return Unauthorized(AuthorizationStatus.LoginAlreadyExist.ToString("g"));
+                return Unauthorized(AuthorizationStatus.LoginAlreadyExist.ToString());
             }
         }
 
@@ -61,7 +61,7 @@ namespace TheRockPaperScissorsGame.API.Controllers
             }
             catch (AuthorizationException ex)
             {
-                return Unauthorized(ex.Status.ToString("g"));
+                return Unauthorized(ex.Status.ToString());
             }
         }
     }

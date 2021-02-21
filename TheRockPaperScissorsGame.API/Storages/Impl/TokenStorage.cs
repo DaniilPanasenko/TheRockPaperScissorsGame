@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Linq;
 
 namespace TheRockPaperScissorsGame.API.Storages.Impl
 {
@@ -13,25 +14,27 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
 
         public string GenerateToken(string login)
         {
-            while (true)
+            var token = Guid.NewGuid().ToString();
+            
+            if (_tokens.TryAdd(login, token))
             {
-                var token = Guid.NewGuid().ToString();
-
-                if (_tokens.TryAdd(token, login))
-                {
-                    return token;
-                }
+                return token;
+            }
+            else
+            {
+                _tokens[login] = token;
+                return token;
             }
         }
-
+    
         public string GetLogin(string token)
         {
-            if (token == null || !_tokens.ContainsKey(token))
+            if (token == null || !_tokens.Values.Contains(token))
             {
                 return null;
             }
 
-            return _tokens[token];
+            return _tokens.FirstOrDefault(x => x.Value == token).Key;
         }
     }
 }

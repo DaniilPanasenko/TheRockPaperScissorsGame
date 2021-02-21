@@ -39,11 +39,18 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
         {
             lock (locker)
             {
-                var userLoginAttempts = _userLoginAttemptsList
-                    .Where(x => x.UserLogin == login)
-                    .FirstOrDefault();
+                if (_userLoginAttemptsList.Count == 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    var userLoginAttempts = _userLoginAttemptsList
+                        .Where(x => x.UserLogin == login)
+                        .FirstOrDefault();
 
-                return userLoginAttempts != null && !userLoginAttempts.IsBlocked;
+                    return userLoginAttempts == null ? true : !userLoginAttempts.IsBlocked;
+                }
             }
         }
     }

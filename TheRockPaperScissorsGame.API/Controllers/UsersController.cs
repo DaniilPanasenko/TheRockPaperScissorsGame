@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Mime;
-using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using TheRockPaperScissorsGame.API.Models;
 using TheRockPaperScissorsGame.API.Services;
@@ -15,7 +12,7 @@ namespace TheRockPaperScissorsGame.API.Controllers
     [Route("api/users")]
     [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]
-    internal class UsersController : ControllerBase
+    public class UsersController : ControllerBase
     {
         private readonly IAuthService _authService;
 
@@ -28,7 +25,7 @@ namespace TheRockPaperScissorsGame.API.Controllers
         [Route("register")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<ActionResult> RegisterAsync([FromBody] Account account)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -41,13 +38,16 @@ namespace TheRockPaperScissorsGame.API.Controllers
             }
             else
             {
-                return NotFound();
+                return Unauthorized();
             }
         }
 
         [HttpPost]
         [Route("login")]
-        //[ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType((int)HttpStatusCode.Conflict)]
         public async Task<ActionResult<string>> LoginAsync([FromBody] Account account)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);

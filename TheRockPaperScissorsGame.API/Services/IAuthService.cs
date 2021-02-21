@@ -6,7 +6,7 @@ using TheRockPaperScissorsGame.API.Models;
 
 namespace TheRockPaperScissorsGame.API.Services
 {
-    internal interface IAuthService
+  public  interface IAuthService
     {
         // public string Authorize(string token);
 

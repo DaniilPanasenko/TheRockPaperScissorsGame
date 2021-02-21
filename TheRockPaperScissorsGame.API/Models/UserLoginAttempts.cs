@@ -1,11 +1,9 @@
 ﻿using System;
 namespace TheRockPaperScissorsGame.API.Models
 {
-    internal class UserLoginAttempts
+    public class UserLoginAttempts
     {
         private TimeSpan _blockingTime = TimeSpan.FromMinutes(1);
-
-        // if we will have the file of this model we need use JsonPropertyName attribute or all models will be deserialized as null
 
         public string UserLogin { get; private set; }
 

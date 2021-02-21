@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Linq;
 
 namespace TheRockPaperScissorsGame.API.Storages.Impl
 {
@@ -16,27 +17,30 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
             while (true)
             {
                 var token = Guid.NewGuid().ToString();
-
-                if (_tokens.TryAdd(login, token))
+                if (!_tokens.Values.Contains(token))
                 {
-                    return token;
-                }
-                else
-                { 
-                // change the value (token) where the key == login
+
+                    if (_tokens.TryAdd(login, token))
+                    {
+                        return token;
+                    }
+                    else
+                    {
+                        _tokens[login] = token;
+                        return token;
+                    }
                 }
             }
         }
-
+    
         public string GetLogin(string token)
         {
-            // we need to check ContainsValue(token) and retrun the key..
-            if (token == null || !_tokens.ContainsKey(token))
+            if (token == null || !_tokens.Values.Contains(token))
             {
                 return null;
             }
 
-            return _tokens[token];
+            return _tokens.FirstOrDefault(x => x.Value == token).Key;
         }
     }
 }

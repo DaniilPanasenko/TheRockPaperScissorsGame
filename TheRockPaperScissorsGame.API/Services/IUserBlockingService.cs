@@ -5,6 +5,8 @@ namespace TheRockPaperScissorsGame.API.Services
     {
         public void NegativeLogin(string login);
 
-        public bool TryPositiveLogin(string login);
+        public bool IsBlocked(string login);
+
+        public void PositiveLogin(string login);
     }
 }

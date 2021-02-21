@@ -49,8 +49,7 @@ namespace TheRockPaperScissorsGame.API.Controllers
         [Route("login")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [ProducesResponseType((int)HttpStatusCode.Conflict)]
+        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<ActionResult<string>> LoginAsync([FromBody] Account account)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);

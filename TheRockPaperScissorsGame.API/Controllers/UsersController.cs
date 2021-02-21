@@ -3,6 +3,8 @@ using System;
 using System.Net;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using TheRockPaperScissorsGame.API.Enums;
+using TheRockPaperScissorsGame.API.Exceptions;
 using TheRockPaperScissorsGame.API.Models;
 using TheRockPaperScissorsGame.API.Services;
 
@@ -26,7 +28,7 @@ namespace TheRockPaperScissorsGame.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        public async Task<ActionResult> RegisterAsync([FromBody] Account account)
+        public async Task<ActionResult<string>> RegisterAsync([FromBody] Account account)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
@@ -34,11 +36,12 @@ namespace TheRockPaperScissorsGame.API.Controllers
 
             if (isRegistered)
             {
-                return Ok();
+                string token = await _authService.Login(account.Login, account.Password);
+                return Ok(token);
             }
             else
             {
-                return Unauthorized();
+                return Unauthorized(AuthorizationStatus.LoginAlreadyExist.ToString("g"));
             }
         }
 
@@ -55,16 +58,11 @@ namespace TheRockPaperScissorsGame.API.Controllers
             try
             {
                 string token = await _authService.Login(account.Login, account.Password);
-                if (token == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok();
+                return Ok(token);
             }
-            catch (InvalidCastException)
+            catch (AuthorizationException ex)
             {
-                return Conflict();
+                return Unauthorized(ex.Status.ToString("g"));
             }
         }
     }

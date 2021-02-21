@@ -22,5 +22,9 @@
   {
     "login": "string1111111",
     "password": "string"
+  },
+  {
+    "login": "DaniilPanasenko",
+    "password": "Qwerty2020"
   }
 ]

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TheRockPaperScissorsGame.API.Enums;
+using TheRockPaperScissorsGame.API.Exceptions;
 using TheRockPaperScissorsGame.API.Models;
 using TheRockPaperScissorsGame.API.Storages;
 
@@ -25,15 +27,18 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
         {
             var account = await _accountStorage.FindAccountAsync(login);
 
-            if (account == null) return null;
+            if (account == null)
+            {
+                throw new AuthorizationException(AuthorizationStatus.IncorrectLogin);
+            }
             if (account.Password != password)
             {
                 _userBlockingService.NegativeLogin(login);
-                return null;
+                throw new AuthorizationException(AuthorizationStatus.IncorrectPassword);
             }
             if (!_userBlockingService.TryPositiveLogin(login))
             {
-                throw new InvalidCastException();//TODO: add exception
+                throw new AuthorizationException(AuthorizationStatus.BlockedAccount);
             }
             return _tokenStorage.GenerateToken(account.Login);
         }

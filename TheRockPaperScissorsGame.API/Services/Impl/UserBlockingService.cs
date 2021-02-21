@@ -35,13 +35,13 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
             }
         }
 
-        public bool TryPositiveLogin(string login)
+        public bool IsBlocked(string login)
         {
             lock (locker)
             {
                 if (_userLoginAttemptsList.Count == 0)
                 {
-                    return true;
+                    return false;
                 }
                 else
                 {
@@ -49,8 +49,16 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
                         .Where(x => x.UserLogin == login)
                         .FirstOrDefault();
 
-                    return userLoginAttempts == null ? true : !userLoginAttempts.IsBlocked;
+                    return userLoginAttempts == null ? false : userLoginAttempts.IsBlocked;
                 }
+            }
+        }
+
+        public void PositiveLogin(string login)
+        {
+            lock (locker)
+            {
+                _userLoginAttemptsList.RemoveAll(x => x.UserLogin == login);
             }
         }
     }

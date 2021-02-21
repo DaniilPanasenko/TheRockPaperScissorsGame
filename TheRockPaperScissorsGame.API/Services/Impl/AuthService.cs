@@ -31,15 +31,16 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
             {
                 throw new AuthorizationException(AuthorizationStatus.IncorrectLogin);
             }
+            if (_userBlockingService.IsBlocked(login))
+            {
+                throw new AuthorizationException(AuthorizationStatus.BlockedAccount);
+            }
             if (account.Password != password)
             {
                 _userBlockingService.NegativeLogin(login);
                 throw new AuthorizationException(AuthorizationStatus.IncorrectPassword);
             }
-            if (!_userBlockingService.TryPositiveLogin(login))
-            {
-                throw new AuthorizationException(AuthorizationStatus.BlockedAccount);
-            }
+            _userBlockingService.PositiveLogin(login);
             return _tokenStorage.GenerateToken(account.Login);
         }
 

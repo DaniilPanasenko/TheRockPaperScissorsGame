@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace TheRockPaperScissorsGame.API.Storages
 {
-    internal interface ITokenStorage
+    public interface ITokenStorage
     {
         public string GenerateToken(string login);
 

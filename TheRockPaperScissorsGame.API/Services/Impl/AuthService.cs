@@ -9,7 +9,7 @@ using TheRockPaperScissorsGame.API.Storages;
 
 namespace TheRockPaperScissorsGame.API.Services.Impl
 {
-    internal class AuthService : IAuthService
+    public class AuthService : IAuthService
     {
         private readonly IAccountStorage _accountStorage;
         private readonly ITokenStorage _tokenStorage;

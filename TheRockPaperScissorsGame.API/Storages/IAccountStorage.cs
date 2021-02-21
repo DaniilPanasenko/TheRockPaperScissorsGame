@@ -3,7 +3,7 @@ using TheRockPaperScissorsGame.API.Models;
 
 namespace TheRockPaperScissorsGame.API.Storages
 {
-    internal interface IAccountStorage
+    public interface IAccountStorage
     {
         Task<Account> FindAccountAsync(string login);
 

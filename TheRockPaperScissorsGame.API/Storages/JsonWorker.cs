@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TheRockPaperScissorsGame.API.Storages
 {
-    internal class JsonWorker<T> where T : class
+    public class JsonWorker<T> where T : class
     {
         static SemaphoreSlim _lockSlim = new SemaphoreSlim(1, 1);
         private readonly string _path;

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace TheRockPaperScissorsGame.API.Storages.Impl
 {
-    internal class TokenStorage : ITokenStorage
+    public class TokenStorage : ITokenStorage
     {
         private readonly ConcurrentDictionary<string, string> _tokens = new ConcurrentDictionary<string, string>();
 

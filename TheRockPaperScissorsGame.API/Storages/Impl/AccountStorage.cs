@@ -7,7 +7,7 @@ using TheRockPaperScissorsGame.API.Models;
 
 namespace TheRockPaperScissorsGame.API.Storages.Impl
 {
-    internal class AccountStorage: IAccountStorage
+    public class AccountStorage : IAccountStorage
     {
         static SemaphoreSlim _lockSlim = new SemaphoreSlim(1, 1);
         

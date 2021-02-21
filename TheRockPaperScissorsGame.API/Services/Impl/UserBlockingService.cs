@@ -49,7 +49,7 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
                         .Where(x => x.UserLogin == login)
                         .FirstOrDefault();
 
-                    return userLoginAttempts == null ? true : !userLoginAttempts.IsBlocked;
+                    return userLoginAttempts == null ? false : userLoginAttempts.IsBlocked;
                 }
             }
         }

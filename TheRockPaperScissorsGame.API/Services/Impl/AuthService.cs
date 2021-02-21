@@ -31,7 +31,7 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
             {
                 throw new AuthorizationException(AuthorizationStatus.IncorrectLogin);
             }
-            if (!_userBlockingService.IsBlocked(login))
+            if (_userBlockingService.IsBlocked(login))
             {
                 throw new AuthorizationException(AuthorizationStatus.BlockedAccount);
             }

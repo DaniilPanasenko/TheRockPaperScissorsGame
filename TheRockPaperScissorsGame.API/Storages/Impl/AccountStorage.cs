@@ -7,10 +7,10 @@ using TheRockPaperScissorsGame.API.Models;
 
 namespace TheRockPaperScissorsGame.API.Storages.Impl
 {
-    internal class AccountStorage : IAccountStorage
+    internal class AccountStorage: IAccountStorage
     {
         static SemaphoreSlim _lockSlim = new SemaphoreSlim(1, 1);
-
+        
         private List<Account> _accounts = new List<Account>();
 
         private JsonWorker<Account> _jsonWorker;
@@ -43,7 +43,7 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
 
                 _accounts.Add(newAccount);
                 await _jsonWorker.WriteDataIntoFileAsync(_accounts);
-
+                
                 return true;
             }
             finally

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TheRockPaperScissorsGame.API.Storages
 {
-    internal class JsonWorker<T> // can add a restriction like where T:class
+    internal class JsonWorker<T> where T : class
     {
         static SemaphoreSlim _lockSlim = new SemaphoreSlim(1, 1);
         private readonly string _path;
@@ -24,16 +24,35 @@ namespace TheRockPaperScissorsGame.API.Storages
             {
                 if (!File.Exists(_path))
                 {
-                    throw new FileNotFoundException();
+                    // For test
+                    #region Very important thought!!!!
+                    // Or maybe should do this way... 
+
+                    //Like to create a base, if somebody else will download our project,
+                    //he wouldn't have this file, but if the person, who will download
+                    //our project, NEED to have the file with all data we need to create
+                    //the file in the VS and set setting like content and copy if newer or copy everytime
+
+                    //then these files will added in the rar 
+                    #endregion
+
+                    File.Create(_path).Close();
+                    // For test!
+
+                    //throw new FileNotFoundException();
                 }
 
                 var json = await File.ReadAllTextAsync(_path);
 
-                var data = JsonSerializer.Deserialize<List<T>>(json);
+                List<T> data;
 
-                if (data == null)
+                if (json.Length == 0)
                 {
-                    throw new ArgumentNullException();
+                    data = new List<T>();
+                }
+                else
+                {
+                    data = JsonSerializer.Deserialize<List<T>>(json);
                 }
 
                 return data;
@@ -61,7 +80,7 @@ namespace TheRockPaperScissorsGame.API.Storages
                 };
 
                 var json = JsonSerializer.Serialize(listObjects, options);
-                await File.AppendAllTextAsync(_path, json);
+                await File.WriteAllTextAsync(_path, json);
             }
             finally
             {

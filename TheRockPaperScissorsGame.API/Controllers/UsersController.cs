@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Mime;
-using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using TheRockPaperScissorsGame.API.Models;
 using TheRockPaperScissorsGame.API.Services;
@@ -15,7 +12,7 @@ namespace TheRockPaperScissorsGame.API.Controllers
     [Route("api/users")]
     [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]
-    internal class UsersController : ControllerBase
+    public class UsersController : ControllerBase
     {
         private readonly IAuthService _authService;
 
@@ -29,11 +26,23 @@ namespace TheRockPaperScissorsGame.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<ActionResult> RegisterAsync([FromBody] Account account)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            bool isRegistered = await _authService.Register(account);
+            bool isRegistered;
+
+            try
+            {
+                isRegistered = await _authService.Register(account);
+            }
+            //do we need this catch?
+            catch (Exception e) // added e to see the exception during debug
+            {
+                // log error
+                return Unauthorized();
+            }
 
             if (isRegistered)
             {
@@ -47,7 +56,10 @@ namespace TheRockPaperScissorsGame.API.Controllers
 
         [HttpPost]
         [Route("login")]
-        //[ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType((int)HttpStatusCode.Conflict)]
         public async Task<ActionResult<string>> LoginAsync([FromBody] Account account)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);

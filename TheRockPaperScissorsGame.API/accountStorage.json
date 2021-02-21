@@ -1,0 +1,26 @@
+[
+  {
+    "login": "string111111",
+    "password": "string"
+  },
+  {
+    "login": "string2222222",
+    "password": "string"
+  },
+  {
+    "login": "string333333",
+    "password": "string"
+  },
+  {
+    "login": "string444444",
+    "password": "string"
+  },
+  {
+    "login": "string2555555",
+    "password": "string"
+  },
+  {
+    "login": "string1111111",
+    "password": "string"
+  }
+]

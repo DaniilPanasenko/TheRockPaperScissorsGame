@@ -14,22 +14,16 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
 
         public string GenerateToken(string login)
         {
-            while (true)
+            var token = Guid.NewGuid().ToString();
+            
+            if (_tokens.TryAdd(login, token))
             {
-                var token = Guid.NewGuid().ToString();
-                if (!_tokens.Values.Contains(token))
-                {
-
-                    if (_tokens.TryAdd(login, token))
-                    {
-                        return token;
-                    }
-                    else
-                    {
-                        _tokens[login] = token;
-                        return token;
-                    }
-                }
+                return token;
+            }
+            else
+            {
+                _tokens[login] = token;
+                return token;
             }
         }
     
@@ -44,30 +38,3 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
         }
     }
 }
-
-#region Method when key is token
-/*
-   public string GenerateToken(string login)
-        {
-            while (true)
-            {
-                var token = Guid.NewGuid().ToString();
-
-                if (_tokens.TryAdd(token, login))
-                {
-                    return token;
-                }
-            }
-        }
-
-        public string GetLogin(string token)
-        {
-            if (token == null || !_tokens.ContainsKey(token))
-            {
-                return null;
-            }
-
-            return _tokens[token];
-        }
- */
-#endregion

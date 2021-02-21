@@ -25,24 +25,12 @@ namespace TheRockPaperScissorsGame.API.Controllers
         [Route("register")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<ActionResult> RegisterAsync([FromBody] Account account)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            bool isRegistered;
-
-            try
-            {
-                isRegistered = await _authService.Register(account);
-            }
-            //do we need this catch?
-            catch (Exception e) // added e to see the exception during debug
-            {
-                // log error
-                return Unauthorized();
-            }
+            bool isRegistered = await _authService.Register(account);
 
             if (isRegistered)
             {
@@ -50,7 +38,7 @@ namespace TheRockPaperScissorsGame.API.Controllers
             }
             else
             {
-                return NotFound();
+                return Unauthorized();
             }
         }
 

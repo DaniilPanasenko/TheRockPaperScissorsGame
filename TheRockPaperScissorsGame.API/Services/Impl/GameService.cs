@@ -1,7 +1,8 @@
 ﻿using System;
+using TheRockPaperScissorsGame.API.Enums;
 using TheRockPaperScissorsGame.API.Models;
 
-namespace TheRockPaperScissorsGame.API.Services
+namespace TheRockPaperScissorsGame.API.Services.Impl
 {
     public class GameService : ISessionService, IRoundService
     {

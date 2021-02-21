@@ -7,10 +7,10 @@ using TheRockPaperScissorsGame.API.Models;
 
 namespace TheRockPaperScissorsGame.API.Storages.Impl
 {
-    internal class AccountStorage: IAccountStorage
+    internal class AccountStorage : IAccountStorage
     {
         static SemaphoreSlim _lockSlim = new SemaphoreSlim(1, 1);
-        
+
         private List<Account> _accounts = new List<Account>();
 
         private JsonWorker<Account> _jsonWorker;
@@ -32,24 +32,18 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
             await _lockSlim.WaitAsync();
             try
             {
-                //if (newAccount == null)
-                //{
-                //    throw new ArgumentNullException(nameof(newAccount));
-                //}
                 if (!_isUploaded)
                 {
                     await LoadData();
-                    //_accounts = await _jsonWorker.ReadDataFromFileAsync();
-                    //_isUploaded = true;
                 }
                 if (_accounts.Any(account => account.Login == newAccount.Login))
                 {
                     return false;
                 }
 
-                await _jsonWorker.WriteDataIntoFileAsync(_accounts);
                 _accounts.Add(newAccount);
-                
+                await _jsonWorker.WriteDataIntoFileAsync(_accounts);
+
                 return true;
             }
             finally
@@ -66,8 +60,6 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
                 if (!_isUploaded)
                 {
                     await LoadData();
-                    //_accounts = await _jsonWorker.ReadDataFromFileAsync();
-                    //_isUploaded = true;
                 }
                 return _accounts.FirstOrDefault(account =>
                     account.Login == login);

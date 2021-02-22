@@ -6,7 +6,7 @@ using TheRockPaperScissorsGame.API.Models;
 
 namespace TheRockPaperScissorsGame.API.Storages
 {
-    interface ISessionStorage
+    public interface ISessionStorage
     {
         Task<bool> AddSessionAsync(Session newSession);
 

@@ -1,14 +1,15 @@
 ﻿using System;
+using System.Threading.Tasks;
 using TheRockPaperScissorsGame.API.Models;
 
 namespace TheRockPaperScissorsGame.API.Services
 {
     public interface ISessionService
     {
-        public string StartSession(GameOptions options);
+        public string StartSession(string login, GameOptions options);
 
-        public string CheckSession(int id);
+        public Task<string> CheckSession(string id);
 
-        public void FinishSession(int id);
+        public void FinishSession(string id);
     }
 }

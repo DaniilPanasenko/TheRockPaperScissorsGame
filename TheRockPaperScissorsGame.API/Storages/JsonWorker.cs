@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -77,6 +78,10 @@ namespace TheRockPaperScissorsGame.API.Storages
                 {
                     WriteIndented = true,
                     PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                //    Converters =
+                //{
+                //  new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+                //}
                 };
 
                 var json = JsonSerializer.Serialize(listObjects, options);

@@ -8,7 +8,7 @@ namespace TheRockPaperScissorsGame.API.Services
     {
         public Task<string> StartSessionAsync(string login, GameOptions options);
 
-        public Task<string> CheckSessionAsync(string id);
+        public Task<string> CheckSessionAsync(string id,string login);
 
         public Task FinishSessionAsync(string id);
     }

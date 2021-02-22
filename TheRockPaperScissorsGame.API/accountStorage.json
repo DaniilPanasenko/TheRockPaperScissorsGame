@@ -34,5 +34,17 @@
   {
     "login": "EMPTY_122",
     "password": "string"
+  },
+  {
+    "login": "boo3030555",
+    "password": "string"
+  },
+  {
+    "login": "12345678",
+    "password": "string"
+  },
+  {
+    "login": "zxcvbnmas",
+    "password": "string"
   }
 ]

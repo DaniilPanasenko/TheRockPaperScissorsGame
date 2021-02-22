@@ -31,6 +31,16 @@ namespace TheRockPaperScissorsGame.API
             services.AddSingleton<IAuthService, AuthService>();
             services.AddSingleton(provider=>new JsonWorker<Account>("accountStorage.json"));
 
+
+            services.AddSingleton(provider => new JsonWorker<Session>("sessionStorage.json"));
+            services.AddSingleton<ISessionStorage, SessionStorage>();
+            services.AddSingleton<IRoundService, RoundService>();
+            services.AddSingleton<ISessionService, SessionService>();
+
+
+
+            //services.AddSingleton<IGameService>(gameService);
+
             services.AddControllers().ConfigureApiBehaviorOptions(options =>
             {
                 // Disable auto BadRequest response

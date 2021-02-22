@@ -7,21 +7,16 @@ using TheRockPaperScissorsGame.API.Storages;
 
 namespace TheRockPaperScissorsGame.API.Services.Impl
 {
-    public class GameService : ISessionService, IRoundService
+    public class SessionService : ISessionService
     {
         private ISessionStorage _sessionStorage;
 
-        public GameService(ISessionStorage sessionStorage)
+        public SessionService(ISessionStorage sessionStorage)
         {
             _sessionStorage = sessionStorage;
         }
 
-        public Move CheckMove(string login, string id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<string> CheckSessionAsync(string id)
+        public async Task<string> CheckSessionAsync(string id, string login)
         {
             var session = await _sessionStorage.FindSessionAsync(id);
             if (session == null)
@@ -34,27 +29,31 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
                 return null;
             }
             else
+            if (session.IsFinished)
+            {
+                throw new GameFinishedException(GameEndReason.RivalLeftGame);
+            }
+            else
             {
                 if (session.IsBot) return "bot";
                 else
                 {
-                    if (session.Player2Login == null)
+                    if (session.Player2Login == null || session.Player1Login == null)
                     {
                         throw new ArgumentNullException();
                     }
-                    return session.Player2Login;
+                    if (session.Player1Login == login)
+                    {
+                        return session.Player2Login;
+                    }
+                    return session.Player1Login;
                 }
             }
         }
 
-        public void DoMove(string login, string id, Move move)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task FinishSessionAsync(string id)
         {
-            if (id != null)
+            if (id == null)
             {
                 throw new ArgumentNullException();
             }

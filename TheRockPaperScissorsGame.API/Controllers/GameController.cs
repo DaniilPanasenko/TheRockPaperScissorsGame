@@ -77,7 +77,7 @@ namespace TheRockPaperScissorsGame.API.Controllers
             if (login == null) return Unauthorized();
             try
             {
-                var playerName = _sessionService.CheckSessionAsync(id);
+                var playerName = await _sessionService.CheckSessionAsync(id, login);
                 if (playerName == null)
                 {
                     return NotFound();

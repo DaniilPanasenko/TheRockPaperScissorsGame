@@ -27,8 +27,11 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
             {
                 throw new ArgumentNullException();
             }
-            var rivalFound = session.RivalFound;
-            if (!rivalFound) return null;
+
+            if (!session.RivalFound)
+            {
+                return null;
+            }
             else
             {
                 if (session.IsBot) return "bot";
@@ -53,9 +56,26 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
             throw new NotImplementedException();
         }
 
-        public string StartSession(string login, GameOptions options)
+        public async Task<string> StartSession(string login, GameOptions options)
         {
-            throw new NotImplementedException();
+            //var session = new Session(options, login);
+
+            //await _sessionStorage.AddSessionAsync(session);
+
+            if (options.RoomType == RoomType.Public && options.RoomNumber != null)
+            {
+                var session  = _sessionStorage.ConnectToPublicRoom(login);
+
+                if (session == null)
+                {
+                    var newSession = new Session(options, login);
+                    await _sessionStorage.AddSessionAsync(newSession);
+                    _sessionStorage.AddToGameQuene(newSession);
+                }
+            }
+
+            // We need to return room number, but our variables are local!!!
+            return session.RoomNumber;
         }
     }
 }

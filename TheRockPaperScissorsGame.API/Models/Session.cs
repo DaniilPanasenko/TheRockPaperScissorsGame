@@ -28,6 +28,8 @@ namespace TheRockPaperScissorsGame.API.Models
         [JsonPropertyName("rounds")]
         public List<Round> Rounds { get; set; }
 
+        public bool IsFinished { get; set; }
+
         public DateTime SessionStart { get; set; }
 
         public string Player1Login { get; set; }

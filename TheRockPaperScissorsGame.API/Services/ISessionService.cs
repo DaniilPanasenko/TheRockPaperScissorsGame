@@ -6,7 +6,7 @@ namespace TheRockPaperScissorsGame.API.Services
 {
     public interface ISessionService
     {
-        public string StartSession(string login, GameOptions options);
+        public Task<string> StartSession(string login, GameOptions options);
 
         public Task<string> CheckSession(string id);
 

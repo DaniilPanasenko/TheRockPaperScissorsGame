@@ -10,12 +10,14 @@ namespace TheRockPaperScissorsGame.API.Storages
     {
         Task AddSessionAsync(Session newSession);
 
-        void AddToGameQuene(Session newSession);
+        void AddToGameQueue(Session newSession);
 
         Task<Session> FindSessionAsync(string roomNumber);
 
         Session ConnectToPublicRoom(string login);
 
-        bool ConnectToPrivateRoom(string roomNumber, string login);
+        Task<bool> ConnectToPrivateRoomAsync(string roomNumber, string login);
+
+        Task SaveSessionsAsync();
     }
 }

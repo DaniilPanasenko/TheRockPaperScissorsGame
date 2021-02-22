@@ -12,7 +12,7 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
    {
         static SemaphoreSlim _lockSlim = new SemaphoreSlim(1, 1);
 
-        private List<Session> _session = null;
+        private List<Session> _session;
 
         private ConcurrentQueue<Session> _connectionQueue = new ConcurrentQueue<Session>();
 
@@ -23,26 +23,30 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
             _jsonWorker = jsonWorker;
         }
 
-        // changed to Task, was Task<bool>?
+        private async Task UploadDataAsync()
+        {
+            _session = await _jsonWorker.ReadDataFromFileAsync();
+        }
+
         public async Task AddSessionAsync(Session newSession)
         {
             if (newSession == null)
             {
                 throw new ArgumentNullException(nameof(newSession));
             }
-
             await _lockSlim.WaitAsync();
             try
             {
+                if (_session == null)
+                {
+                    await UploadDataAsync();
+                }
                 if (_session.Any(session => session.RoomNumber == newSession.RoomNumber))
                 {
-                    // throw an exeption
+                    throw new InvalidOperationException("Session with this room number is already exist");
                 }
 
                 _session.Add(newSession);
-
-                // we probably don't need that...
-                // await _jsonWorker.WriteDataIntoFileAsync(_session);
             }
             finally
             {
@@ -51,16 +55,15 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
         }
         
         // changed to void, was bool
-        public void AddToGameQuene(Session newSession)
+        public void AddToGameQueue(Session newSession)
         {
             if (newSession == null)
             {
                 throw new ArgumentNullException(nameof(newSession));
             }
-
             if (_connectionQueue.Any(session => session.RoomNumber == newSession.RoomNumber))
             {
-                // Throw execption
+                 throw new InvalidOperationException("Session with this room number is already exist");
             }
             _connectionQueue.Enqueue(newSession);
         }
@@ -70,6 +73,10 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
             await _lockSlim.WaitAsync();
             try
             {
+                if (_session == null)
+                {
+                    await UploadDataAsync();
+                }
                 return _session.FirstOrDefault(session =>
                     session.RoomNumber == roomNumber);
             }
@@ -95,7 +102,7 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
             return null;
         }
 
-        public bool ConnectToPrivateRoom(string roomNumber, string login)
+        public async Task<bool> ConnectToPrivateRoomAsync(string roomNumber, string login)
         {
             if (roomNumber == null)
             {
@@ -107,29 +114,51 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
                 throw new ArgumentNullException();
             }
 
-            var session = _session.FirstOrDefault(session =>
-                    session.RoomNumber == roomNumber);
-
-            if (session==null)
+            await _lockSlim.WaitAsync();
+            try
             {
-                return false;
-            }
+                if (_session == null)
+                {
+                    await UploadDataAsync();
+                }
+                var session = _session.FirstOrDefault(session =>
+                        session.RoomNumber == roomNumber);
 
-            if (session.IsBot || session.Player2Login != null)
+                if (session==null)
+                {
+                    return false;
+                }
+
+                if (session.IsBot || session.Player2Login != null)
+                {
+                    return false;
+                }
+
+                session.Player2Login = login;
+                return true;
+            }
+            finally
             {
-                return false;
+                _lockSlim.Release();
             }
-
-            session.Player2Login = login;
-
-            return true;
-
         }
 
-        private async Task SaveSessions()
+        public async Task SaveSessionsAsync()
         {
-            var successfulSessins = _session.Where(session => session.IsFinished && session.Rounds.Count != 0).ToList();
-            await _jsonWorker.WriteDataIntoFileAsync(successfulSessins);
+            await _lockSlim.WaitAsync();
+            try
+            {
+                if (_session == null)
+                {
+                    await UploadDataAsync();
+                }
+                var successfulSessions = _session.Where(session => session.IsFinished && session.Rounds.Count != 0).ToList();
+                await _jsonWorker.WriteDataIntoFileAsync(successfulSessions);
+            }
+            finally
+            {
+                _lockSlim.Release();
+            }
         }
     }
 }

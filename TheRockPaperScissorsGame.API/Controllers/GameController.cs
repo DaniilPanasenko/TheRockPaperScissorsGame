@@ -53,6 +53,7 @@ namespace TheRockPaperScissorsGame.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
+        [ProducesResponseType((int)HttpStatusCode.Conflict)]
         public async Task<ActionResult<string>> StartSessionAsync([FromBody] GameOptions options)
         {
             var login = GetLogin();
@@ -62,26 +63,35 @@ namespace TheRockPaperScissorsGame.API.Controllers
                 var roomNumber = await _sessionService.StartSessionAsync(login, options);
                 return Ok(roomNumber);
             }
-            catch(RoomConnectionException ex)
+            catch (RoomConnectionException ex)
             {
                 return BadRequest(ex.Message);
             }
+            catch (GameFinishedException ex)
+            {
+                await FinishSessionAsync(options.RoomNumber);
+                return Conflict(ex.Message);
+            }
+
         }
 
         [HttpGet]
-        [Route("check_session/{id}")]
+        [Route("check_session/{roomId}")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<ActionResult> CheckSessionAsync(string id)
+        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.Conflict)]
+        public async Task<ActionResult> CheckSessionAsync(string roomId)
         {
             var login = GetLogin();
             if (login == null) return Unauthorized();
             try
             {
-                var playerName = await _sessionService.CheckSessionAsync(id, login);
-                if (playerName == null)
-                {
-                    return NotFound();
-                }
+                var playerName = await _sessionService.CheckSessionAsync(roomId, login);
+
+                if (playerName == null) return NotFound();
+                
                 return Ok(playerName);
             }
             catch (RoomConnectionException ex)
@@ -90,22 +100,24 @@ namespace TheRockPaperScissorsGame.API.Controllers
             }
             catch(GameFinishedException ex)
             {
-                await _sessionService.FinishSessionAsync(id);
+                await _sessionService.FinishSessionAsync(roomId);
                 return Conflict(ex.Status.ToString());
             }
         }
 
         [HttpPost]
-        [Route("do_move/{id}")]
+        [Route("do_move/{roomId}")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<ActionResult> DoMoveAsync([FromRoute]string id, [FromBody] Move move)
+        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult> DoMoveAsync([FromRoute]string roomId, [FromBody] Move move)
         {
             var login = GetLogin();
             if (login == null) return Unauthorized();
 
             try
             {
-                await _roundService.DoMoveAsync(login, id, move);
+                await _roundService.DoMoveAsync(login, roomId, move);
                 return Ok();
             }
             catch (MoveException ex)
@@ -115,21 +127,21 @@ namespace TheRockPaperScissorsGame.API.Controllers
         }
 
         [HttpGet]
-        [Route("check_move/{id}")]
+        [Route("check_move/{roomId}")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<ActionResult<string>> CheckMoveAsync(string id)
+        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult<string>> CheckMoveAsync(string roomId)
         {
             var login = GetLogin();
             if (login == null) return Unauthorized();
 
             try
             {
-                var move = await _roundService.CheckMoveAsync(login, id);
+                var move = await _roundService.CheckMoveAsync(login, roomId);
 
-                if (move == null)
-                {
-                    return NotFound();
-                }
+                if (move == null) return NotFound();
 
                 return Ok(move.ToString());
             }
@@ -137,19 +149,26 @@ namespace TheRockPaperScissorsGame.API.Controllers
             {
                 return BadRequest(ex.Message);
             }
+            catch (RoomConnectionException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         }
 
         [HttpPost]
-        [Route("finish_session/{id}")]
+        [Route("finish_session/{roomId}")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<ActionResult<string>> FinishSessionAsync(string id)
+        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult<string>> FinishSessionAsync(string roomId)
         {
             var login = GetLogin();
             if (login == null) return Unauthorized();
             try
             {
-                await _sessionService.FinishSessionAsync(id);
-                return Conflict(GameEndReason.RivalLeftGame.ToString());
+                await _sessionService.FinishSessionAsync(roomId);
+                return Ok(GameEndReason.RivalLeftGame.ToString());
             }
             catch (RoomConnectionException ex)
             {

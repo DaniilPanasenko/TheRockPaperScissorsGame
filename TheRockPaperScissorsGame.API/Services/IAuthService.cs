@@ -8,8 +8,6 @@ namespace TheRockPaperScissorsGame.API.Services
 {
   public  interface IAuthService
     {
-        // public string Authorize(string token);
-
         public Task<string> Login(string login, string password);
 
         public Task<bool> Register(Account account);

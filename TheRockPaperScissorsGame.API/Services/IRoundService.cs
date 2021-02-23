@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Threading.Tasks;
 using TheRockPaperScissorsGame.API.Enums;
 
 namespace TheRockPaperScissorsGame.API.Services
 {
     public interface IRoundService
     {
-        public void DoMove(string login, string id, Move move);
+        public Task DoMoveAsync(string login, string id, Move move);
 
-        public Move CheckMove(string login, string id);
+        public Task<Move?> CheckMoveAsync(string login, string id);
     }
 }

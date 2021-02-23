@@ -1,1 +1,19 @@
-[]
+[
+  {
+    "roomNumber": "28d75f53-be28-4016-873d-b2bbc2e2482e",
+    "rounds": [
+      {
+        "player1Move": 0,
+        "player2Move": 0
+      },
+      {
+        "player1Move": 0,
+        "player2Move": 2
+      }
+    ],
+    "sessionStart": "2021-02-23T00:01:16.7186519Z",
+    "sessionFinished": "0001-01-01T00:00:00",
+    "player1Login": "12345678",
+    "player2Login": null
+  }
+]

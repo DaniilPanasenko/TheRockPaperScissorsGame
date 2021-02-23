@@ -9,10 +9,15 @@ namespace TheRockPaperScissorsGame.API.Models
         {
         }
 
+        //public Round(Move?)
+        //{
+
+        //}
+
         [JsonPropertyName("player1Move")]
-        public Move Player1Move { get; set; }
+        public Move? Player1Move { get; set; }
 
         [JsonPropertyName("player2Move")]
-        public Move Player2Move { get; set; }
+        public Move? Player2Move { get; set; }
     }
 }

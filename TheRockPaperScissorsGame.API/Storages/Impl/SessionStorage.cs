@@ -110,7 +110,7 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
                     continue;
                 }
 
-                session.Player2Login = login;
+                session.AddSecondPlayer(login);
                 return session;
             }
 
@@ -150,12 +150,7 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
                     return false;
                 }
 
-                if (session.Player1Login == login)
-                {
-                    throw new RoomConnectionException("User is already in the room");
-                }
-
-                session.Player2Login = login;
+                session.AddSecondPlayer(login);
                 return true;
             }
             finally

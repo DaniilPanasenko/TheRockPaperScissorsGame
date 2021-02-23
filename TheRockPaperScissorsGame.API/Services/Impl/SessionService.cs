@@ -105,11 +105,7 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
                 {
                     throw new RoomConnectionException("Room not found");
                 }
-                if (session.IsBot || session.Player2Login != null)
-                {
-                    throw new RoomConnectionException("Room is occupated");
-                }
-                session.Player2Login = login;
+                session.AddSecondPlayer(login);
                 return session.RoomNumber;
             }
         }

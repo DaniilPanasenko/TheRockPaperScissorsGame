@@ -30,6 +30,21 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
             _session.ForEach(session => session.IsFinished = true);
         }
 
+        public List<Session> GetFinishedSessions()
+        {
+            var successfulSessions = _session.Where(session => session.IsFinished && session.Rounds.Count != 0).ToList();
+
+            foreach (var session in successfulSessions)
+            {
+                if (session.Rounds[session.Rounds.Count - 1].Player1Move == null || session.Rounds[session.Rounds.Count - 1].Player2Move == null)
+                {
+                    session.Rounds.RemoveAt(session.Rounds.Count - 1);
+                }
+            }
+
+            return successfulSessions = successfulSessions.Where(session => session.Rounds.Count != 0).ToList();
+        }
+
         public async Task AddSessionAsync(Session newSession)
         {
             if (newSession == null)
@@ -168,25 +183,28 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
                 {
                     await UploadDataAsync();
                 }
-                var successfulSessions = _session.Where(session => session.IsFinished && session.Rounds.Count != 0).ToList();
-
-
-                foreach (var session in successfulSessions)
-                {
-                    if (session.Rounds[session.Rounds.Count - 1].Player1Move == null || session.Rounds[session.Rounds.Count - 1].Player2Move == null)
-                    {
-                        session.Rounds.RemoveAt(session.Rounds.Count - 1);
-                    }
-                }
-
-                successfulSessions = successfulSessions.Where(session => session.Rounds.Count != 0).ToList();
-
-                await _jsonWorker.WriteDataIntoFileAsync(successfulSessions);
+                
+                await _jsonWorker.WriteDataIntoFileAsync(GetFinishedSessions());
             }
             finally
             {
                 _lockSlim.Release();
             }
         }
+
+        //public List<Session> GetFinishedSessions()
+        //{
+        //    var successfulSessions = _session.Where(session => session.IsFinished && session.Rounds.Count != 0).ToList();
+
+        //    foreach (var session in successfulSessions)
+        //    {
+        //        if (session.Rounds[session.Rounds.Count - 1].Player1Move == null || session.Rounds[session.Rounds.Count - 1].Player2Move == null)
+        //        {
+        //            session.Rounds.RemoveAt(session.Rounds.Count - 1);
+        //        }
+        //    }
+
+        //    return successfulSessions = successfulSessions.Where(session => session.Rounds.Count != 0).ToList();
+        //}
     }
 }

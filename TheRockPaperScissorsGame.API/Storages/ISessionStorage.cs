@@ -19,5 +19,7 @@ namespace TheRockPaperScissorsGame.API.Storages
         Task<bool> ConnectToPrivateRoomAsync(string roomNumber, string login);
 
         Task SaveSessionsAsync();
+
+        List<Session> GetFinishedSessions()
     }
 }

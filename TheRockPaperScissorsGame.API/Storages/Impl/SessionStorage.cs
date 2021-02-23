@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using TheRockPaperScissorsGame.API.Exceptions;
 using TheRockPaperScissorsGame.API.Models;
 
 namespace TheRockPaperScissorsGame.API.Storages.Impl
@@ -26,6 +27,7 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
         private async Task UploadDataAsync()
         {
             _session = await _jsonWorker.ReadDataFromFileAsync();
+            _session.ForEach(session => session.IsFinished = true);
         }
 
         public async Task AddSessionAsync(Session newSession)
@@ -92,13 +94,28 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
                 throw new ArgumentNullException();
             }
 
-            if (_connectionQueue.TryDequeue(out Session session))
+            var sessionCount = _connectionQueue.Count();
+            var iteration = 0;
+          
+            while (_connectionQueue.TryDequeue(out Session session) && iteration!= sessionCount)
             {
+                iteration++;
+
+                if (session.IsFinished)
+                    continue;
+
+                if (session.Player1Login == login)
+                {
+                    _connectionQueue.Enqueue(session);
+                    continue;
+                }
+
                 session.Player2Login = login;
                 return session;
             }
 
             return null;
+
         }
 
         public async Task<bool> ConnectToPrivateRoomAsync(string roomNumber, string login)
@@ -133,6 +150,11 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
                     return false;
                 }
 
+                if (session.Player1Login == login)
+                {
+                    throw new RoomConnectionException("User is already in the room");
+                }
+
                 session.Player2Login = login;
                 return true;
             }
@@ -152,6 +174,18 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
                     await UploadDataAsync();
                 }
                 var successfulSessions = _session.Where(session => session.IsFinished && session.Rounds.Count != 0).ToList();
+
+
+                foreach (var session in successfulSessions)
+                {
+                    if (session.Rounds[session.Rounds.Count - 1].Player1Move == null || session.Rounds[session.Rounds.Count - 1].Player2Move == null)
+                    {
+                        session.Rounds.RemoveAt(session.Rounds.Count - 1);
+                    }
+                }
+
+                successfulSessions = successfulSessions.Where(session => session.Rounds.Count != 0).ToList();
+
                 await _jsonWorker.WriteDataIntoFileAsync(successfulSessions);
             }
             finally

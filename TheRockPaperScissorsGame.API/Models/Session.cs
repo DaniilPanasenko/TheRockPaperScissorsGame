@@ -29,9 +29,6 @@ namespace TheRockPaperScissorsGame.API.Models
         [JsonPropertyName("roomNumber")]
         public string RoomNumber { get; set; }
 
-        //[JsonPropertyName("roomType")]
-        //public RoomType RoomType { get; set; }
-
         [JsonPropertyName("rounds")]
         public List<Round> Rounds { get; set; }
 

@@ -1,19 +1,61 @@
 [
   {
-    "roomNumber": "28d75f53-be28-4016-873d-b2bbc2e2482e",
+    "roomNumber": "ad70e19d-5bbe-4ef7-98b6-b1b26c104591",
+    "rounds": [
+      {
+        "player1Move": 1,
+        "player2Move": 2
+      }
+    ],
+    "sessionStart": "2021-02-23T08:57:34.6370366Z",
+    "sessionFinished": "2021-02-23T09:04:53.0421407Z",
+    "player1Login": "12345678",
+    "player2Login": "zxcvbnmas"
+  },
+  {
+    "roomNumber": "fcb81e81-2b4c-41f2-b77c-2ad394ef6775",
     "rounds": [
       {
         "player1Move": 0,
         "player2Move": 0
       },
       {
-        "player1Move": 0,
-        "player2Move": 2
+        "player1Move": 2,
+        "player2Move": 1
+      },
+      {
+        "player1Move": 1,
+        "player2Move": 0
       }
     ],
-    "sessionStart": "2021-02-23T00:01:16.7186519Z",
-    "sessionFinished": "0001-01-01T00:00:00",
+    "sessionStart": "2021-02-23T09:07:04.8884148Z",
+    "sessionFinished": "2021-02-23T09:14:47.721624Z",
+    "player1Login": "zxcvbnmas",
+    "player2Login": "12345678"
+  },
+  {
+    "roomNumber": "ad7b21bb-ca6d-4c43-999f-2f31fee51af0",
+    "rounds": [
+      {
+        "player1Move": 1,
+        "player2Move": 1
+      },
+      {
+        "player1Move": 0,
+        "player2Move": 2
+      },
+      {
+        "player1Move": 2,
+        "player2Move": 1
+      },
+      {
+        "player1Move": 0,
+        "player2Move": 0
+      }
+    ],
+    "sessionStart": "2021-02-23T09:23:24.7705963Z",
+    "sessionFinished": "2021-02-23T09:28:19.5947779Z",
     "player1Login": "12345678",
-    "player2Login": null
+    "player2Login": "zxcvbnmas"
   }
 ]

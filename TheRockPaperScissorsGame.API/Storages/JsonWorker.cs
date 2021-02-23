@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,22 +23,7 @@ namespace TheRockPaperScissorsGame.API.Storages
             {
                 if (!File.Exists(_path))
                 {
-                    // For test
-                    #region Very important thought!!!!
-                    // Or maybe should do this way... 
-
-                    //Like to create a base, if somebody else will download our project,
-                    //he wouldn't have this file, but if the person, who will download
-                    //our project, NEED to have the file with all data we need to create
-                    //the file in the VS and set setting like content and copy if newer or copy everytime
-
-                    //then these files will added in the rar 
-                    #endregion
-
                     File.Create(_path).Close();
-                    // For test!
-
-                    //throw new FileNotFoundException();
                 }
 
                 var json = await File.ReadAllTextAsync(_path);

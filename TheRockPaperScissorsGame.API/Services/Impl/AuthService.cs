@@ -14,7 +14,6 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
         private readonly IAccountStorage _accountStorage;
         private readonly ITokenStorage _tokenStorage;
         private readonly IUserBlockingService _userBlockingService;
-        // one more dependency?
        
         public AuthService(IAccountStorage accountStorage, ITokenStorage tokenStorage, IUserBlockingService userBlockingService)
         {

@@ -16,9 +16,9 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
             _sessionStorage = sessionStorage;
         }
 
-        public async Task<string> CheckSessionAsync(string id, string login)
+        public async Task<string> CheckSessionAsync(string roomId, string login)
         {
-            var session = await _sessionStorage.FindSessionAsync(id);
+            var session = await _sessionStorage.FindSessionAsync(roomId);
             if (session == null)
             {
                 throw new RoomConnectionException("Room not found");
@@ -51,13 +51,13 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
             }
         }
 
-        public async Task FinishSessionAsync(string id)
+        public async Task FinishSessionAsync(string roomId)
         {
-            if (id == null)
+            if (roomId == null)
             {
                 throw new ArgumentNullException();
             }
-            var session = await _sessionStorage.FindSessionAsync(id);
+            var session = await _sessionStorage.FindSessionAsync(roomId);
             if (session == null)
             {
                 throw new RoomConnectionException("Room not found");

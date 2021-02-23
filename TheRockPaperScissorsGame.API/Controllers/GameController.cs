@@ -69,7 +69,7 @@ namespace TheRockPaperScissorsGame.API.Controllers
             }
             catch (GameFinishedException ex)
             {
-                await FinishSessionAsync(options.RoomNumber);
+                await _sessionService.FinishSessionAsync(options.RoomNumber);
                 return Conflict(ex.Message);
             }
 
@@ -153,7 +153,6 @@ namespace TheRockPaperScissorsGame.API.Controllers
             {
                 return BadRequest(ex.Message);
             }
-        }
         }
 
         [HttpPost]

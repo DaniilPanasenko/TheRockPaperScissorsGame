@@ -23,11 +23,11 @@ namespace TheRockPaperScissorsGame.API.Controllers
 
         private readonly ITokenStorage _tokenStorage;
 
-        public GameController(ISessionService sessionService, IRoundService roundService, ITokenStorage tokenstorage)
+        public GameController(ISessionService sessionService, IRoundService roundService, ITokenStorage tokenStorage)
         {
             _sessionService = sessionService;
             _roundService = roundService;
-            _tokenStorage = tokenstorage;
+            _tokenStorage = tokenStorage;
         }
 
         [FromHeader(Name = "Token")]
@@ -124,6 +124,11 @@ namespace TheRockPaperScissorsGame.API.Controllers
             {
                 return BadRequest(ex.Message);
             }
+            catch (GameFinishedException ex)
+            {
+                await _sessionService.FinishSessionAsync(roomId);
+                return Conflict(ex.Status.ToString());
+            }
         }
 
         [HttpGet]
@@ -152,6 +157,11 @@ namespace TheRockPaperScissorsGame.API.Controllers
             catch (RoomConnectionException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (GameFinishedException ex)
+            {
+                await _sessionService.FinishSessionAsync(roomId);
+                return Conflict(ex.Status.ToString());
             }
         }
 

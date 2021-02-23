@@ -11,6 +11,9 @@ namespace TheRockPaperScissorsGame.API.Models
     public class Session
     {
         private TimeSpan _connectionTimeOut = TimeSpan.FromMinutes(5);
+
+        private TimeSpan _roundTimeOut = TimeSpan.FromSeconds(20);
+
         static SemaphoreSlim _lockSlim = new SemaphoreSlim(1, 1);
 
         public Session()
@@ -24,6 +27,10 @@ namespace TheRockPaperScissorsGame.API.Models
             RoomNumber = Guid.NewGuid().ToString();
             Rounds = new List<Round>();
             IsBot = options.RoomType == RoomType.Train;
+            if (IsBot)
+            {
+                LastMoveTime = DateTime.UtcNow;
+            }
         }
 
         [JsonPropertyName("roomNumber")]
@@ -48,6 +55,9 @@ namespace TheRockPaperScissorsGame.API.Models
         public string Player2Login { get; set; }
 
         [JsonIgnore]
+        public DateTime? LastMoveTime { get; set; }
+
+        [JsonIgnore]
         public bool IsBot { get; set; }
 
         [JsonIgnore]
@@ -64,11 +74,27 @@ namespace TheRockPaperScissorsGame.API.Models
             }
         }
 
+        public bool RoundTimeOut
+        {
+            get
+            {
+                if (LastMoveTime != null)
+                {
+                    return DateTime.UtcNow - LastMoveTime > _roundTimeOut;
+                }
+                return false;
+            }
+        }
+
         public async Task AddMoveAsync(bool isFirst, Move move)
         {
             await _lockSlim.WaitAsync();
             try
             {
+                if (RoundTimeOut)
+                {
+                    throw new GameFinishedException(GameEndReason.RoundTimeOut);
+                }
                 Round round;
                 if (Rounds.Count == 0)
                 {
@@ -100,6 +126,7 @@ namespace TheRockPaperScissorsGame.API.Models
                 {
                     round.Player2Move = move;
                 }
+                LastMoveTime = DateTime.UtcNow;
             }
             finally
             {
@@ -116,7 +143,10 @@ namespace TheRockPaperScissorsGame.API.Models
                 {
                     throw new MoveException("User has not made a move yet");
                 }
-
+                if (RoundTimeOut)
+                {
+                    throw new GameFinishedException(GameEndReason.RoundTimeOut);
+                }
                 var lastRound = Rounds[Rounds.Count - 1];
 
                 if (isFirst)
@@ -140,6 +170,24 @@ namespace TheRockPaperScissorsGame.API.Models
             {
                 _lockSlim.Release();
             }
+        }
+
+        public void AddSecondPlayer(string login)
+        {
+            if (login==null)
+            {
+                throw new ArgumentNullException();
+            }
+            if (IsBot || Player2Login != null)
+            {
+                throw new RoomConnectionException("Room is occupated");
+            }
+            if (Player1Login == login)
+            {
+                throw new RoomConnectionException("User is already in the room");
+            }
+            Player2Login = login;
+            LastMoveTime = DateTime.UtcNow;
         }
     }
 }

@@ -74,6 +74,7 @@ namespace TheRockPaperScissorsGame.API.Models
             }
         }
 
+        [JsonIgnore]
         public bool RoundTimeOut
         {
             get

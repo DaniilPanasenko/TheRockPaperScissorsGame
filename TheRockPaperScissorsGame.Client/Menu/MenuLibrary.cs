@@ -1,0 +1,45 @@
+﻿using System;
+namespace TheRockPaperScissorsGame.Client.Menu
+{
+    public static class MenuLibrary
+    {
+        public static int InputMenuItemNumber(string menuName, string[] commands)
+        {
+            WriteLineColor($"\n{menuName} Menu:", ConsoleColor.Yellow);
+            for (int i = 0; i < commands.Length; i++)
+            {
+                Console.WriteLine($"{i + 1} - {commands[i]}");
+            }
+            WriteLineColor("\nEnter the command number...", ConsoleColor.DarkCyan);
+            int command;
+            while (!int.TryParse(Console.ReadLine(), out command) || command < 1 || command > commands.Length)
+            {
+                WriteLineColor("You entered incorrect command", ConsoleColor.Red);
+                WriteLineColor("\nEnter the command number...", ConsoleColor.DarkCyan);
+            }
+            return command;
+        }
+
+        public static string InputStringValue(string valueName)
+        {
+            WriteLineColor($"Enter {valueName} ...", ConsoleColor.DarkCyan);
+            string value;
+            value = Console.ReadLine();
+            while (string.IsNullOrEmpty(value.Trim()))
+            {
+                WriteLineColor($"You entered empty {valueName}", ConsoleColor.Red);
+                Console.WriteLine($"You entered empty {valueName}");
+                WriteLineColor($"Enter {valueName} ...", ConsoleColor.DarkCyan);
+                value = Console.ReadLine();
+            }
+            return value;
+        }
+
+        public static void WriteLineColor(string text, ConsoleColor color)
+        {
+            Console.ForegroundColor = color;
+            Console.WriteLine(text);
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+    }
+}

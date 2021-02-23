@@ -1,6 +1,11 @@
 ﻿using System;
+using System.IO;
+using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
+using TheRockPaperScissorsGame.Client.Clients;
 using TheRockPaperScissorsGame.Client.Menu;
+using TheRockPaperScissorsGame.Client.Models;
 
 namespace TheRockPaperScissorsGame.Client
 {
@@ -10,8 +15,20 @@ namespace TheRockPaperScissorsGame.Client
         {
             try
             {
-                Console.WriteLine("The Rock Paper Scissors Game. Designed by Karyna Bilotska and Daniil Panasenko\n");
-                IMainMenu mainMenu = new MainMenu();
+                MenuLibrary.WriteLineColor("The Rock Paper Scissors Game. Designed by Karyna Bilotska and Daniil Panasenko\n", ConsoleColor.DarkGreen);
+
+                var httpClient = new HttpClient();
+                var json = File.ReadAllText("clientOptions.json");
+                var options = JsonSerializer.Deserialize<ClientOptions>(json);
+                httpClient.BaseAddress = new Uri(options.BaseAddress);
+
+                var storage = new ValuesStorage();
+
+                var userClient = new UserClient(httpClient);
+                var gameClient = new GameClient(httpClient, storage);
+                var statisticClient = new StatisticClient(httpClient, storage);
+
+                var mainMenu = new MainMenu(userClient);
                 await mainMenu.StartAsync();
                 return 0;
             }

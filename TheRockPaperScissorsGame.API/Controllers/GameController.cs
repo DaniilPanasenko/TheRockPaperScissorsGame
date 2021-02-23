@@ -98,21 +98,45 @@ namespace TheRockPaperScissorsGame.API.Controllers
         [HttpPost]
         [Route("do_move/{id}")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<ActionResult> DoMoveAsync([FromRoute]int id, [FromBody] string move)
+        public async Task<ActionResult> DoMoveAsync([FromRoute]string id, [FromBody] Move move)
         {
             var login = GetLogin();
             if (login == null) return Unauthorized();
-            throw new NotImplementedException();
+
+            try
+            {
+                await _roundService.DoMoveAsync(login, id, move);
+                return Ok();
+            }
+            catch (MoveException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet]
         [Route("check_move/{id}")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<ActionResult<string>> CheckMoveAsync(int id)
+        public async Task<ActionResult<string>> CheckMoveAsync(string id)
         {
             var login = GetLogin();
             if (login == null) return Unauthorized();
-            throw new NotImplementedException();
+
+            try
+            {
+                var move = await _roundService.CheckMoveAsync(login, id);
+
+                if (move == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(move.ToString());
+            }
+            catch (MoveException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost]

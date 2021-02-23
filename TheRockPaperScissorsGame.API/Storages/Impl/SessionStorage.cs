@@ -54,7 +54,6 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
             }
         }
         
-        // changed to void, was bool
         public void AddToGameQueue(Session newSession)
         {
             if (newSession == null)

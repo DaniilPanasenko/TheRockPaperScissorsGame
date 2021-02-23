@@ -63,6 +63,7 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
                 throw new RoomConnectionException("Room not found");
             }
             session.IsFinished = true;
+            session.SessionFinished = DateTime.UtcNow;
             await _sessionStorage.SaveSessionsAsync();
         }
 

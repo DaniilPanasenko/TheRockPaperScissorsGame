@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Threading.Tasks;
 using TheRockPaperScissorsGame.Client.Contracts;
+using TheRockPaperScissorsGame.Client.Services;
 
 namespace TheRockPaperScissorsGame.Client.Clients
 {
@@ -18,12 +19,13 @@ namespace TheRockPaperScissorsGame.Client.Clients
 
         public async Task<HttpResponseMessage> Login(string login, string password)
         {
-            var user = new UserDTO(login, password);
+            var user = new UserDto(login, password);
             var uri = new Uri(_httpClient.BaseAddress + "users/login");
             var response = await _httpClient.PostAsync(uri, user, new JsonMediaTypeFormatter());
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 var token = await response.Content.ReadAsStringAsync();
+                token = ResponseDeserializer.Deserialize<string>(token);
                 _httpClient.DefaultRequestHeaders.Add("Token", token);
             }
             return response;
@@ -31,12 +33,13 @@ namespace TheRockPaperScissorsGame.Client.Clients
 
         public async Task<HttpResponseMessage> Registration(string login, string password)
         {
-            var user = new UserDTO(login, password);
+            var user = new UserDto(login, password);
             var uri = new Uri(_httpClient.BaseAddress + "users/register");
             var response = await _httpClient.PostAsync(uri, user, new JsonMediaTypeFormatter());
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 var token = await response.Content.ReadAsStringAsync();
+                token = ResponseDeserializer.Deserialize<string>(token);
                 _httpClient.DefaultRequestHeaders.Add("Token", token);
             }
             return response;

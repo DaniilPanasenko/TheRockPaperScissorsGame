@@ -3,9 +3,9 @@ using TheRockPaperScissorsGame.Client.Contracts.Enums;
 
 namespace TheRockPaperScissorsGame.Client.Contracts
 {
-    public class GameOptionsDTO
+    public class GameOptionsDto
     {
-        public GameOptionsDTO(RoomType roomType, string roomNumber)
+        public GameOptionsDto(RoomType roomType, string roomNumber)
         {
             RoomType = roomType;
             RoomNumber = roomNumber;

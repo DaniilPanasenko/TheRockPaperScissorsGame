@@ -1,9 +1,9 @@
 ﻿using System;
 namespace TheRockPaperScissorsGame.Client.Contracts
 {
-    public class UserDTO
+    public class UserDto
     {
-        public UserDTO(string login, string password)
+        public UserDto(string login, string password)
         {
             Login = login;
             Password = password;

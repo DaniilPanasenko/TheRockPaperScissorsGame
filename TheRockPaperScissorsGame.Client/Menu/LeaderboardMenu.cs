@@ -55,7 +55,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
                         response = await _statisticClient.GetLeaderboardAsync(amount, statisticsType);
                         content = await response.Content.ReadAsStringAsync();
 
-                        var timeResults = JsonSerializer.Deserialize<List<UserResultDto<int>>>(content);
+                        var timeResults = JsonSerializer.Deserialize<List<UserResultDto<string>>>(content);
 
                         break;
                     case 3:
@@ -65,7 +65,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
                         response = await _statisticClient.GetLeaderboardAsync(amount, statisticsType);
                         content = await response.Content.ReadAsStringAsync();
 
-                        var winPersResults = JsonSerializer.Deserialize<List<UserResultDto<int>>>(content);
+                        var winPersResults = JsonSerializer.Deserialize<List<UserResultDto<decimal>>>(content);
                         break;
                     case 4:
                     default:

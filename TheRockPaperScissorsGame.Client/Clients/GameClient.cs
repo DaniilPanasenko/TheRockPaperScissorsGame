@@ -22,8 +22,8 @@ namespace TheRockPaperScissorsGame.Client.Clients
 
         public async Task<HttpResponseMessage> StartSession(RoomType roomType, string roomId)
         {
-            var options = new GameOptionsDTO(roomType, roomId);
-            var uri = new Uri(_httpClient.BaseAddress + "start_session");
+            var options = new GameOptionsDto(roomType, roomId);
+            var uri = new Uri(_httpClient.BaseAddress + "game/start_session");
             var response = await _httpClient.PostAsync(uri, options, new JsonMediaTypeFormatter());
             if (response.StatusCode == HttpStatusCode.OK)
             {
@@ -35,21 +35,21 @@ namespace TheRockPaperScissorsGame.Client.Clients
 
         public async Task<HttpResponseMessage> CheckSession()
         {
-            var uri = new Uri(_httpClient.BaseAddress + "check_session/" + _valuesStorage.RoomId);
+            var uri = new Uri(_httpClient.BaseAddress + "game/check_session/" + _valuesStorage.RoomId);
             var response = await _httpClient.GetAsync(uri);
             return response;
         }
 
         public async Task<HttpResponseMessage> DoMove(Move move)
         {
-            var uri = new Uri(_httpClient.BaseAddress + "do_move/" + _valuesStorage.RoomId);
+            var uri = new Uri(_httpClient.BaseAddress + "game/do_move/" + _valuesStorage.RoomId);
             var response = await _httpClient.PostAsync(uri, move, new JsonMediaTypeFormatter());
             return response;
         }
 
         public async Task<HttpResponseMessage> FinishSession()
         {
-            var uri = new Uri(_httpClient.BaseAddress +"finish_session/" + _valuesStorage.RoomId);
+            var uri = new Uri(_httpClient.BaseAddress + "game/finish_session/" + _valuesStorage.RoomId);
             var response = await _httpClient.PostAsync(uri, null);
             return response;
         }

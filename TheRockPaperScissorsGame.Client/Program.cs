@@ -11,25 +11,35 @@ namespace TheRockPaperScissorsGame.Client
 {
     class Program
     {
+        private static UserClient _userClient;
+        private static GameClient _gameClient;
+        private static StatisticClient _statisticClient;
+
+        private static void Setup()
+        {
+            var httpClient = new HttpClient();
+            var json = File.ReadAllText("clientOptions.json");
+            var options = JsonSerializer.Deserialize<ClientOptions>(json);
+            httpClient.BaseAddress = new Uri(options.BaseAddress);
+
+            var storage = new ValuesStorage();
+
+            _userClient = new UserClient(httpClient);
+            _gameClient = new GameClient(httpClient, storage);
+            _statisticClient = new StatisticClient(httpClient, storage);
+        }
+
         private static async Task<int> Main()
         {
             try
             {
                 MenuLibrary.WriteLineColor("The Rock Paper Scissors Game. Designed by Karyna Bilotska and Daniil Panasenko\n", ConsoleColor.DarkGreen);
 
-                var httpClient = new HttpClient();
-                var json = File.ReadAllText("clientOptions.json");
-                var options = JsonSerializer.Deserialize<ClientOptions>(json);
-                httpClient.BaseAddress = new Uri(options.BaseAddress);
+                Setup();
 
-                var storage = new ValuesStorage();
-
-                var userClient = new UserClient(httpClient);
-                var gameClient = new GameClient(httpClient, storage);
-                var statisticClient = new StatisticClient(httpClient, storage);
-
-                var mainMenu = new MainMenu(userClient);
+                IMenu mainMenu = new MainMenu(_userClient, _gameClient, _statisticClient);
                 await mainMenu.StartAsync();
+
                 return 0;
             }
             catch (Exception ex)

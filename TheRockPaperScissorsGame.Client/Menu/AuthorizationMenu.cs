@@ -10,11 +10,15 @@ namespace TheRockPaperScissorsGame.Client.Menu
 {
     public class AuthorizationMenu : IMenu
     {
-        UserClient _userClient;
+        private UserClient _userClient;
+        private GameClient _gameClient;
+        private StatisticClient _statisticClient;
 
-        public AuthorizationMenu(UserClient userClient)
+        public AuthorizationMenu(UserClient userClient, GameClient gameClient, StatisticClient statisticClient)
         {
             _userClient = userClient;
+            _gameClient = gameClient;
+            _statisticClient = statisticClient;
         }
 
         public async Task StartAsync()
@@ -54,7 +58,8 @@ namespace TheRockPaperScissorsGame.Client.Menu
                 {
                     MenuLibrary.WriteLineColor("\nSuccessfully login\n", ConsoleColor.Green);
                     Thread.Sleep(1000);
-                    //profile
+                    IMenu menu = new UserMenu(_userClient, _gameClient, _statisticClient);
+                    await menu.StartAsync();
                     return;
                 }
                 else if (response.StatusCode == HttpStatusCode.BadRequest)

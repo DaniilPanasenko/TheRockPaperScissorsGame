@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TheRockPaperScissorsGame.API.Contracts;
 using TheRockPaperScissorsGame.API.Enums;
 using TheRockPaperScissorsGame.API.Models;
@@ -17,14 +18,14 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
             _sessionStorage = sessionStorage;
         }
 
-        public List<UserResultDto<int>> GetWinsLeaderboard(int amount)
+        public async Task<List<UserResultDto<int>>> GetWinsLeaderboardAsync(int amount)
         {
             if (amount < 0)
             {
                 throw new ArgumentException();
             }
 
-            var sessions = _sessionStorage.GetFinishedSessions();
+            var sessions = await _sessionStorage.GetFinishedSessions();
 
             var users = GetUsers(sessions);
 
@@ -44,25 +45,25 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
             return usersResults.Take(amount).ToList();
         }
 
-        public List<UserResultDto<TimeSpan>> GetTimeLeaderboard(int amount)
+        public async Task<List<UserResultDto<string>>> GetTimeLeaderboardAsync(int amount)
         {
             if (amount < 0)
             {
                 throw new ArgumentException();
             }
 
-            var sessions = _sessionStorage.GetFinishedSessions();
+            var sessions = await _sessionStorage.GetFinishedSessions();
 
             var users = GetUsers(sessions);
 
-            List<UserResultDto<TimeSpan>> usersResults = new List<UserResultDto<TimeSpan>>();
+            List<UserResultDto<string>> usersResults = new List<UserResultDto<string>>();
 
             foreach (var user in users)
             {
-                usersResults.Add(new UserResultDto<TimeSpan>
+                usersResults.Add(new UserResultDto<string>
                 {
                     Login = user,
-                    Result = GetUserGameTime(user)
+                    Result = await GetUserGameTimeAsync(user)
                 });
             }
 
@@ -71,14 +72,14 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
             return usersResults.Take(amount).ToList();
         }
 
-        public List<UserResultDto<decimal>> GetWinsPercentLeaderboard(int amount)
+        public async Task<List<UserResultDto<decimal>>> GetWinsPercentLeaderboardAsync(int amount)
         {
             if (amount < 0)
             {
                 throw new ArgumentException();
             }
 
-            var sessions = _sessionStorage.GetFinishedSessions();
+            var sessions = await _sessionStorage.GetFinishedSessions();
 
             var users = GetUsers(sessions);
 
@@ -99,60 +100,56 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
            
         }
 
-        public ResultsDto GetUserResultsCount(string login)
+        public async Task<ResultsDto> GetUserResultsCountAsync(string login)
         {
             if (login == null)
             {
                 throw new ArgumentNullException();
             }
 
-            var sessions = _sessionStorage.GetFinishedSessions();
-
-            var winsCount = GetWinsCount(sessions, login);
-
-            var lossCount = GetLossCount(sessions, login);
-
-            var drawCount = GetDrawCount(sessions, login);
-
-            return new ResultsDto
+            var sessions = await _sessionStorage.GetFinishedSessions();
+            ResultsDto results = new ResultsDto
             {
-                WinCount = winsCount,
-                LossCount = lossCount,
-                DrawCount = drawCount
+                WinCount = GetWinsCount(sessions, login),
+                DrawCount = GetDrawCount(sessions, login),
+                LossCount = GetLossCount(sessions, login)
             };
+          
+            return results;
         }
 
-        public TimeSpan GetUserGameTime(string login)
+        public async Task<string> GetUserGameTimeAsync(string login)
         {
             if (login == null)
             {
                 throw new ArgumentNullException();
             }
 
-            var sessions = _sessionStorage.GetFinishedSessions();
+            var sessions = await _sessionStorage.GetFinishedSessions();
 
             TimeSpan gameTime = default;
 
             sessions.Where(session => session.Player1Login == login || session.Player2Login == login).ToList()
                 .ForEach(session => gameTime += session.SessionFinished - session.SessionStart);
 
-            return gameTime;
+            return gameTime.ToString("dd':'hh':'mm':'ss");
         }
 
-        public MovesDto GetUserMovesStatistics(string login)
+        public async Task<MovesDto> GetUserMovesStatisticsAsync(string login)
         {
             if (login == null)
             {
                 throw new ArgumentNullException();
             }
 
-            var sessions = _sessionStorage.GetFinishedSessions();
+            var sessions = await _sessionStorage.GetFinishedSessions();
 
-            MovesDto moves = new MovesDto();
-
-            moves.RockCount = GetRockCount(sessions, login);
-            moves.ScissorsCount = GetScissorsCount(sessions, login);
-            moves.PaperCount = GetPaperCount(sessions, login);
+            MovesDto moves = new MovesDto
+            {
+                RockCount = GetRockCount(sessions, login),
+                ScissorsCount = GetScissorsCount(sessions, login),
+                PaperCount = GetPaperCount(sessions, login)
+            };
 
             return moves;
         }
@@ -210,7 +207,8 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
         {
             var users = sessions.Select(session => session.Player1Login).ToList();
             users.AddRange(sessions.Where(session => session.Player2Login != null).Select(session => session.Player2Login).ToList());
-            return users.Distinct().Where(user => sessions.Where(session => session.Player1Login == user || session.Player1Login == user).Select(y => y.Rounds.Count).Sum() >= 10).ToList();
+
+            return users.Distinct().Where(user => sessions.Where(session => session.Player1Login == user || session.Player2Login == user).Select(y => y.Rounds.Count).Sum() >= 10).ToList();
         }
     }
 }

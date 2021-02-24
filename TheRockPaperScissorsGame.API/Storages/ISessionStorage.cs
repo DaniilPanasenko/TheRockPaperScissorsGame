@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using TheRockPaperScissorsGame.API.Models;
 
@@ -20,6 +18,6 @@ namespace TheRockPaperScissorsGame.API.Storages
 
         Task SaveSessionsAsync();
 
-        List<Session> GetFinishedSessions();
+        Task<List<Session>> GetFinishedSessions();
     }
 }

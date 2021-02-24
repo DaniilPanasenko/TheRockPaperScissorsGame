@@ -7,6 +7,9 @@ namespace TheRockPaperScissorsGame.API.Enums
 {
     public enum StatisticsType
     {
-        //WinStatisti
+        WinStatistics,
+        TimeStatistics,
+        MovesStatistics, 
+        WinPercentStatistics
     }
 }

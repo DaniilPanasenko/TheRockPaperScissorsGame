@@ -1,21 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using TheRockPaperScissorsGame.API.Contracts;
 
 namespace TheRockPaperScissorsGame.API.Services
 {
     public interface IStatisticsService
     {
-        List<UserResultDto<int>> GetWinsLeaderboard(int amount);
+        Task<List<UserResultDto<int>>> GetWinsLeaderboardAsync(int amount);
 
-        List<UserResultDto<TimeSpan>> GetTimeLeaderboard(int amount);
+        Task<List<UserResultDto<string>>> GetTimeLeaderboardAsync(int amount);
 
-        List<UserResultDto<decimal>> GetWinsPercentLeaderboard(int amount);
+        Task<List<UserResultDto<decimal>>> GetWinsPercentLeaderboardAsync(int amount);
 
-        ResultsDto GetUserResultsCount(string login);
+        Task<ResultsDto> GetUserResultsCountAsync(string login);
 
-        TimeSpan GetUserGameTime(string login);
+        Task<string> GetUserGameTimeAsync(string login);
 
-        MovesDto GetUserMovesStatistics(string login);
+        Task<MovesDto> GetUserMovesStatisticsAsync(string login);
     }
 }

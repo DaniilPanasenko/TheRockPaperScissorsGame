@@ -5,6 +5,10 @@
       {
         "player1Move": 1,
         "player2Move": 2
+      },
+      {
+        "player1Move": 0,
+        "player2Move": 0
       }
     ],
     "sessionStart": "2021-02-23T08:57:34.6370366Z",
@@ -49,6 +53,14 @@
       {
         "player1Move": 2,
         "player2Move": 1
+      },
+      {
+        "player1Move": 0,
+        "player2Move": 0
+      },
+      {
+        "player1Move": 0,
+        "player2Move": 0
       },
       {
         "player1Move": 0,

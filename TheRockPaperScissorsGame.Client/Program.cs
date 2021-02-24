@@ -26,7 +26,7 @@ namespace TheRockPaperScissorsGame.Client
 
             _userClient = new UserClient(httpClient);
             _gameClient = new GameClient(httpClient, storage);
-            _statisticClient = new StatisticClient(httpClient, storage);
+            _statisticClient = new StatisticClient(httpClient);
         }
 
         private static async Task<int> Main()

@@ -22,16 +22,20 @@ namespace TheRockPaperScissorsGame.Client.Menu
         {
             while (true)
             {
+                IMenu menu;
                 Console.Clear();
                 var options = new string[] { "Authorization", "Leaderboard", "Exit" };
+
                 var command = MenuLibrary.InputMenuItemNumber("Main", options);
                 switch (command)
                 {
                     case 1:
-                        IMenu menu = new AuthorizationMenu(_userClient, _gameClient, _statisticClient);
+                        menu = new AuthorizationMenu(_userClient, _gameClient, _statisticClient);
                         await menu.StartAsync();
                         break;
                     case 2:
+                        menu = new LeaderboardMenu(_userClient, _gameClient, _statisticClient);
+                        await menu.StartAsync();
                         break;
                     case 3:
                     default:

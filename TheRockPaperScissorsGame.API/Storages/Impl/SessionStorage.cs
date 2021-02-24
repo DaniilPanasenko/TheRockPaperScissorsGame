@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using TheRockPaperScissorsGame.API.Exceptions;
 using TheRockPaperScissorsGame.API.Models;
 
 namespace TheRockPaperScissorsGame.API.Storages.Impl
@@ -30,19 +29,32 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
             _session.ForEach(session => session.IsFinished = true);
         }
 
-        public List<Session> GetFinishedSessions()
+        public async Task<List<Session>> GetFinishedSessions()
         {
-            var successfulSessions = _session.Where(session => session.IsFinished && session.Rounds.Count != 0).ToList();
-
-            foreach (var session in successfulSessions)
+            await _lockSlim.WaitAsync();
+            try
             {
-                if (session.Rounds[session.Rounds.Count - 1].Player1Move == null || session.Rounds[session.Rounds.Count - 1].Player2Move == null)
+                if (_session == null)
                 {
-                    session.Rounds.RemoveAt(session.Rounds.Count - 1);
+                    await UploadDataAsync();
                 }
-            }
 
-            return successfulSessions = successfulSessions.Where(session => session.Rounds.Count != 0).ToList();
+                var successfulSessions = _session.Where(session => session.IsFinished && session.Rounds.Count != 0).ToList();
+
+                foreach (var session in successfulSessions)
+                {
+                    if (session.Rounds[session.Rounds.Count - 1].Player1Move == null || session.Rounds[session.Rounds.Count - 1].Player2Move == null)
+                    {
+                        session.Rounds.RemoveAt(session.Rounds.Count - 1);
+                    }
+                }
+
+                return successfulSessions = successfulSessions.Where(session => session.Rounds.Count != 0).ToList();
+            }
+            finally
+            {
+                _lockSlim.Release();
+            }
         }
 
         public async Task AddSessionAsync(Session newSession)
@@ -184,27 +196,12 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
                     await UploadDataAsync();
                 }
                 
-                await _jsonWorker.WriteDataIntoFileAsync(GetFinishedSessions());
+                await _jsonWorker.WriteDataIntoFileAsync(await GetFinishedSessions());
             }
             finally
             {
                 _lockSlim.Release();
             }
         }
-
-        //public List<Session> GetFinishedSessions()
-        //{
-        //    var successfulSessions = _session.Where(session => session.IsFinished && session.Rounds.Count != 0).ToList();
-
-        //    foreach (var session in successfulSessions)
-        //    {
-        //        if (session.Rounds[session.Rounds.Count - 1].Player1Move == null || session.Rounds[session.Rounds.Count - 1].Player2Move == null)
-        //        {
-        //            session.Rounds.RemoveAt(session.Rounds.Count - 1);
-        //        }
-        //    }
-
-        //    return successfulSessions = successfulSessions.Where(session => session.Rounds.Count != 0).ToList();
-        //}
     }
 }

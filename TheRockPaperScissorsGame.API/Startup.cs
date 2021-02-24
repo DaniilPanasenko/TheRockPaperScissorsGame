@@ -27,17 +27,17 @@ namespace TheRockPaperScissorsGame.API
         {
             services.AddSingleton<IAccountStorage, AccountStorage>();
             services.AddSingleton<ITokenStorage, TokenStorage>();
+            services.AddSingleton<ISessionStorage, SessionStorage>();
+
             services.AddSingleton<IUserBlockingService, UserBlockingService>();
             services.AddSingleton<IAuthService, AuthService>();
+
             services.AddSingleton(provider=>new JsonWorker<Account>("accountStorage.json"));
-
-
             services.AddSingleton(provider => new JsonWorker<Session>("sessionStorage.json"));
-            services.AddSingleton<ISessionStorage, SessionStorage>();
+         
             services.AddSingleton<IRoundService, RoundService>();
             services.AddSingleton<ISessionService, SessionService>();
-
-
+            services.AddSingleton<IStatisticsService, StatisticsService>();
 
             //services.AddSingleton<IGameService>(gameService);
 

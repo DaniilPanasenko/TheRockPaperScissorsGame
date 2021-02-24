@@ -1,17 +1,16 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using TheRockPaperScissorsGame.Client.Clients;
 
 namespace TheRockPaperScissorsGame.Client.Menu
 {
-    public class MainMenu : IMenu
+    public class UserMenu : IMenu
     {
         private UserClient _userClient;
         private GameClient _gameClient;
         private StatisticClient _statisticClient;
 
-        public MainMenu(UserClient userClient, GameClient gameClient, StatisticClient statisticClient)
+        public UserMenu(UserClient userClient, GameClient gameClient, StatisticClient statisticClient)
         {
             _userClient = userClient;
             _gameClient = gameClient;
@@ -22,15 +21,17 @@ namespace TheRockPaperScissorsGame.Client.Menu
         {
             while (true)
             {
-                var options = new string[] { "Authorization", "View rate", "Exit" };
-                var command = MenuLibrary.InputMenuItemNumber("Main", options);
+                Console.Clear();
+                var options = new string[] { "Game", "Statistics", "Logout" };
+                var command = MenuLibrary.InputMenuItemNumber("User", options);
                 switch (command)
                 {
                     case 1:
-                        IMenu menu = new AuthorizationMenu(_userClient, _gameClient, _statisticClient);
+                        IMenu menu = new GameStartMenu(_userClient, _gameClient, _statisticClient);
                         await menu.StartAsync();
                         break;
                     case 2:
+                        //
                         break;
                     case 3:
                     default:

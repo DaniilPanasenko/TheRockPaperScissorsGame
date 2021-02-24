@@ -4,7 +4,7 @@ using TheRockPaperScissorsGame.API.Contracts;
 
 namespace TheRockPaperScissorsGame.API.Services
 {
-    interface IStatisticsService
+    public interface IStatisticsService
     {
         List<UserResultDto<int>> GetWinsLeaderboard(int amount);
 

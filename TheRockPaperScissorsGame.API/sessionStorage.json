@@ -82,5 +82,35 @@
     "sessionFinished": "2021-02-23T11:48:33.363753Z",
     "player1Login": "iamdaniil",
     "player2Login": null
+  },
+  {
+    "roomNumber": "6bd2ab4b-8424-44af-afa1-97be7e91a11a",
+    "rounds": [
+      {
+        "player1Move": 0,
+        "player2Move": 2
+      },
+      {
+        "player1Move": 2,
+        "player2Move": 0
+      }
+    ],
+    "sessionStart": "2021-02-24T21:05:21.304098Z",
+    "sessionFinished": "2021-02-24T21:05:46.680875Z",
+    "player1Login": "ddddddddd",
+    "player2Login": null
+  },
+  {
+    "roomNumber": "68d1cef2-b9ce-4a23-ab92-79e715f63ce5",
+    "rounds": [
+      {
+        "player1Move": 0,
+        "player2Move": 0
+      }
+    ],
+    "sessionStart": "2021-02-24T21:20:53.020756Z",
+    "sessionFinished": "2021-02-24T21:20:58.742171Z",
+    "player1Login": "ddddddddd",
+    "player2Login": null
   }
 ]

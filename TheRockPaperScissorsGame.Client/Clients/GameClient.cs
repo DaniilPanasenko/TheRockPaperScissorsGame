@@ -49,6 +49,13 @@ namespace TheRockPaperScissorsGame.Client.Clients
             return response;
         }
 
+        public async Task<HttpResponseMessage> CheckMove()
+        {
+            var uri = new Uri(_httpClient.BaseAddress + "game/check_move/" + _valuesStorage.RoomId);
+            var response = await _httpClient.GetAsync(uri);
+            return response;
+        }
+
         public async Task<HttpResponseMessage> FinishSession()
         {
             var uri = new Uri(_httpClient.BaseAddress + "game/finish_session/" + _valuesStorage.RoomId);

@@ -111,7 +111,8 @@ namespace TheRockPaperScissorsGame.Client.Menu
                     name = ResponseDeserializer.Deserialize<string>(name);
                     MenuLibrary.WriteLineColor($"\nYour opponent is {name}\n", ConsoleColor.Green);
                     Thread.Sleep(1000);
-                    //Game
+                    IMenu menu = new GameMenu(_userClient, _gameClient, _statisticClient);
+                    await menu.StartAsync();
                     return;
                 }
                 else if(response.StatusCode == HttpStatusCode.Conflict)

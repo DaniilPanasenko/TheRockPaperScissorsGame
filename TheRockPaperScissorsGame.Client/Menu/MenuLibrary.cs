@@ -41,5 +41,12 @@ namespace TheRockPaperScissorsGame.Client.Menu
             Console.WriteLine(text);
             Console.ForegroundColor = ConsoleColor.White;
         }
+
+        public static void WriteColor(string text, ConsoleColor color)
+        {
+            Console.ForegroundColor = color;
+            Console.Write(text);
+            Console.ForegroundColor = ConsoleColor.White;
+        }
     }
 }

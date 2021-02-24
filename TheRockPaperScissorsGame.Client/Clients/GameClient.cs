@@ -5,6 +5,7 @@ using System.Net.Http.Formatting;
 using System.Threading.Tasks;
 using TheRockPaperScissorsGame.Client.Contracts;
 using TheRockPaperScissorsGame.Client.Contracts.Enums;
+using TheRockPaperScissorsGame.Client.Services;
 
 namespace TheRockPaperScissorsGame.Client.Clients
 {
@@ -28,6 +29,7 @@ namespace TheRockPaperScissorsGame.Client.Clients
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 var room = await response.Content.ReadAsStringAsync();
+                room = ResponseDeserializer.Deserialize<string>(room);
                 _valuesStorage.RoomId = room;
             }
             return response;

@@ -22,9 +22,11 @@ namespace TheRockPaperScissorsGame.Client.Menu
         {
             while (true)
             {
+
                 IMenu menu;
 
-                var options = new string[] { "Authorization", "View rate", "Exit" };
+                var options = new string[] { "Authorization", "Leaderboard", "Exit" };
+
                 var command = MenuLibrary.InputMenuItemNumber("Main", options);
                 switch (command)
                 {

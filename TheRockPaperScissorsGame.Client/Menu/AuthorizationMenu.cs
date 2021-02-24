@@ -100,7 +100,8 @@ namespace TheRockPaperScissorsGame.Client.Menu
                 {
                     MenuLibrary.WriteLineColor("\nSuccessfully registration\n", ConsoleColor.Green);
                     Thread.Sleep(1000);
-                    //profile
+                    IMenu menu = new UserMenu(_userClient, _gameClient, _statisticClient);
+                    await menu.StartAsync();
                     return;
                 }
                 else if (response.StatusCode == HttpStatusCode.BadRequest)

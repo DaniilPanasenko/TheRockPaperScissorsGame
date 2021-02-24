@@ -25,8 +25,8 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
 
         private async Task UploadDataAsync()
         {
-            _session = await _jsonWorker.ReadDataFromFileAsync();
-            _session.ForEach(session => session.IsFinished = true);
+                _session = await _jsonWorker.ReadDataFromFileAsync();
+                _session.ForEach(session => session.IsFinished = true);
         }
 
         public async Task<List<Session>> GetFinishedSessions()
@@ -195,13 +195,12 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
                 {
                     await UploadDataAsync();
                 }
-                
-                await _jsonWorker.WriteDataIntoFileAsync(await GetFinishedSessions());
             }
             finally
             {
                 _lockSlim.Release();
             }
+            await _jsonWorker.WriteDataIntoFileAsync(await GetFinishedSessions());
         }
     }
 }

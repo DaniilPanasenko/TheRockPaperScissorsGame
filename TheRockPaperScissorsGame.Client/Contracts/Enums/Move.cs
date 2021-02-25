@@ -1,5 +1,4 @@
-﻿using System;
-namespace TheRockPaperScissorsGame.Client.Contracts.Enums
+﻿namespace TheRockPaperScissorsGame.Client.Contracts.Enums
 {
     public enum Move
     {

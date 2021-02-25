@@ -1,5 +1,4 @@
-﻿using System;
-namespace TheRockPaperScissorsGame.Client.Contracts
+﻿namespace TheRockPaperScissorsGame.Client.Contracts
 {
     public class UserDto
     {

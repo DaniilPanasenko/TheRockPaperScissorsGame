@@ -50,21 +50,28 @@ namespace TheRockPaperScissorsGame.Client.Menu
                         move = Move.Scissors;
                         break;
                     case 4:
-                        await _gameClient.FinishSession();
+                        await _gameClient.FinishSessionAsync();
                         return;
                 }
 
-                var success = await DoMove(move);
-                if (!success) return;
+                var success = await DoMoveAsync(move);
+                if (!success)
+                {
+                    return;
+                }
 
-                success = await CheckMove();
-                if (!success) return;
+                success = await CheckMoveAsync();
+                if (!success)
+                {
+                    return;
+                }
             }
         }
 
-        public async Task<bool> DoMove(Move move)
+        public async Task<bool> DoMoveAsync(Move move)
         {
-            var response = await _gameClient.DoMove(move);
+            var response = await _gameClient.DoMoveAsync(move);
+
             if(response.StatusCode== HttpStatusCode.OK)
             {
                 _currentMove = move;
@@ -81,15 +88,16 @@ namespace TheRockPaperScissorsGame.Client.Menu
             {
                 throw new HttpListenerException();
             }
+
             return false;
         }
 
-        public async Task<bool> CheckMove()
+        public async Task<bool> CheckMoveAsync()
         {
             MenuLibrary.WriteLineColor("\nWait opponent...", ConsoleColor.DarkCyan);
             while (true)
             {
-                var response = await _gameClient.CheckMove();
+                var response = await _gameClient.CheckMoveAsync();
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
                     var resultJson = await response.Content.ReadAsStringAsync();
@@ -106,6 +114,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
                 {
                     throw new HttpListenerException();
                 }
+
                 Thread.Sleep(200);
             }
         }

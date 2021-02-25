@@ -1,5 +1,4 @@
-﻿using System;
-namespace TheRockPaperScissorsGame.Client.Clients
+﻿namespace TheRockPaperScissorsGame.Client.Clients
 {
     public class ValuesStorage
     {

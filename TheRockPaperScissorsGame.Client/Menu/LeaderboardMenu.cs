@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Net.Http;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using TheRockPaperScissorsGame.Client.Clients;
@@ -52,6 +50,11 @@ namespace TheRockPaperScissorsGame.Client.Menu
                 }
 
                 var content = await GetStatistcsAsync(statisticsType);
+                if (content == null)
+                {
+                    continue;
+                }
+
                 var results = JsonSerializer.Deserialize<List<UserResultDto>>(content);
                 ShowRate(results);
             }
@@ -74,7 +77,8 @@ namespace TheRockPaperScissorsGame.Client.Menu
             }
             else
             {
-                throw new HttpListenerException();
+                ResponseLibrary.UnknownResponse();
+                return null;
             }
         }
 

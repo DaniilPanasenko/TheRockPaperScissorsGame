@@ -4,10 +4,6 @@ namespace TheRockPaperScissorsGame.Client.Contracts
 {
     public class UserResultDto
     {
-        public UserResultDto()
-        {
-        }
-
         [JsonPropertyName("login")]
         public string Login { get; set; }
 

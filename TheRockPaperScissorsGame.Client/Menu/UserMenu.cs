@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using TheRockPaperScissorsGame.Client.Clients;
 using TheRockPaperScissorsGame.Client.Menu.Library;
 
@@ -40,7 +39,6 @@ namespace TheRockPaperScissorsGame.Client.Menu
                         await menu.StartAsync();
                         break;
                     case 3:
-                    default:
                         return;
                 }
             }

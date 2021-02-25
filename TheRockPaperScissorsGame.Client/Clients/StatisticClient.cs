@@ -20,21 +20,31 @@ namespace TheRockPaperScissorsGame.Client.Clients
             var response = await _httpClient.GetAsync(uri);
             return response;
         }
+
         public async Task<HttpResponseMessage> GetUserResultsAsync()
         {
             var uri = new Uri(_httpClient.BaseAddress + $"statistics/user_results");
             var response = await _httpClient.GetAsync(uri);
             return response;
         }
-        public async Task<HttpResponseMessage> GetUserGameTime()
+
+        public async Task<HttpResponseMessage> GetUserGameTimeAsync()
         {
             var uri = new Uri(_httpClient.BaseAddress + $"statistics/user_time");
             var response = await _httpClient.GetAsync(uri);
             return response;
         }
+
         public async Task<HttpResponseMessage> GetUserMovesAsync()
         {
             var uri = new Uri(_httpClient.BaseAddress + $"statistics/user_moves");
+            var response = await _httpClient.GetAsync(uri);
+            return response;
+        }
+
+        public async Task<HttpResponseMessage> GetUserResultByIntervalAsync(int? amount, TimeInterval interval)
+        {
+            var uri = new Uri(_httpClient.BaseAddress + $"statistics/result_by_time?amount={amount}&type={interval}");
             var response = await _httpClient.GetAsync(uri);
             return response;
         }

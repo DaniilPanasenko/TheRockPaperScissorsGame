@@ -4,10 +4,6 @@ namespace TheRockPaperScissorsGame.Client.Contracts
 {
     public class ResultsDto
     {
-        public ResultsDto()
-        {
-        }
-
         [JsonPropertyName("winCount")]
         public int WinCount { get; set; }
 

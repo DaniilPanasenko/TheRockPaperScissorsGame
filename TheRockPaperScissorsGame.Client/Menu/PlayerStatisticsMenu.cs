@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using TheRockPaperScissorsGame.Client.Contracts;
 using TheRockPaperScissorsGame.Client.Clients;
-using System.Threading;
 using TheRockPaperScissorsGame.Client.Menu.Library;
 using System.Net;
 
@@ -22,6 +20,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
             _gameClient = gameClient;
             _statisticClient = statisticClient;
         }
+
         public async Task StartAsync()
         {
             while (true)
@@ -43,7 +42,8 @@ namespace TheRockPaperScissorsGame.Client.Menu
                         await GetMovesStatistics();
                         break;
                     case 4:
-                        //
+                        IMenu menu = new IntervalResultsMenu(_userClient, _gameClient, _statisticClient);
+                        await menu.StartAsync();
                         break;
                     case 5:
                         return;
@@ -80,7 +80,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
 
         private async Task GetTotalTime()
         {
-            var response = await _statisticClient.GetUserGameTime();
+            var response = await _statisticClient.GetUserGameTimeAsync();
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 var time = await response.Content.ReadAsStringAsync();

@@ -17,11 +17,12 @@ namespace TheRockPaperScissorsGame.Client.Clients
             _httpClient = httpClient;
         }
 
-        public async Task<HttpResponseMessage> Login(string login, string password)
+        public async Task<HttpResponseMessage> LoginAsync(string login, string password)
         {
             var user = new UserDto(login, password);
             var uri = new Uri(_httpClient.BaseAddress + "users/login");
             var response = await _httpClient.PostAsync(uri, user, new JsonMediaTypeFormatter());
+
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 var token = await response.Content.ReadAsStringAsync();
@@ -29,14 +30,16 @@ namespace TheRockPaperScissorsGame.Client.Clients
                 _httpClient.DefaultRequestHeaders.Clear();
                 _httpClient.DefaultRequestHeaders.Add("Token", token);
             }
+
             return response;
         }
 
-        public async Task<HttpResponseMessage> Registration(string login, string password)
+        public async Task<HttpResponseMessage> RegistrationAsync(string login, string password)
         {
             var user = new UserDto(login, password);
             var uri = new Uri(_httpClient.BaseAddress + "users/register");
             var response = await _httpClient.PostAsync(uri, user, new JsonMediaTypeFormatter());
+
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 var token = await response.Content.ReadAsStringAsync();
@@ -44,6 +47,7 @@ namespace TheRockPaperScissorsGame.Client.Clients
                 _httpClient.DefaultRequestHeaders.Clear();
                 _httpClient.DefaultRequestHeaders.Add("Token", token);
             }
+
             return response;
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using TheRockPaperScissorsGame.Client.Clients;
+using TheRockPaperScissorsGame.Client.Menu.Library;
 
 namespace TheRockPaperScissorsGame.Client.Menu
 {
@@ -23,9 +24,11 @@ namespace TheRockPaperScissorsGame.Client.Menu
             {
                 IMenu menu;
 
-                Console.Clear();
+                MenuLibrary.Clear();
+
                 var options = new string[] { "Game", "Statistics", "Logout" };
-                var command = MenuLibrary.InputMenuItemNumber("User", options);
+                var command = MenuLibrary.InputMenuItemNumber("User Menu", options);
+
                 switch (command)
                 {
                     case 1:

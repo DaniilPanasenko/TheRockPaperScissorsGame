@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using TheRockPaperScissorsGame.Client.Clients;
 using TheRockPaperScissorsGame.Client.Menu;
+using TheRockPaperScissorsGame.Client.Menu.Library;
 using TheRockPaperScissorsGame.Client.Models;
 
 namespace TheRockPaperScissorsGame.Client

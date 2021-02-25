@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Net;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using TheRockPaperScissorsGame.Client.Clients;
 using TheRockPaperScissorsGame.Client.Contracts.Enums;
+using TheRockPaperScissorsGame.Client.Menu.Library;
 using TheRockPaperScissorsGame.Client.Services;
 
 namespace TheRockPaperScissorsGame.Client.Menu
@@ -25,11 +27,14 @@ namespace TheRockPaperScissorsGame.Client.Menu
         {
             while (true)
             {
-                Console.Clear();
+                MenuLibrary.Clear();
+
                 var options = new string[] { "Public game", "Private game", "Train game", "Back" };
-                var command = MenuLibrary.InputMenuItemNumber("Game", options);
+                var command = MenuLibrary.InputMenuItemNumber("Game Menu", options);
+
                 RoomType roomType;
                 string roomId = null;
+
                 switch (command)
                 {
                     case 1:
@@ -53,7 +58,8 @@ namespace TheRockPaperScissorsGame.Client.Menu
         private string ChoosePrivateRoom()
         {
             var options = new string[] { "Start private room", "Connect to private room" };
-            var command = MenuLibrary.InputMenuItemNumber("Private room", options);
+            var command = MenuLibrary.InputMenuItemNumber("Private room Menu", options);
+
             if (command == 1)
             {
                 return null;
@@ -71,32 +77,28 @@ namespace TheRockPaperScissorsGame.Client.Menu
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 MenuLibrary.WriteLineColor("\nSuccessfully started game\n", ConsoleColor.Green);
+
                 if(roomType==RoomType.Private && roomId == null)
                 {
                     var roomNumber = await response.Content.ReadAsStringAsync();
                     roomNumber = ResponseDeserializer.Deserialize<string>(roomNumber);
-                    Console.Write("Your room number: ");
+
+                    MenuLibrary.WriteColor("Your room number: ", ConsoleColor.White);
                     MenuLibrary.WriteLineColor(roomNumber, ConsoleColor.Green);
-                    Console.WriteLine("Say it your friend to connection.");
+                    MenuLibrary.WriteLineColor("Say it your friend to connection.", ConsoleColor.White);
                 }
                 MenuLibrary.WriteLineColor("\nWait for the opponent...\n", ConsoleColor.DarkCyan);
+
                 await WaitPlayer();
-                return;
             }
             else if (response.StatusCode == HttpStatusCode.BadRequest ||
                      response.StatusCode == HttpStatusCode.Conflict)
             {
-                var jsonResponse = await response.Content.ReadAsStringAsync();
-                var textResponse = ResponseDeserializer.Deserialize<string>(jsonResponse);
-                MenuLibrary.WriteLineColor($"\n{textResponse}", ConsoleColor.Red);
-                Console.WriteLine("Please repeat starting game.");
-                Thread.Sleep(3000);
+                await ResponseLibrary.RepeatOperationWithMessageAsync<string>(response);
             }
             else
             {
-                MenuLibrary.WriteLineColor("\nSorry, something went wrong, try it later\n", ConsoleColor.Red);
-                Thread.Sleep(3000);
-                return;
+                ResponseLibrary.UnknownResponse();
             }
         }
 
@@ -108,25 +110,23 @@ namespace TheRockPaperScissorsGame.Client.Menu
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
                     var name = await response.Content.ReadAsStringAsync();
-                    name = ResponseDeserializer.Deserialize<string>(name);
+                    name = JsonSerializer.Deserialize<string>(name);
+
                     MenuLibrary.WriteLineColor($"\nYour opponent is {name}\n", ConsoleColor.Green);
                     Thread.Sleep(1000);
+
                     IMenu menu = new GameMenu(_userClient, _gameClient, _statisticClient);
                     await menu.StartAsync();
                     return;
                 }
                 else if(response.StatusCode == HttpStatusCode.Conflict)
                 {
-                    var exception = await response.Content.ReadAsStringAsync();
-                    exception = ResponseDeserializer.Deserialize<string>(exception);
-                    MenuLibrary.WriteLineColor($"\nSorry, your game is finished because of {exception}\n", ConsoleColor.Red);
-                    Thread.Sleep(3000);
+                    await ResponseLibrary.GameFinishedResponseAsync(response);
                     return;
                 }
                 else if(response.StatusCode != HttpStatusCode.NotFound)
                 {
-                    MenuLibrary.WriteLineColor("\nSorry, something went wrong, try it later\n", ConsoleColor.Red);
-                    Thread.Sleep(3000);
+                    ResponseLibrary.UnknownResponse();
                     return;
                 }
                 Thread.Sleep(200);

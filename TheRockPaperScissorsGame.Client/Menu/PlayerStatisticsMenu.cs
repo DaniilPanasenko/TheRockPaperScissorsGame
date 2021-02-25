@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using TheRockPaperScissorsGame.Client.Contracts;
 using TheRockPaperScissorsGame.Client.Clients;
 using System.Threading;
+using TheRockPaperScissorsGame.Client.Menu.Library;
+using System.Net;
 
 namespace TheRockPaperScissorsGame.Client.Menu
 {
@@ -24,63 +26,106 @@ namespace TheRockPaperScissorsGame.Client.Menu
         {
             while (true)
             {
-                Console.Clear();
-                HttpResponseMessage result;
-                string content;
+                MenuLibrary.Clear();
 
-                var options = new string[] { "Total results", "Total playing time", "Moves statistics", "Back" };
-                var command = MenuLibrary.InputMenuItemNumber("PlayerStatistics", options);
+                var options = new string[] { "Total results", "Total playing time", "Moves statistics", "Results by the time", "Back" };
+                var command = MenuLibrary.InputMenuItemNumber("Player statistics Menu", options);
+
                 switch (command)
                 {
                     case 1:
-                        result = await _statisticClient.GetUserResultsAsync();
-
-                        content = await result.Content.ReadAsStringAsync();
-
-                        var results = JsonSerializer.Deserialize<ResultsDto>(content);
-
-                        Console.Clear();
-
-                        Console.WriteLine("Your statistics: ");
-
-                        Console.WriteLine($"Wins: {results.WinCount}");
-                        Console.WriteLine($"Draws: {results.DrawCount}");
-                        Console.WriteLine($"Losses: {results.LossCount}");
-
-                        Console.WriteLine("Press any key to return to the player statistics menu");
-                        Console.ReadKey();
+                        await GetResults();
                         break;
                     case 2:
-                        result = await _statisticClient.GetUserGameTime();
-                        // Another method to show the information?\
-                        Console.Clear();
-
-                        Console.WriteLine($"Time, spended in the game:  {await result.Content.ReadAsStringAsync()}");
-
-                        Console.WriteLine("Press any key to return to the player statistics menu");
-                        Console.ReadKey();
+                        await GetTotalTime();
                         break;
                     case 3:
-                        result = await _statisticClient.GetUserMovesAsync();
-
-                        content = await result.Content.ReadAsStringAsync();
-
-                        var movesResults = JsonSerializer.Deserialize<MovesDto>(content);
-
-                        Console.Clear();
-
-                        Console.WriteLine($"Rock: {movesResults.RockCount}");
-                        Console.WriteLine($"Scissors: {movesResults.PaperCount}");
-                        Console.WriteLine($"Paper: {movesResults.ScissorsCount}");
-
-                        Console.WriteLine("Press any key to return to the player statistics menu");
-                        Console.ReadKey();
-
+                        await GetMovesStatistics();
                         break;
                     case 4:
-                    default:
+                        //
+                        break;
+                    case 5:
                         return;
                 }
+            }
+        }
+
+        private async Task GetResults()
+        {
+            var response = await _statisticClient.GetUserResultsAsync();
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var results = JsonSerializer.Deserialize<ResultsDto>(content);
+
+                MenuLibrary.WriteLineColor("\nYour results:\n", ConsoleColor.Yellow);
+
+                MenuLibrary.WriteColor("Wins: ", ConsoleColor.Yellow);
+                MenuLibrary.WriteLineColor(results.WinCount.ToString(), ConsoleColor.White);
+
+                MenuLibrary.WriteColor("Draws: ", ConsoleColor.Yellow);
+                MenuLibrary.WriteLineColor(results.DrawCount.ToString(), ConsoleColor.White);
+
+                MenuLibrary.WriteColor("Losses: ", ConsoleColor.Yellow);
+                MenuLibrary.WriteLineColor(results.LossCount.ToString(), ConsoleColor.White);
+
+                MenuLibrary.WriteLineColor("\nPress any key to return to the player statistics menu", ConsoleColor.DarkCyan);
+                Console.ReadKey();
+            }
+            else
+            {
+                ResponseLibrary.UnknownResponse();
+                return;
+            }
+        }
+
+        private async Task GetTotalTime()
+        {
+            var response = await _statisticClient.GetUserGameTime();
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                var time = await response.Content.ReadAsStringAsync();
+
+                MenuLibrary.WriteColor("Total time in the game: ", ConsoleColor.Yellow);
+                MenuLibrary.WriteLineColor(time, ConsoleColor.White);
+
+                MenuLibrary.WriteLineColor("\nPress any key to return to the player statistics menu", ConsoleColor.DarkCyan);
+                Console.ReadKey();
+            }
+            else
+            {
+                ResponseLibrary.UnknownResponse();
+                return;
+            }
+        }
+
+        private async Task GetMovesStatistics()
+        {
+            var response = await _statisticClient.GetUserMovesAsync();
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var results = JsonSerializer.Deserialize<MovesDto>(content);
+
+                MenuLibrary.WriteLineColor("\nYour moves:\n", ConsoleColor.Yellow);
+
+                MenuLibrary.WriteColor("Rock: ", ConsoleColor.Yellow);
+                MenuLibrary.WriteLineColor(results.RockCount.ToString(), ConsoleColor.White);
+
+                MenuLibrary.WriteColor("Paper: ", ConsoleColor.Yellow);
+                MenuLibrary.WriteLineColor(results.PaperCount.ToString(), ConsoleColor.White);
+
+                MenuLibrary.WriteColor("Scissors: ", ConsoleColor.Yellow);
+                MenuLibrary.WriteLineColor(results.ScissorsCount.ToString(), ConsoleColor.White);
+
+                MenuLibrary.WriteLineColor("\nPress any key to return to the player statistics menu", ConsoleColor.DarkCyan);
+                Console.ReadKey();
+            }
+            else
+            {
+                ResponseLibrary.UnknownResponse();
+                return;
             }
         }
     }

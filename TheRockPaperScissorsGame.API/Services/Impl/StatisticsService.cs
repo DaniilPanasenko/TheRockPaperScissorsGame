@@ -18,7 +18,7 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
             _sessionStorage = sessionStorage;
         }
 
-        public async Task<List<UserResultDto<int>>> GetWinsLeaderboardAsync(int amount)
+        public async Task<List<UserResultDto>> GetWinsLeaderboardAsync(int amount)
         {
             if (amount < 0)
             {
@@ -29,14 +29,14 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
 
             var users = GetUsers(sessions);
 
-            List<UserResultDto<int>> usersResults = new List<UserResultDto<int>>();
+            List<UserResultDto> usersResults = new List<UserResultDto>();
 
             foreach (var user in users)
             {
-                usersResults.Add(new UserResultDto<int>
+                usersResults.Add(new UserResultDto
                 {
                     Login = user,
-                    Result = GetWinsCount(sessions, user)
+                    Result = GetWinsCount(sessions, user).ToString()
                 });
             }
 
@@ -45,7 +45,7 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
             return usersResults.Take(amount).ToList();
         }
 
-        public async Task<List<UserResultDto<string>>> GetTimeLeaderboardAsync(int amount)
+        public async Task<List<UserResultDto>> GetTimeLeaderboardAsync(int amount)
         {
             if (amount < 0)
             {
@@ -56,11 +56,11 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
 
             var users = GetUsers(sessions);
 
-            List<UserResultDto<string>> usersResults = new List<UserResultDto<string>>();
+            List<UserResultDto> usersResults = new List<UserResultDto>();
 
             foreach (var user in users)
             {
-                usersResults.Add(new UserResultDto<string>
+                usersResults.Add(new UserResultDto
                 {
                     Login = user,
                     Result = await GetUserGameTimeAsync(user)
@@ -72,7 +72,7 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
             return usersResults.Take(amount).ToList();
         }
 
-        public async Task<List<UserResultDto<decimal>>> GetWinsPercentLeaderboardAsync(int amount)
+        public async Task<List<UserResultDto>> GetWinsPercentLeaderboardAsync(int amount)
         {
             if (amount < 0)
             {
@@ -83,14 +83,14 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
 
             var users = GetUsers(sessions);
 
-            List<UserResultDto<decimal>> usersResults = new List<UserResultDto<decimal>>();
+            List<UserResultDto> usersResults = new List<UserResultDto>();
 
             foreach (var user in users)
             {
-                usersResults.Add(new UserResultDto<decimal>
+                usersResults.Add(new UserResultDto
                 {
                     Login = user,
-                    Result = GetWinsPercent(sessions, user)
+                    Result = GetWinsPercent(sessions, user).ToString()
                 });
             }
 

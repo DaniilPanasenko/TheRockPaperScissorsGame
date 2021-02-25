@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using TheRockPaperScissorsGame.Client.Clients;
+using TheRockPaperScissorsGame.Client.Menu.Library;
 
 namespace TheRockPaperScissorsGame.Client.Menu
 {
@@ -23,10 +24,12 @@ namespace TheRockPaperScissorsGame.Client.Menu
             while (true)
             {
                 IMenu menu;
-                Console.Clear();
-                var options = new string[] { "Authorization", "Leaderboard", "Exit" };
 
-                var command = MenuLibrary.InputMenuItemNumber("Main", options);
+                MenuLibrary.Clear();
+
+                var options = new string[] { "Authorization", "Leaderboard", "Exit" };
+                var command = MenuLibrary.InputMenuItemNumber("Main Menu", options);
+
                 switch (command)
                 {
                     case 1:
@@ -38,7 +41,6 @@ namespace TheRockPaperScissorsGame.Client.Menu
                         await menu.StartAsync();
                         break;
                     case 3:
-                    default:
                         return;
                 }
             }

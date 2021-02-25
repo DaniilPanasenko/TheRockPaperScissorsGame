@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using TheRockPaperScissorsGame.Client.Clients;
+using TheRockPaperScissorsGame.Client.Menu.Library;
 using TheRockPaperScissorsGame.Client.Models;
 using TheRockPaperScissorsGame.Client.Services;
 
@@ -25,9 +27,11 @@ namespace TheRockPaperScissorsGame.Client.Menu
         {
             while (true)
             {
-                Console.Clear();
+                MenuLibrary.Clear();
+
                 var options = new string[] { "Login", "Registration", "Back" };
-                var command = MenuLibrary.InputMenuItemNumber("Authorization", options);
+                var command = MenuLibrary.InputMenuItemNumber("Authorization Menu", options);
+
                 switch (command)
                 {
                     case 1:
@@ -37,7 +41,6 @@ namespace TheRockPaperScissorsGame.Client.Menu
                         await ExecuteRegistration();
                         break;
                     case 3:
-                    default:
                         return;
                 }
             }
@@ -45,85 +48,57 @@ namespace TheRockPaperScissorsGame.Client.Menu
 
         private async Task ExecuteLogin()
         {
-            Console.Clear();
+            MenuLibrary.Clear();
             while (true)
             {
                 MenuLibrary.WriteLineColor("\nLogin\n", ConsoleColor.Yellow);
+
                 string login = MenuLibrary.InputStringValue("login");
                 string password = MenuLibrary.InputStringValue("password");
 
                 var response = await _userClient.Login(login, password);
 
-                if (response.StatusCode == HttpStatusCode.OK)
-                {
-                    MenuLibrary.WriteLineColor("\nSuccessfully login\n", ConsoleColor.Green);
-                    Thread.Sleep(1000);
-                    IMenu menu = new UserMenu(_userClient, _gameClient, _statisticClient);
-                    await menu.StartAsync();
-                    return;
-                }
-                else if (response.StatusCode == HttpStatusCode.BadRequest)
-                {
-                    var jsonResponse = await response.Content.ReadAsStringAsync();
-                    var textResponse = ResponseDeserializer.Deserialize<UserValidaionResponse>(jsonResponse);
-                    MenuLibrary.WriteLineColor($"\n{textResponse}", ConsoleColor.Red);
-                    Console.WriteLine("Please repeat login.");
-                }
-                else if (response.StatusCode == HttpStatusCode.Unauthorized)
-                {
-                    var jsonResponse = await response.Content.ReadAsStringAsync();
-                    var textResponse = ResponseDeserializer.Deserialize<string>(jsonResponse);
-                    MenuLibrary.WriteLineColor($"\n{textResponse}\n", ConsoleColor.Red);
-                    Console.WriteLine("Please repeat login.");
-                }
-                else
-                {
-                    MenuLibrary.WriteLineColor("\nSorry, something went wrong, try it later\n", ConsoleColor.Red);
-                    Thread.Sleep(3000);
-                    return;
-                }
+                if (await ResponseHandler(response, "login")) return;
             }
         }
 
         private async Task ExecuteRegistration()
         {
-            Console.Clear();
+            MenuLibrary.Clear();
             while (true)
             {
                 MenuLibrary.WriteLineColor("\nRegistration\n", ConsoleColor.Yellow);
+
                 string login = MenuLibrary.InputStringValue("login");
                 string password = MenuLibrary.InputStringValue("password");
 
                 var response = await _userClient.Registration(login, password);
 
-                if (response.StatusCode == HttpStatusCode.OK)
-                {
-                    MenuLibrary.WriteLineColor("\nSuccessfully registration\n", ConsoleColor.Green);
-                    Thread.Sleep(1000);
-                    IMenu menu = new UserMenu(_userClient, _gameClient, _statisticClient);
-                    await menu.StartAsync();
-                    return;
-                }
-                else if (response.StatusCode == HttpStatusCode.BadRequest)
-                {
-                    var jsonResponse = await response.Content.ReadAsStringAsync();
-                    var textResponse = ResponseDeserializer.Deserialize<UserValidaionResponse>(jsonResponse);
-                    MenuLibrary.WriteLineColor($"\n{textResponse}", ConsoleColor.Red);
-                    Console.WriteLine("Please repeat registration.");
-                }
-                else if (response.StatusCode == HttpStatusCode.Unauthorized)
-                {
-                    var jsonResponse = await response.Content.ReadAsStringAsync();
-                    var textResponse = ResponseDeserializer.Deserialize<string>(jsonResponse);
-                    MenuLibrary.WriteLineColor($"\n{textResponse}\n", ConsoleColor.Red);
-                    Console.WriteLine("Please repeat registartion.");
-                }
-                else
-                {
-                    MenuLibrary.WriteLineColor("\nSorry, something went wrong, try it later\n", ConsoleColor.Red);
-                    Thread.Sleep(3000);
-                    return;
-                }
+                if (await ResponseHandler(response, "registration")) return;
+            }
+        }
+
+        private async Task<bool> ResponseHandler(HttpResponseMessage response, string operation)
+        {
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                ResponseLibrary.SuccessfullyOperation(operation);
+
+                IMenu menu = new UserMenu(_userClient, _gameClient, _statisticClient);
+                await menu.StartAsync();
+
+                return true;
+            }
+            else if (response.StatusCode == HttpStatusCode.BadRequest
+                    || response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                await ResponseLibrary.RepeatOperationWithMessageAsync<UserValidaionResponse>(response);
+                return false;
+            }
+            else
+            {
+                ResponseLibrary.UnknownResponse();
+                return true;
             }
         }
     }

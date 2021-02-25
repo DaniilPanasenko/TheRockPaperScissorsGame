@@ -187,7 +187,7 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
                     interval = TimeSpan.FromMinutes(1);
                     break;
             }
-            var fromTime = new DateTime(DateTime.UtcNow.Ticks % interval.Ticks);
+            var fromTime = new DateTime(DateTime.UtcNow.Ticks + 1000 - DateTime.UtcNow.Ticks % interval.Ticks);
             results.Add(new ResultsByTimeDto(fromTime.ToString()));
             foreach(var session in sessions)
             {

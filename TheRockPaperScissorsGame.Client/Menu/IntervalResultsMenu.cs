@@ -89,8 +89,9 @@ namespace TheRockPaperScissorsGame.Client.Menu
             int place = 1;
             foreach (var result in results)
             {
-                MenuLibrary.WriteColor($"{place}. {result.Time}->", ConsoleColor.White);
-                MenuLibrary.WriteLineColor(result.WinCount.ToString() + " : ", ConsoleColor.Green);
+                MenuLibrary.WriteColor($"{place}. {result.Time} -> ", ConsoleColor.White);
+                MenuLibrary.WriteColor(result.WinCount.ToString(), ConsoleColor.Green);
+                MenuLibrary.WriteColor(" : ", ConsoleColor.White);
                 MenuLibrary.WriteLineColor(result.LossCount.ToString(), ConsoleColor.Red);
                 place++;
             }

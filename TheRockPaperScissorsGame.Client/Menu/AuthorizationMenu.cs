@@ -88,16 +88,19 @@ namespace TheRockPaperScissorsGame.Client.Menu
 
                 return true;
             }
-            else if (response.StatusCode == HttpStatusCode.BadRequest
-                    || response.StatusCode == HttpStatusCode.Unauthorized)
+            else if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                await ResponseLibrary.RepeatOperationWithMessageAsync<string>(response);
+                return false;
+            }
+            else if (response.StatusCode == HttpStatusCode.BadRequest)
             {
                 await ResponseLibrary.RepeatOperationWithMessageAsync<UserValidaionResponse>(response);
                 return false;
             }
             else
             {
-                ResponseLibrary.UnknownResponse();
-                return true;
+                throw new HttpListenerException();
             }
         }
     }

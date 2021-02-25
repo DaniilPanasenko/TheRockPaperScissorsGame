@@ -29,7 +29,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
                 IMenu menu;
 
                 var options = new string[] { "Leaderboard", "Player statistics", "Back" };
-                var command = MenuLibrary.InputMenuItemNumber("Statistics", options);
+                var command = MenuLibrary.InputMenuItemNumber("Statistics Menu", options);
                 switch (command)
                 {
                     case 1:

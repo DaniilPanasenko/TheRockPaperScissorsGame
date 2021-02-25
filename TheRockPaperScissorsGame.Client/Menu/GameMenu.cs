@@ -79,7 +79,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
             }
             else
             {
-                ResponseLibrary.UnknownResponse();
+                throw new HttpListenerException();
             }
             return false;
         }
@@ -104,8 +104,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
                 }
                 else if(response.StatusCode != HttpStatusCode.NotFound)
                 {
-                    ResponseLibrary.UnknownResponse();
-                    return false;
+                    throw new HttpListenerException();
                 }
                 Thread.Sleep(200);
             }

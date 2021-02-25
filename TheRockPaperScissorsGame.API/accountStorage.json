@@ -58,5 +58,13 @@
   {
     "login": "string10",
     "password": "string10"
+  },
+  {
+    "login": "player01",
+    "password": "12345678"
+  },
+  {
+    "login": "player02",
+    "password": "12345678"
   }
 ]

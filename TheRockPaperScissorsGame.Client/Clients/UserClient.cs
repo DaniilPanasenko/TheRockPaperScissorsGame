@@ -26,6 +26,7 @@ namespace TheRockPaperScissorsGame.Client.Clients
             {
                 var token = await response.Content.ReadAsStringAsync();
                 token = JsonSerializer.Deserialize<string>(token);
+                _httpClient.DefaultRequestHeaders.Clear();
                 _httpClient.DefaultRequestHeaders.Add("Token", token);
             }
             return response;
@@ -40,6 +41,7 @@ namespace TheRockPaperScissorsGame.Client.Clients
             {
                 var token = await response.Content.ReadAsStringAsync();
                 token = JsonSerializer.Deserialize<string>(token);
+                _httpClient.DefaultRequestHeaders.Clear();
                 _httpClient.DefaultRequestHeaders.Add("Token", token);
             }
             return response;

@@ -13,7 +13,7 @@ namespace TheRockPaperScissorsGame.API.Models
     {
         private TimeSpan _connectionTimeOut = TimeSpan.FromMinutes(1);
 
-        private TimeSpan _roundTimeOut = TimeSpan.FromSeconds(20);
+        private TimeSpan _roundTimeOut = TimeSpan.FromSeconds(2000);
 
         static SemaphoreSlim _lockSlim = new SemaphoreSlim(1, 1);
 
@@ -150,13 +150,12 @@ namespace TheRockPaperScissorsGame.API.Models
                     throw new GameFinishedException(GameEndReason.RoundTimeOut);
                 }
                 var lastRound = Rounds[Rounds.Count - 1];
-
+                if (lastRound.Player1Move == null || lastRound.Player2Move == null)
+                {
+                    return null;
+                }
                 if (isFirst)
                 {
-                    if (lastRound.Player1Move == null)
-                    {
-                        return null;
-                    }
                     var result = new RoundResultDto()
                     {
                         OpponentMove = lastRound.Player2Move.ToString(),
@@ -170,13 +169,9 @@ namespace TheRockPaperScissorsGame.API.Models
                 }
                 else
                 {
-                    if (lastRound.Player2Move == null)
-                    {
-                        return null;
-                    }
                     var result = new RoundResultDto()
                     {
-                        OpponentMove = lastRound.Player2Move.ToString(),
+                        OpponentMove = lastRound.Player1Move.ToString(),
                         Result = lastRound.WinType == WinType.Draw
                                 ? RoundResultFromUserSide.Draw
                                 : lastRound.WinType == WinType.SecondPlayer

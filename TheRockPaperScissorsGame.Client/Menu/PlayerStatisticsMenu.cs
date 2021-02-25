@@ -74,8 +74,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
             }
             else
             {
-                ResponseLibrary.UnknownResponse();
-                return;
+                throw new HttpListenerException();
             }
         }
 
@@ -94,8 +93,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
             }
             else
             {
-                ResponseLibrary.UnknownResponse();
-                return;
+                throw new HttpListenerException();
             }
         }
 
@@ -122,8 +120,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
             }
             else
             {
-                ResponseLibrary.UnknownResponse();
-                return;
+                throw new HttpListenerException();
             }
         }
     }

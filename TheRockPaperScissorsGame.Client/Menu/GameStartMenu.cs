@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using TheRockPaperScissorsGame.Client.Clients;
 using TheRockPaperScissorsGame.Client.Contracts.Enums;
 using TheRockPaperScissorsGame.Client.Menu.Library;
-using TheRockPaperScissorsGame.Client.Services;
 
 namespace TheRockPaperScissorsGame.Client.Menu
 {
@@ -81,7 +80,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
                 if(roomType==RoomType.Private && roomId == null)
                 {
                     var roomNumber = await response.Content.ReadAsStringAsync();
-                    roomNumber = ResponseDeserializer.Deserialize<string>(roomNumber);
+                    roomNumber = JsonSerializer.Deserialize<string>(roomNumber);
 
                     MenuLibrary.WriteColor("Your room number: ", ConsoleColor.White);
                     MenuLibrary.WriteLineColor(roomNumber, ConsoleColor.Green);

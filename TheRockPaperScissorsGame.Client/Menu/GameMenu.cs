@@ -4,8 +4,10 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using TheRockPaperScissorsGame.Client.Clients;
+using TheRockPaperScissorsGame.Client.Contracts;
 using TheRockPaperScissorsGame.Client.Contracts.Enums;
 using TheRockPaperScissorsGame.Client.Menu.Library;
+using TheRockPaperScissorsGame.Client.Models;
 
 namespace TheRockPaperScissorsGame.Client.Menu
 {
@@ -15,19 +17,22 @@ namespace TheRockPaperScissorsGame.Client.Menu
         private GameClient _gameClient;
         private StatisticClient _statisticClient;
 
+        private SessionResults _sessionResults;
+        private Move _currentMove; 
+
         public GameMenu(UserClient userClient, GameClient gameClient, StatisticClient statisticClient)
         {
             _userClient = userClient;
             _gameClient = gameClient;
             _statisticClient = statisticClient;
+            _sessionResults = new SessionResults();
         }
 
         public async Task StartAsync()
         {
             while (true)
             {
-                MenuLibrary.Clear();
-                MenuLibrary.WriteLineColor("\nGame\n", ConsoleColor.Yellow);
+                PrintHeader();
 
                 var options = new string[] { "Rock", "Paper", "Scissors", "Quit" };
                 var command = MenuLibrary.InputMenuItemNumber("Choose command", options);
@@ -54,8 +59,6 @@ namespace TheRockPaperScissorsGame.Client.Menu
 
                 success = await CheckMove();
                 if (!success) return;
-
-                Thread.Sleep(2000);
             }
         }
 
@@ -64,8 +67,10 @@ namespace TheRockPaperScissorsGame.Client.Menu
             var response = await _gameClient.DoMove(move);
             if(response.StatusCode== HttpStatusCode.OK)
             {
-                MenuLibrary.WriteColor($"\nYour move: {move}\n", ConsoleColor.White);
-                MenuLibrary.WriteLineColor($"{move}\n", ConsoleColor.Green);
+                _currentMove = move;
+                PrintHeader();
+                MenuLibrary.WriteColor($"\nYour move: ", ConsoleColor.White);
+                MenuLibrary.WriteLineColor($"{_currentMove}", ConsoleColor.DarkCyan);
                 return true;
             }
             else if (response.StatusCode == HttpStatusCode.Conflict)
@@ -81,17 +86,15 @@ namespace TheRockPaperScissorsGame.Client.Menu
 
         public async Task<bool> CheckMove()
         {
-            MenuLibrary.WriteLineColor("Wait opponent...", ConsoleColor.DarkCyan);
+            MenuLibrary.WriteLineColor("\nWait opponent...", ConsoleColor.DarkCyan);
             while (true)
             {
                 var response = await _gameClient.CheckMove();
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    var move = await response.Content.ReadAsStringAsync();
-                    move = JsonSerializer.Deserialize<string>(move);
-
-                    MenuLibrary.WriteColor($"\nOpponent move: {move}\n", ConsoleColor.White);
-                    MenuLibrary.WriteLineColor($"{move}\n", ConsoleColor.Green);
+                    var resultJson = await response.Content.ReadAsStringAsync();
+                    var result = JsonSerializer.Deserialize<RoundResultDto>(resultJson);
+                    PrintResult(result);
                     return true;
                 }
                 else if (response.StatusCode == HttpStatusCode.Conflict)
@@ -106,6 +109,54 @@ namespace TheRockPaperScissorsGame.Client.Menu
                 }
                 Thread.Sleep(200);
             }
+        }
+
+        public void PrintHeader()
+        {
+            MenuLibrary.Clear();
+            MenuLibrary.WriteLineColor("\nGame\n", ConsoleColor.Yellow);
+            MenuLibrary.WriteColor("Results: ", ConsoleColor.White);
+            MenuLibrary.WriteColor($"{_sessionResults.WinCount} : ", ConsoleColor.Green);
+            MenuLibrary.WriteColor($"{_sessionResults.DrawCount} : ", ConsoleColor.Yellow);
+            MenuLibrary.WriteLineColor($"{_sessionResults.LossesCount}", ConsoleColor.Red);
+        }
+
+        public void PrintResult(RoundResultDto result)
+        {
+            string resultString = "";
+            ConsoleColor color = ConsoleColor.White;
+
+            switch (result.Result)
+            {
+                case 1:
+                    _sessionResults.WinCount++;
+                    resultString = "Win";
+                    color = ConsoleColor.Green;
+                    break;
+                case 0:
+                    _sessionResults.DrawCount++;
+                    resultString = "Draw";
+                    color = ConsoleColor.Yellow;
+                    break;
+                case -1:
+                    _sessionResults.LossesCount++;
+                    resultString = "Lose";
+                    color = ConsoleColor.Red;
+                    break;
+            }
+
+            PrintHeader();
+
+            MenuLibrary.WriteColor($"\nYour move: ", ConsoleColor.White);
+            MenuLibrary.WriteLineColor($"{_currentMove}", ConsoleColor.DarkCyan);
+
+            MenuLibrary.WriteColor($"Opponent move: ", ConsoleColor.White);
+            MenuLibrary.WriteLineColor($"{result.OpponentMove}", ConsoleColor.DarkCyan);
+
+            MenuLibrary.WriteColor($"\nResult: ", ConsoleColor.White);
+            MenuLibrary.WriteLineColor(resultString, color);
+
+            MenuLibrary.PressAnyKey();
         }
     }
 }

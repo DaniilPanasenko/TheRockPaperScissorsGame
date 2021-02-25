@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using TheRockPaperScissorsGame.API.Contracts;
 using TheRockPaperScissorsGame.API.Enums;
 
 namespace TheRockPaperScissorsGame.API.Services
@@ -8,6 +9,6 @@ namespace TheRockPaperScissorsGame.API.Services
     {
         public Task DoMoveAsync(string login, string id, Move move);
 
-        public Task<Move?> CheckMoveAsync(string login, string id);
+        public Task<RoundResultDto> CheckMoveAsync(string login, string id);
     }
 }

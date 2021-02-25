@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using TheRockPaperScissorsGame.API.Contracts;
 using TheRockPaperScissorsGame.API.Enums;
 using TheRockPaperScissorsGame.API.Exceptions;
 
@@ -135,7 +136,7 @@ namespace TheRockPaperScissorsGame.API.Models
             }
         }
 
-        public async Task<Move?> GetMoveAsync(bool isFirst)
+        public async Task<RoundResultDto> GetMoveAsync(bool isFirst)
         {
             await _lockSlim.WaitAsync();
             try
@@ -152,11 +153,20 @@ namespace TheRockPaperScissorsGame.API.Models
 
                 if (isFirst)
                 {
-                    if(lastRound.Player1Move==null)
+                    if (lastRound.Player1Move == null)
                     {
                         return null;
                     }
-                    return lastRound.Player2Move;
+                    var result = new RoundResultDto()
+                    {
+                        OpponentMove = lastRound.Player2Move.ToString(),
+                        Result = lastRound.WinType == WinType.Draw
+                                ? RoundResultFromUserSide.Draw
+                                : lastRound.WinType == WinType.FirstPlayer
+                                    ? RoundResultFromUserSide.YouWin
+                                    : RoundResultFromUserSide.OpponentWin
+                    };
+                    return result;
                 }
                 else
                 {
@@ -164,7 +174,16 @@ namespace TheRockPaperScissorsGame.API.Models
                     {
                         return null;
                     }
-                    return lastRound.Player1Move;
+                    var result = new RoundResultDto()
+                    {
+                        OpponentMove = lastRound.Player2Move.ToString(),
+                        Result = lastRound.WinType == WinType.Draw
+                                ? RoundResultFromUserSide.Draw
+                                : lastRound.WinType == WinType.SecondPlayer
+                                    ? RoundResultFromUserSide.YouWin
+                                    : RoundResultFromUserSide.OpponentWin
+                    };
+                    return result;
                 }
             }
             finally

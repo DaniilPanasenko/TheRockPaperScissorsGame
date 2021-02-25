@@ -70,8 +70,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
                 MenuLibrary.WriteColor("Losses: ", ConsoleColor.Yellow);
                 MenuLibrary.WriteLineColor(results.LossCount.ToString(), ConsoleColor.White);
 
-                MenuLibrary.WriteLineColor("\nPress any key to return to the player statistics menu", ConsoleColor.DarkCyan);
-                Console.ReadKey();
+                MenuLibrary.PressAnyKey();
             }
             else
             {
@@ -86,12 +85,12 @@ namespace TheRockPaperScissorsGame.Client.Menu
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 var time = await response.Content.ReadAsStringAsync();
+                time = JsonSerializer.Deserialize<string>(time);
 
-                MenuLibrary.WriteColor("Total time in the game: ", ConsoleColor.Yellow);
+                MenuLibrary.WriteColor("\nTotal time in the game: ", ConsoleColor.Yellow);
                 MenuLibrary.WriteLineColor(time, ConsoleColor.White);
 
-                MenuLibrary.WriteLineColor("\nPress any key to return to the player statistics menu", ConsoleColor.DarkCyan);
-                Console.ReadKey();
+                MenuLibrary.PressAnyKey();
             }
             else
             {
@@ -119,8 +118,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
                 MenuLibrary.WriteColor("Scissors: ", ConsoleColor.Yellow);
                 MenuLibrary.WriteLineColor(results.ScissorsCount.ToString(), ConsoleColor.White);
 
-                MenuLibrary.WriteLineColor("\nPress any key to return to the player statistics menu", ConsoleColor.DarkCyan);
-                Console.ReadKey();
+                MenuLibrary.PressAnyKey();
             }
             else
             {

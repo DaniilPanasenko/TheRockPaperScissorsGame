@@ -36,6 +36,10 @@ namespace TheRockPaperScissorsGame.Client
             {
                 MenuLibrary.WriteLineColor("The Rock Paper Scissors Game. Designed by Karyna Bilotska and Daniil Panasenko\n", ConsoleColor.DarkGreen);
 
+                //maybe rules or some information
+
+                MenuLibrary.PressAnyKey();
+
                 Setup();
 
                 IMenu mainMenu = new MainMenu(_userClient, _gameClient, _statisticClient);

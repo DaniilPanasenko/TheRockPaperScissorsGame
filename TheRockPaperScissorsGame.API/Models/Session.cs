@@ -90,13 +90,17 @@ namespace TheRockPaperScissorsGame.API.Models
 
         public async Task AddMoveAsync(bool isFirst, Move move)
         {
+            if (RoundTimeOut)
+            {
+                throw new GameFinishedException(GameEndReason.RoundTimeOut);
+            }
+            if (IsFinished)
+            {
+                throw new GameFinishedException(GameEndReason.RivalLeftGame);
+            }
             await _lockSlim.WaitAsync();
             try
             {
-                if (RoundTimeOut)
-                {
-                    throw new GameFinishedException(GameEndReason.RoundTimeOut);
-                }
                 Round round;
                 if (Rounds.Count == 0)
                 {
@@ -111,13 +115,9 @@ namespace TheRockPaperScissorsGame.API.Models
                         round = new Round();
                         Rounds.Add(round);
                     }
-                    else if ((isFirst && lastRound.Player1Move == null) || (!isFirst && lastRound.Player2Move == null))
-                    {
-                        round = lastRound;
-                    }
                     else
                     {
-                        throw new MoveException("User has already made a move");
+                        round = lastRound;
                     }
                 }
                 if (isFirst)
@@ -138,17 +138,21 @@ namespace TheRockPaperScissorsGame.API.Models
 
         public async Task<RoundResultDto> GetMoveAsync(bool isFirst)
         {
+            if (RoundTimeOut)
+            {
+                throw new GameFinishedException(GameEndReason.RoundTimeOut);
+            }
+            if (IsFinished)
+            {
+                throw new GameFinishedException(GameEndReason.RivalLeftGame);
+            }
+            if (Rounds.Count == 0)
+            {
+                throw new MoveException("User has not made a move yet");
+            }
             await _lockSlim.WaitAsync();
             try
             {
-                if (Rounds.Count == 0)
-                {
-                    throw new MoveException("User has not made a move yet");
-                }
-                if (RoundTimeOut)
-                {
-                    throw new GameFinishedException(GameEndReason.RoundTimeOut);
-                }
                 var lastRound = Rounds[Rounds.Count - 1];
                 if (lastRound.Player1Move == null || lastRound.Player2Move == null)
                 {

@@ -121,6 +121,33 @@ namespace TheRockPaperScissorsGame.API.Controllers
             return Ok(result);
         }
 
+        [HttpGet]
+        [Route("results_by_time")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult> GetResultsByTimeAsync(int? amount, TimeInterval timeInterval)
+        {
+            var login = GetLogin();
+
+            if (login == null)
+            {
+                return Unauthorized();
+            }
+
+            if (amount == null)
+            {
+                amount = int.MaxValue;
+            }
+
+            if (amount < 0)
+            {
+                return BadRequest();
+            }
+
+            var result = await _statisticsService.GetResultsByTimeAsync(login,(int)amount, timeInterval);
+            return Ok(result);
+        }
+
         [NonAction]
         private string GetLogin()
         {

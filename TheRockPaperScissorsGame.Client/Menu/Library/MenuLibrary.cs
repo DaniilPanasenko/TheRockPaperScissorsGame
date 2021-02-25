@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace TheRockPaperScissorsGame.Client.Menu.Library
 {
     public static class MenuLibrary
@@ -34,7 +35,7 @@ namespace TheRockPaperScissorsGame.Client.Menu.Library
             return value;
         }
 
-        public static int InputIntegerValue(string valueName,int min, int max)
+        public static int InputIntegerValue(string valueName, int min, int max)
         {
             WriteLineColor($"Enter {valueName} ...", ConsoleColor.DarkCyan);
             int value;

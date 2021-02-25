@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using TheRockPaperScissorsGame.Client.Clients;
 using TheRockPaperScissorsGame.Client.Menu.Library;
 
@@ -19,7 +16,6 @@ namespace TheRockPaperScissorsGame.Client.Menu
             _gameClient = gameClient;
             _statisticClient = statisticClient;
         }
-
 
         public async Task StartAsync()
         {
@@ -41,7 +37,6 @@ namespace TheRockPaperScissorsGame.Client.Menu
                         await menu.StartAsync();
                         break;
                     case 3:
-                    default:
                         return;
                 }
             }

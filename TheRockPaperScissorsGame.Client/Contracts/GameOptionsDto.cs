@@ -1,5 +1,4 @@
-﻿using System;
-using TheRockPaperScissorsGame.Client.Contracts.Enums;
+﻿using TheRockPaperScissorsGame.Client.Contracts.Enums;
 
 namespace TheRockPaperScissorsGame.Client.Contracts
 {

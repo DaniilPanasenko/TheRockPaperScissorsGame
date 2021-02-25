@@ -50,7 +50,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
                     default:
                         return;
                 }
-                await GameStart(roomType, roomId);
+                await GameStartAsync(roomType, roomId);
             }
         }
 
@@ -69,15 +69,15 @@ namespace TheRockPaperScissorsGame.Client.Menu
             }
         }
 
-        private async Task GameStart(RoomType roomType, string roomId)
+        private async Task GameStartAsync(RoomType roomType, string roomId)
         {
-            var response = await _gameClient.StartSession(roomType, roomId);
+            var response = await _gameClient.StartSessionAsync(roomType, roomId);
 
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 MenuLibrary.WriteLineColor("\nSuccessfully started game\n", ConsoleColor.Green);
 
-                if(roomType==RoomType.Private && roomId == null)
+                if (roomType == RoomType.Private && roomId == null)
                 {
                     var roomNumber = await response.Content.ReadAsStringAsync();
                     roomNumber = JsonSerializer.Deserialize<string>(roomNumber);
@@ -88,7 +88,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
                 }
                 MenuLibrary.WriteLineColor("\nWait for the opponent...\n", ConsoleColor.DarkCyan);
 
-                await WaitPlayer();
+                await WaitPlayerAsync();
             }
             else if (response.StatusCode == HttpStatusCode.BadRequest ||
                      response.StatusCode == HttpStatusCode.Conflict)
@@ -101,11 +101,12 @@ namespace TheRockPaperScissorsGame.Client.Menu
             }
         }
 
-        private async Task WaitPlayer()
+        private async Task WaitPlayerAsync()
         {
             while (true)
             {
-                var response = await _gameClient.CheckSession();
+                var response = await _gameClient.CheckSessionAsync();
+
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
                     var name = await response.Content.ReadAsStringAsync();
@@ -127,6 +128,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
                 {
                     throw new HttpListenerException();
                 }
+
                 Thread.Sleep(200);
             }
         }

@@ -422,5 +422,164 @@
     "sessionFinished": "2021-02-25T19:54:38.368999Z",
     "player1Login": "player01",
     "player2Login": "player02"
+  },
+  {
+    "roomNumber": "d7102908-f128-40a6-8803-75f6780fc838",
+    "rounds": [
+      {
+        "player1Move": 1,
+        "player2Move": 1
+      },
+      {
+        "player1Move": 0,
+        "player2Move": 1
+      },
+      {
+        "player1Move": 1,
+        "player2Move": 2
+      },
+      {
+        "player1Move": 2,
+        "player2Move": 2
+      }
+    ],
+    "sessionStart": "2021-02-25T20:22:42.3401982Z",
+    "sessionFinished": "2021-02-25T20:23:59.8626863Z",
+    "player1Login": "DaniilPanasenko",
+    "player2Login": null
+  },
+  {
+    "roomNumber": "d43d0f75-9253-4dbb-ab30-1669b53fdf5e",
+    "rounds": [
+      {
+        "player1Move": 0,
+        "player2Move": 0
+      },
+      {
+        "player1Move": 1,
+        "player2Move": 0
+      },
+      {
+        "player1Move": 0,
+        "player2Move": 2
+      },
+      {
+        "player1Move": 2,
+        "player2Move": 0
+      },
+      {
+        "player1Move": 0,
+        "player2Move": 0
+      }
+    ],
+    "sessionStart": "2021-02-25T20:22:47.432062Z",
+    "sessionFinished": "2021-02-25T20:27:00.4455245Z",
+    "player1Login": "zxcvbnmas",
+    "player2Login": "12345678"
+  },
+  {
+    "roomNumber": "09e41fed-a6b0-4859-8b72-fa614123880f",
+    "rounds": [
+      {
+        "player1Move": 0,
+        "player2Move": 0
+      },
+      {
+        "player1Move": 0,
+        "player2Move": 1
+      },
+      {
+        "player1Move": 0,
+        "player2Move": 1
+      },
+      {
+        "player1Move": 0,
+        "player2Move": 0
+      },
+      {
+        "player1Move": 0,
+        "player2Move": 0
+      },
+      {
+        "player1Move": 0,
+        "player2Move": 2
+      },
+      {
+        "player1Move": 0,
+        "player2Move": 1
+      },
+      {
+        "player1Move": 0,
+        "player2Move": 1
+      },
+      {
+        "player1Move": 0,
+        "player2Move": 0
+      },
+      {
+        "player1Move": 0,
+        "player2Move": 0
+      },
+      {
+        "player1Move": 0,
+        "player2Move": 0
+      },
+      {
+        "player1Move": 1,
+        "player2Move": 2
+      },
+      {
+        "player1Move": 1,
+        "player2Move": 1
+      },
+      {
+        "player1Move": 1,
+        "player2Move": 2
+      },
+      {
+        "player1Move": 1,
+        "player2Move": 2
+      },
+      {
+        "player1Move": 2,
+        "player2Move": 1
+      },
+      {
+        "player1Move": 2,
+        "player2Move": 1
+      },
+      {
+        "player1Move": 2,
+        "player2Move": 0
+      },
+      {
+        "player1Move": 2,
+        "player2Move": 0
+      },
+      {
+        "player1Move": 2,
+        "player2Move": 2
+      },
+      {
+        "player1Move": 2,
+        "player2Move": 1
+      },
+      {
+        "player1Move": 2,
+        "player2Move": 0
+      },
+      {
+        "player1Move": 2,
+        "player2Move": 1
+      },
+      {
+        "player1Move": 2,
+        "player2Move": 0
+      }
+    ],
+    "sessionStart": "2021-02-25T20:23:15.8913049Z",
+    "sessionFinished": "2021-02-25T20:25:19.0582752Z",
+    "player1Login": "boo3030555",
+    "player2Login": null
   }
 ]

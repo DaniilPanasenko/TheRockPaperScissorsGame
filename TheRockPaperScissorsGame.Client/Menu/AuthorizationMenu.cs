@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 using TheRockPaperScissorsGame.Client.Clients;
 using TheRockPaperScissorsGame.Client.Menu.Library;
@@ -34,10 +33,10 @@ namespace TheRockPaperScissorsGame.Client.Menu
                 switch (command)
                 {
                     case 1:
-                        await ExecuteLogin();
+                        await ExecuteLoginAsync();
                         break;
                     case 2:
-                        await ExecuteRegistration();
+                        await ExecuteRegistrationAsync();
                         break;
                     case 3:
                         return;
@@ -45,7 +44,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
             }
         }
 
-        private async Task ExecuteLogin()
+        private async Task ExecuteLoginAsync()
         {
             MenuLibrary.Clear();
             while (true)
@@ -55,13 +54,16 @@ namespace TheRockPaperScissorsGame.Client.Menu
                 string login = MenuLibrary.InputStringValue("login");
                 string password = MenuLibrary.InputStringValue("password");
 
-                var response = await _userClient.Login(login, password);
+                var response = await _userClient.LoginAsync(login, password);
 
-                if (await ResponseHandler(response, "login")) return;
+                if (await ResponseHandlerAsync(response, "login"))
+                {
+                    return;
+                }
             }
         }
 
-        private async Task ExecuteRegistration()
+        private async Task ExecuteRegistrationAsync()
         {
             MenuLibrary.Clear();
             while (true)
@@ -71,13 +73,16 @@ namespace TheRockPaperScissorsGame.Client.Menu
                 string login = MenuLibrary.InputStringValue("login");
                 string password = MenuLibrary.InputStringValue("password");
 
-                var response = await _userClient.Registration(login, password);
+                var response = await _userClient.RegistrationAsync(login, password);
 
-                if (await ResponseHandler(response, "registration")) return;
+                if (await ResponseHandlerAsync(response, "registration"))
+                {
+                    return;
+                }
             }
         }
 
-        private async Task<bool> ResponseHandler(HttpResponseMessage response, string operation)
+        private async Task<bool> ResponseHandlerAsync(HttpResponseMessage response, string operation)
         {
             if (response.StatusCode == HttpStatusCode.OK)
             {

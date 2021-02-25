@@ -66,5 +66,21 @@
   {
     "login": "player02",
     "password": "12345678"
+  },
+  {
+    "login": "aaaaaaakkkkk",
+    "password": "12345676543"
+  },
+  {
+    "login": "oqqqqqqqqqqqq",
+    "password": "12121212121"
+  },
+  {
+    "login": "qaaaaaaaaaaa",
+    "password": "1212121212"
+  },
+  {
+    "login": "1asdfgjhrew",
+    "password": "asdfghjtre"
   }
 ]

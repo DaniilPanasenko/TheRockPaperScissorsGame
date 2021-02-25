@@ -52,8 +52,6 @@ namespace TheRockPaperScissorsGame.Client.Menu
                 }
 
                 var content = await GetStatistcsAsync(statisticsType);
-                if (content == null) continue;
-
                 var results = JsonSerializer.Deserialize<List<UserResultDto>>(content);
                 ShowRate(results);
             }
@@ -76,8 +74,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
             }
             else
             {
-                ResponseLibrary.UnknownResponse();
-                return null;
+                throw new HttpListenerException();
             }
         }
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Net;
 using System.Net.Mime;
 using System.Threading.Tasks;
@@ -85,6 +86,7 @@ namespace TheRockPaperScissorsGame.API.Controllers
         {
             var login = GetLogin();
             if (login == null) return Unauthorized();
+
             try
             {
                 var playerName = await _sessionService.CheckSessionAsync(roomId, login);

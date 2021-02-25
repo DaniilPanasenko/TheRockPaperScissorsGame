@@ -5,7 +5,7 @@ namespace TheRockPaperScissorsGame.Client.Menu.Library
     {
         public static int InputMenuItemNumber(string menuName, string[] commands)
         {
-            WriteLineColor($"\n{menuName} Menu:", ConsoleColor.Yellow);
+            WriteLineColor($"\n{menuName}:", ConsoleColor.Yellow);
             for (int i = 0; i < commands.Length; i++)
             {
                 Console.WriteLine($"{i + 1} - {commands[i]}");

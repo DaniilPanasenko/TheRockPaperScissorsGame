@@ -32,26 +32,29 @@ namespace TheRockPaperScissorsGame.Client
 
         private static async Task<int> Main()
         {
-            try
+            while (true)
             {
-                MenuLibrary.WriteLineColor("The Rock Paper Scissors Game. Designed by Karyna Bilotska and Daniil Panasenko\n", ConsoleColor.DarkGreen);
+                try
+                {
+                    MenuLibrary.Clear();
+                    MenuLibrary.WriteLineColor("The Rock Paper Scissors Game. Designed by Karyna Bilotska and Daniil Panasenko\n", ConsoleColor.DarkGreen);
 
-                //maybe rules or some information
+                    //maybe rules or some information
 
-                MenuLibrary.PressAnyKey();
+                    MenuLibrary.PressAnyKey();
 
-                Setup();
+                    Setup();
 
-                IMenu mainMenu = new MainMenu(_userClient, _gameClient, _statisticClient);
-                await mainMenu.StartAsync();
+                    IMenu mainMenu = new MainMenu(_userClient, _gameClient, _statisticClient);
+                    await mainMenu.StartAsync();
 
-                return 0;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Critical unhandled exception");
-                Console.WriteLine(ex);
-                return -1;
+                    return 0;
+                }
+                catch (Exception)
+                {
+                    ResponseLibrary.UnknownResponse();
+                    MenuLibrary.PressAnyKey();
+                }
             }
         }
     }

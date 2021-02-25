@@ -97,7 +97,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
             }
             else
             {
-                ResponseLibrary.UnknownResponse();
+                throw new HttpListenerException();
             }
         }
 
@@ -112,7 +112,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
                     name = JsonSerializer.Deserialize<string>(name);
 
                     MenuLibrary.WriteLineColor($"\nYour opponent is {name}\n", ConsoleColor.Green);
-                    Thread.Sleep(1000);
+                    MenuLibrary.PressAnyKey();
 
                     IMenu menu = new GameMenu(_userClient, _gameClient, _statisticClient);
                     await menu.StartAsync();
@@ -125,8 +125,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
                 }
                 else if(response.StatusCode != HttpStatusCode.NotFound)
                 {
-                    ResponseLibrary.UnknownResponse();
-                    return;
+                    throw new HttpListenerException();
                 }
                 Thread.Sleep(200);
             }

@@ -19,8 +19,8 @@ namespace TheRockPaperScissorsGame.Client.Menu.Library
 
         public static void UnknownResponse()
         {
-            MenuLibrary.WriteLineColor("\nSorry, something went wrong, try it later\n", ConsoleColor.Red);
-            Thread.Sleep(3000);
+            MenuLibrary.WriteLineColor("\nSorry, something went wrong\n", ConsoleColor.Red);
+            Thread.Sleep(1000);
         }
 
         public static void SuccessfullyOperation(string operation)

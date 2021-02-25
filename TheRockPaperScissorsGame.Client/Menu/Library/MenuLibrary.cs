@@ -1,5 +1,5 @@
 ﻿using System;
-namespace TheRockPaperScissorsGame.Client.Menu
+namespace TheRockPaperScissorsGame.Client.Menu.Library
 {
     public static class MenuLibrary
     {
@@ -47,6 +47,11 @@ namespace TheRockPaperScissorsGame.Client.Menu
             Console.ForegroundColor = color;
             Console.Write(text);
             Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        public static void Clear()
+        {
+            Console.Clear();
         }
     }
 }

@@ -6,11 +6,11 @@ namespace TheRockPaperScissorsGame.API.Services
 {
     public interface IStatisticsService
     {
-        Task<List<UserResultDto<int>>> GetWinsLeaderboardAsync(int amount);
+        Task<List<UserResultDto>> GetWinsLeaderboardAsync(int amount);
 
-        Task<List<UserResultDto<string>>> GetTimeLeaderboardAsync(int amount);
+        Task<List<UserResultDto>> GetTimeLeaderboardAsync(int amount);
 
-        Task<List<UserResultDto<decimal>>> GetWinsPercentLeaderboardAsync(int amount);
+        Task<List<UserResultDto>> GetWinsPercentLeaderboardAsync(int amount);
 
         Task<ResultsDto> GetUserResultsCountAsync(string login);
 

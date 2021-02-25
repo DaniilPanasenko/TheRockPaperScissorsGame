@@ -1,9 +1,9 @@
 ﻿namespace TheRockPaperScissorsGame.API.Contracts
 {
-    public class UserResultDto<T>
+    public class UserResultDto
     {
         public string Login { get; set; }
 
-        public T Result { get; set; }
+        public string Result { get; set; }
     }
 }

@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using TheRockPaperScissorsGame.Client.Clients;
 using TheRockPaperScissorsGame.Client.Contracts.Enums;
+using TheRockPaperScissorsGame.Client.Menu.Library;
 
 namespace TheRockPaperScissorsGame.Client.Menu
 {
@@ -25,10 +26,12 @@ namespace TheRockPaperScissorsGame.Client.Menu
         {
             while (true)
             {
-                Console.Clear();
+                MenuLibrary.Clear();
                 MenuLibrary.WriteLineColor("\nGame\n", ConsoleColor.Yellow);
+
                 var options = new string[] { "Rock", "Paper", "Scissors", "Quit" };
                 var command = MenuLibrary.InputMenuItemNumber("Choose command", options);
+
                 Move move = Move.Rock;
                 switch (command)
                 {
@@ -45,10 +48,13 @@ namespace TheRockPaperScissorsGame.Client.Menu
                         await _gameClient.FinishSession();
                         return;
                 }
+
                 var success = await DoMove(move);
                 if (!success) return;
+
                 success = await CheckMove();
                 if (!success) return;
+
                 Thread.Sleep(2000);
             }
         }
@@ -58,26 +64,24 @@ namespace TheRockPaperScissorsGame.Client.Menu
             var response = await _gameClient.DoMove(move);
             if(response.StatusCode== HttpStatusCode.OK)
             {
-                MenuLibrary.WriteLineColor($"\nYour move: {move}\n", ConsoleColor.Green);
+                MenuLibrary.WriteColor($"\nYour move: {move}\n", ConsoleColor.White);
+                MenuLibrary.WriteLineColor($"{move}\n", ConsoleColor.Green);
                 return true;
             }
             else if (response.StatusCode == HttpStatusCode.Conflict)
             {
-                var exception = await response.Content.ReadAsStringAsync();
-                exception = JsonSerializer.Deserialize<string>(exception);
-                MenuLibrary.WriteLineColor($"\nSorry, your game is finished because of {exception}\n", ConsoleColor.Red);
-                Thread.Sleep(3000);
+                await ResponseLibrary.GameFinishedResponseAsync(response);
             }
             else
             {
-                MenuLibrary.WriteLineColor("\nSorry, something went wrong, try it later\n", ConsoleColor.Red);
-                Thread.Sleep(3000);
+                ResponseLibrary.UnknownResponse();
             }
             return false;
         }
 
         public async Task<bool> CheckMove()
         {
+            MenuLibrary.WriteLineColor("Wait opponent...", ConsoleColor.DarkCyan);
             while (true)
             {
                 var response = await _gameClient.CheckMove();
@@ -85,24 +89,22 @@ namespace TheRockPaperScissorsGame.Client.Menu
                 {
                     var move = await response.Content.ReadAsStringAsync();
                     move = JsonSerializer.Deserialize<string>(move);
-                    MenuLibrary.WriteLineColor($"\nOpponent move: {move}\n", ConsoleColor.Green);
+
+                    MenuLibrary.WriteColor($"\nOpponent move: {move}\n", ConsoleColor.White);
+                    MenuLibrary.WriteLineColor($"{move}\n", ConsoleColor.Green);
                     return true;
                 }
                 else if (response.StatusCode == HttpStatusCode.Conflict)
                 {
-                    var exception = await response.Content.ReadAsStringAsync();
-                    exception = JsonSerializer.Deserialize<string>(exception);
-                    MenuLibrary.WriteLineColor($"\nSorry, your game is finished because of {exception}\n", ConsoleColor.Red);
-                    Thread.Sleep(3000);
+                    await ResponseLibrary.GameFinishedResponseAsync(response);
                     return false;
                 }
                 else if(response.StatusCode != HttpStatusCode.NotFound)
                 {
-                    MenuLibrary.WriteLineColor("\nSorry, something went wrong, try it later\n", ConsoleColor.Red);
-                    Thread.Sleep(3000);
+                    ResponseLibrary.UnknownResponse();
                     return false;
                 }
-                Thread.Sleep(100);
+                Thread.Sleep(200);
             }
         }
     }

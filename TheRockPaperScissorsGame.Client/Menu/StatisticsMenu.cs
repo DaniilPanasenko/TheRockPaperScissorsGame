@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using TheRockPaperScissorsGame.Client.Clients;
+using TheRockPaperScissorsGame.Client.Menu.Library;
 
 namespace TheRockPaperScissorsGame.Client.Menu
 {
@@ -24,7 +25,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
         {
             while (true)
             {
-                Console.Clear();
+                MenuLibrary.Clear();
                 IMenu menu;
 
                 var options = new string[] { "Leaderboard", "Player statistics", "Back" };

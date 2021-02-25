@@ -136,18 +136,18 @@ namespace TheRockPaperScissorsGame.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<ActionResult<string>> CheckMoveAsync(string roomId)
+        public async Task<ActionResult> CheckMoveAsync(string roomId)
         {
             var login = GetLogin();
             if (login == null) return Unauthorized();
 
             try
             {
-                var move = await _roundService.CheckMoveAsync(login, roomId);
+                var result = await _roundService.CheckMoveAsync(login, roomId);
 
-                if (move == null) return NotFound();
+                if (result == null) return NotFound();
 
-                return Ok(move.ToString());
+                return Ok(result);
             }
             catch (MoveException ex)
             {

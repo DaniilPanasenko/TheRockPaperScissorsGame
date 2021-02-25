@@ -57,13 +57,16 @@ namespace TheRockPaperScissorsGame.Client.Menu
                 var results = JsonSerializer.Deserialize<List<UserResultDto>>(content);
                 ShowRate(results);
             }
-            throw new NotImplementedException();
         }
 
         private async Task<string> GetStatistcsAsync(StatisticsType type)
         {
             var options = new string[] { "Set the amount of best players in the rate", "Show all players in the rate" };
-            var amount = MenuLibrary.InputMenuItemNumber("Please, choose", options);
+            var command = MenuLibrary.InputMenuItemNumber("Please, choose", options);
+
+            var amount = command == 1
+                ? MenuLibrary.InputIntegerValue("amount", 1, int.MaxValue)
+                : int.MaxValue;
 
             var response = await _statisticClient.GetLeaderboardAsync(amount, type);
             if (response.StatusCode == HttpStatusCode.OK)
@@ -86,7 +89,9 @@ namespace TheRockPaperScissorsGame.Client.Menu
             {
                 MenuLibrary.WriteColor($"{place}. {result.Login}: ", ConsoleColor.White);
                 MenuLibrary.WriteLineColor(result.Result, ConsoleColor.Yellow);
+                place++;
             }
+            MenuLibrary.PressAnyKey();
         }
     }
 }

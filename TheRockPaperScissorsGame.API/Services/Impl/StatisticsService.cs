@@ -40,7 +40,7 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
                 });
             }
 
-            usersResults = usersResults.OrderByDescending(result => result.Result).ToList();
+            usersResults = usersResults.OrderByDescending(result => int.Parse(result.Result)).ToList();
 
             return usersResults.Take(amount).ToList();
         }
@@ -67,7 +67,7 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
                 });
             }
 
-            usersResults = usersResults.OrderByDescending(result => result.Result).ToList();
+            usersResults = usersResults.OrderByDescending(result => TimeSpan.Parse(result.Result)).ToList();
 
             return usersResults.Take(amount).ToList();
         }
@@ -94,7 +94,7 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
                 });
             }
 
-            usersResults = usersResults.OrderByDescending(result => result.Result).ToList();
+            usersResults = usersResults.OrderByDescending(result => decimal.Parse(result.Result)).ToList();
 
             return usersResults.Take(amount).ToList();
            

@@ -2,9 +2,9 @@
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
+using System.Text.Json;
 using System.Threading.Tasks;
 using TheRockPaperScissorsGame.Client.Contracts;
-using TheRockPaperScissorsGame.Client.Services;
 
 namespace TheRockPaperScissorsGame.Client.Clients
 {
@@ -25,7 +25,7 @@ namespace TheRockPaperScissorsGame.Client.Clients
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 var token = await response.Content.ReadAsStringAsync();
-                token = ResponseDeserializer.Deserialize<string>(token);
+                token = JsonSerializer.Deserialize<string>(token);
                 _httpClient.DefaultRequestHeaders.Add("Token", token);
             }
             return response;
@@ -39,7 +39,7 @@ namespace TheRockPaperScissorsGame.Client.Clients
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 var token = await response.Content.ReadAsStringAsync();
-                token = ResponseDeserializer.Deserialize<string>(token);
+                token = JsonSerializer.Deserialize<string>(token);
                 _httpClient.DefaultRequestHeaders.Add("Token", token);
             }
             return response;

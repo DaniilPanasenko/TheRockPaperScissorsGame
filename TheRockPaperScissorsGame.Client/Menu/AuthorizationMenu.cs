@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using TheRockPaperScissorsGame.Client.Clients;
 using TheRockPaperScissorsGame.Client.Menu.Library;
 using TheRockPaperScissorsGame.Client.Models;
-using TheRockPaperScissorsGame.Client.Services;
 
 namespace TheRockPaperScissorsGame.Client.Menu
 {

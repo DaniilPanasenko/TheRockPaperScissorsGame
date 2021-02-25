@@ -28,9 +28,20 @@ namespace TheRockPaperScissorsGame.Client.Menu.Library
             while (string.IsNullOrEmpty(value.Trim()))
             {
                 WriteLineColor($"You entered empty {valueName}", ConsoleColor.Red);
-                Console.WriteLine($"You entered empty {valueName}");
-                WriteLineColor($"Enter {valueName} ...", ConsoleColor.DarkCyan);
+                WriteLineColor($"\nEnter {valueName} ...", ConsoleColor.DarkCyan);
                 value = Console.ReadLine();
+            }
+            return value;
+        }
+
+        public static int InputIntegerValue(string valueName,int min, int max)
+        {
+            WriteLineColor($"Enter {valueName} ...", ConsoleColor.DarkCyan);
+            int value;
+            while (!int.TryParse(Console.ReadLine(), out value) || value < min || value > max)
+            {
+                WriteLineColor($"You entered incorrect {valueName}", ConsoleColor.Red);
+                WriteLineColor($"\nEnter {valueName} ...", ConsoleColor.DarkCyan);
             }
             return value;
         }
@@ -47,6 +58,12 @@ namespace TheRockPaperScissorsGame.Client.Menu.Library
             Console.ForegroundColor = color;
             Console.Write(text);
             Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        public static void PressAnyKey()
+        {
+            WriteLineColor("\nPress any key to continue", ConsoleColor.DarkCyan);
+            Console.ReadKey();
         }
 
         public static void Clear()

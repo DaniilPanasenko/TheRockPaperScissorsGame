@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TheRockPaperScissorsGame.API.Contracts;
 using TheRockPaperScissorsGame.API.Enums;
 using TheRockPaperScissorsGame.API.Exceptions;
 using TheRockPaperScissorsGame.API.Storages;
@@ -52,7 +53,7 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
             }
         }
 
-        public async Task <Move?> CheckMoveAsync(string login, string id)
+        public async Task <RoundResultDto> CheckMoveAsync(string login, string id)
         {
             if (login == null)
             {

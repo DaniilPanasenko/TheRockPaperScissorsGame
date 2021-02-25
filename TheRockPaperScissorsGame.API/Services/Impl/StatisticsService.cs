@@ -144,6 +144,7 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
 
             var sessions = await _sessionStorage.GetFinishedSessions();
 
+
             MovesDto moves = new MovesDto
             {
                 RockCount = GetRockCount(sessions, login),
@@ -152,6 +153,63 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
             };
 
             return moves;
+        }
+
+        public async Task<List<ResultsByTimeDto>> GetResultsByTimeAsync(string login, int amount, TimeInterval timeInterval)
+        {
+            if (login == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            var sessions = await _sessionStorage.GetFinishedSessions();
+            sessions = sessions.Where(x => x.Player1Login == login || x.Player2Login == login).OrderByDescending(x=>x.SessionStart).ToList();
+
+            var results = new List<ResultsByTimeDto>();
+
+            if (sessions.Count == 0)
+            {
+                return results;
+            }
+
+            var firstGame = sessions.Last().SessionStart;
+
+            TimeSpan interval = new TimeSpan(0);
+            switch (timeInterval)
+            {
+                case TimeInterval.Day:
+                    interval = TimeSpan.FromDays(1);
+                    break;
+                case TimeInterval.Hour:
+                    interval = TimeSpan.FromHours(1);
+                    break;
+                case TimeInterval.Minute:
+                    interval = TimeSpan.FromMinutes(1);
+                    break;
+            }
+            var fromTime = new DateTime(DateTime.UtcNow.Ticks % interval.Ticks);
+            results.Add(new ResultsByTimeDto(fromTime.ToString()));
+            foreach(var session in sessions)
+            {
+                if (session.SessionStart < fromTime)
+                {
+                    if (results.Count == amount) break;
+                    fromTime = new DateTime(fromTime.Ticks - interval.Ticks);
+                    results.Add(new ResultsByTimeDto(fromTime.ToString()));
+                }
+                var isFirst = login == session.Player1Login;
+                results.Last().WinCount += session.Rounds
+                    .Where(x =>
+                        (x.WinType == WinType.FirstPlayer && isFirst) ||
+                        (x.WinType == WinType.SecondPlayer && !isFirst))
+                    .Count();
+                results.Last().LossCount += session.Rounds
+                    .Where(x =>
+                        (x.WinType == WinType.FirstPlayer && !isFirst) ||
+                        (x.WinType == WinType.SecondPlayer && isFirst))
+                    .Count();
+            }
+            return results;
         }
 
         private int GetWinsCount(List<Session> sessions, string login)
@@ -210,5 +268,7 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
 
             return users.Distinct().Where(user => sessions.Where(session => session.Player1Login == user || session.Player2Login == user).Select(y => y.Rounds.Count).Sum() >= 10).ToList();
         }
+
+
     }
 }

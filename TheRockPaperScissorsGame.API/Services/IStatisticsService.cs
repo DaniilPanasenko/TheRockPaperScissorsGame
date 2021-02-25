@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using TheRockPaperScissorsGame.API.Contracts;
+using TheRockPaperScissorsGame.API.Enums;
 
 namespace TheRockPaperScissorsGame.API.Services
 {
@@ -17,5 +18,7 @@ namespace TheRockPaperScissorsGame.API.Services
         Task<string> GetUserGameTimeAsync(string login);
 
         Task<MovesDto> GetUserMovesStatisticsAsync(string login);
+
+        Task<List<ResultsByTimeDto>> GetResultsByTimeAsync(string login, int amount, TimeInterval timeInterval);
     }
 }

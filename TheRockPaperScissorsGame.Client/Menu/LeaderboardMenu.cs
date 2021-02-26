@@ -25,7 +25,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
 
         public async Task StartAsync()
         {
-            _logger.LogInformation("In the LeaderboardMenu");
+            _logger.LogInformation("class LeaderboardMenu. StartAsync()");
             
             while (true)
             {
@@ -68,6 +68,8 @@ namespace TheRockPaperScissorsGame.Client.Menu
 
         private async Task<string> GetStatistcsAsync(StatisticsType type)
         {
+            _logger.LogInformation("class LeaderboardMenu. GetStatistcsAsync()");
+
             var options = new string[] { "Set the amount of best players in the rate", "Show all players in the rate" };
             var command = MenuLibrary.InputMenuItemNumber("Please, choose", options);
 
@@ -77,18 +79,18 @@ namespace TheRockPaperScissorsGame.Client.Menu
 
             var response = await _statisticClient.GetLeaderboardAsync(amount, type);
 
-            _logger.LogInformation("Sent the request for statistics");
+            _logger.LogInformation("REQUEST: Sent the request for statistics");
 
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                _logger.LogInformation("Got the statistics (200)");
+                _logger.LogInformation("RESPONSE: Got the statistics (200)");
 
                 var content = await response.Content.ReadAsStringAsync();
                 return content;
             }
             else
             {
-                _logger.LogInformation("Unknown response");
+                _logger.LogInformation("RESPONSE: Unknown response");
                 throw new HttpListenerException();
             }
         }

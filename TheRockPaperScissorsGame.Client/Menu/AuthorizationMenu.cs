@@ -6,14 +6,15 @@ using System.Threading.Tasks;
 using TheRockPaperScissorsGame.Client.Clients;
 using TheRockPaperScissorsGame.Client.Menu.Library;
 using TheRockPaperScissorsGame.Client.Models;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace TheRockPaperScissorsGame.Client.Menu
 {
     public class AuthorizationMenu : IMenu
     {
         private readonly UserClient _userClient;
+
         private readonly ILogger<AuthorizationMenu> _logger;
+
         private readonly UserMenu _userMenu;
 
         public AuthorizationMenu(UserClient userClient, UserMenu userMenu,ILogger<AuthorizationMenu> logger)
@@ -25,7 +26,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
 
         public async Task StartAsync()
         {
-           _logger.LogInformation("In Authorization Menu");
+           _logger.LogInformation("class AuthorizationMenu. StartAsync()");
             while (true)
             {
                 _logger.LogInformation("Choosing the Authorization Method");
@@ -53,7 +54,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
 
         private async Task ExecuteLoginAsync()
         {
-            _logger.LogInformation("Moved to Execute Login");
+            _logger.LogInformation("class AuthorizationMenu. ExecuteLoginAsync()");
 
             MenuLibrary.Clear();
             while (true)
@@ -67,7 +68,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
 
                 var response = await _userClient.LoginAsync(login, password);
 
-                _logger.LogInformation("Sent the login request to the server");
+                _logger.LogInformation("REQUEST: Sent the login request to the server");
 
                 if (await ResponseHandlerAsync(response, "login"))
                 {
@@ -78,7 +79,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
 
         private async Task ExecuteRegistrationAsync()
         {
-            _logger.LogInformation("Moved to Execute Registration");
+            _logger.LogInformation("class AuthorizationMenu. ExecuteRegistrationAsync()");
 
             MenuLibrary.Clear();
             while (true)
@@ -92,7 +93,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
 
                 var response = await _userClient.RegistrationAsync(login, password);
 
-                _logger.LogInformation("Sent the register request to the server");
+                _logger.LogInformation("REQUEST: Sent the register request to the server");
 
                 if (await ResponseHandlerAsync(response, "registration"))
                 {
@@ -105,7 +106,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
         {
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                _logger.LogInformation("Successful request (200)");
+                _logger.LogInformation("RESPONSE: Successful request (200)");
 
                 ResponseLibrary.SuccessfullyOperation(operation);
                 await _userMenu.StartAsync();
@@ -113,19 +114,19 @@ namespace TheRockPaperScissorsGame.Client.Menu
             }
             else if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
-                _logger.LogInformation("Unable to Unauthorized (401)");
+                _logger.LogInformation("RESPONSE: Unable to Unauthorized (401)");
                 await ResponseLibrary.RepeatOperationWithMessageAsync<string>(response);
                 return true;
             }
             else if (response.StatusCode == HttpStatusCode.BadRequest)
             {
-                _logger.LogInformation("Bad request (400)");
+                _logger.LogInformation("RESPONSE: Bad request (400)");
                 await ResponseLibrary.RepeatOperationWithMessageAsync<UserValidaionResponse>(response);
                 return false;
             }
             else
             {
-                _logger.LogInformation("Unknown response");
+                _logger.LogInformation("RESPONSE: Unknown response");
                 throw new HttpListenerException();
             }
         }

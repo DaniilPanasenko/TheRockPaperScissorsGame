@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Net.Mime;
 using System.Threading.Tasks;
@@ -16,6 +17,8 @@ namespace TheRockPaperScissorsGame.API.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IAuthService _authService;
+
+        private readonly ILogger<UsersController> _logger;
 
         public UsersController(IAuthService authService)
         {

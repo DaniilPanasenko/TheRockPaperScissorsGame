@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text.Json;
@@ -13,22 +14,30 @@ namespace TheRockPaperScissorsGame.Client.Menu
     public class IntervalResultsMenu : IMenu
     {
         private readonly StatisticClient _statisticClient;
+        private readonly ILogger<IntervalResultsMenu> _logger;
 
-        public IntervalResultsMenu(StatisticClient statisticClient)
+        public IntervalResultsMenu(StatisticClient statisticClient, ILogger<IntervalResultsMenu> logger)
         {
             _statisticClient = statisticClient;
+            _logger = logger;
         }
 
         public async Task StartAsync()
         {
+            _logger.LogInformation("In the IntervalResultsMenu");
+
             while (true)
             {
+                _logger.LogInformation("Choosing Time Interval");
+
                 TimeInterval timeInterval = TimeInterval.Day;
 
                 MenuLibrary.Clear();
 
                 var options = new string[] { "By days", "By hours", "By minutes", "Back" };
                 var command = MenuLibrary.InputMenuItemNumber("Leaderboard Menu", options);
+
+                _logger.LogInformation("Chose the command");
 
                 switch (command)
                 {
@@ -46,6 +55,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
                 }
 
                 var content = await GetResultByIntervalAsync(timeInterval);
+
                 if (content == null)
                 {
                     continue;
@@ -67,15 +77,19 @@ namespace TheRockPaperScissorsGame.Client.Menu
 
             var response = await _statisticClient.GetUserResultByIntervalAsync(amount, timeInterval);
 
+            _logger.LogInformation("Sent the response to get the statistics");
+
             if (response.StatusCode == HttpStatusCode.OK)
             {
+                _logger.LogInformation("Get the statistics (200)");
+
                 var content = await response.Content.ReadAsStringAsync();
                 return content;
             }
             else
             {
-                ResponseLibrary.UnknownResponse();
-                return null;
+                _logger.LogInformation("Unknown response");
+                throw new HttpListenerException();
             }
         }
 

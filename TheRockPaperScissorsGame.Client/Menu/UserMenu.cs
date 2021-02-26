@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 using TheRockPaperScissorsGame.Client.Clients;
 using TheRockPaperScissorsGame.Client.Menu.Library;
 
@@ -6,35 +7,41 @@ namespace TheRockPaperScissorsGame.Client.Menu
 {
     public class UserMenu : IMenu
     {
-        private readonly GameClient _gameClient;
-        private readonly StatisticClient _statisticClient;
+        private readonly GameStartMenu _gameStartMenu;
 
-        public UserMenu(GameClient gameClient, StatisticClient statisticClient)
+        private readonly StatisticsMenu _statisticsMenu;
+
+        private readonly ILogger<UserMenu> _logger;
+
+        public UserMenu(GameStartMenu gameStartMenu, StatisticsMenu statisticsMenu, ILogger<UserMenu> logger)
         {
-            _gameClient = gameClient;
-            _statisticClient = statisticClient;
+            _gameStartMenu = gameStartMenu;
+            _statisticsMenu = statisticsMenu;
+            _logger = logger;
         }
 
         public async Task StartAsync()
         {
+            _logger.LogInformation("In the UserMenu");
+
             while (true)
             {
-                IMenu menu;
+                _logger.LogInformation("Choosing the option");
 
                 MenuLibrary.Clear();
 
                 var options = new string[] { "Game", "Statistics", "Logout" };
                 var command = MenuLibrary.InputMenuItemNumber("User Menu", options);
 
+                _logger.LogInformation("Chose the command");
+
                 switch (command)
                 {
                     case 1:
-                        menu = new GameStartMenu(_gameClient);
-                        await menu.StartAsync();
+                        await _gameStartMenu.StartAsync();
                         break;
                     case 2:
-                        menu = new StatisticsMenu(_statisticClient);
-                        await menu.StartAsync();
+                        await _statisticsMenu.StartAsync();
                         break;
                     case 3:
                         return;

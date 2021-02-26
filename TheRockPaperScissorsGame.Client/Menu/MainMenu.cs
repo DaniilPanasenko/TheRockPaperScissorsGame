@@ -1,42 +1,47 @@
 ﻿using System.Threading.Tasks;
 using TheRockPaperScissorsGame.Client.Clients;
 using TheRockPaperScissorsGame.Client.Menu.Library;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace TheRockPaperScissorsGame.Client.Menu
 {
     public class MainMenu : IMenu
     {
-        private readonly UserClient _userClient;
-        private readonly GameClient _gameClient;
-        private readonly StatisticClient _statisticClient;
+        private readonly ILogger<MainMenu> _logger;
+        private readonly LeaderboardMenu _leaderMenu;
+        private readonly AuthorizationMenu _authMenu;
 
-        public MainMenu(UserClient userClient, GameClient gameClient, StatisticClient statisticClient)
+        public MainMenu(AuthorizationMenu authMenu, LeaderboardMenu leaderMenu, ILogger<MainMenu> logger)
         {
-            _userClient = userClient;
-            _gameClient = gameClient;
-            _statisticClient = statisticClient;
+            _logger = logger;
+            _leaderMenu = leaderMenu;
+            _authMenu = authMenu;
         }
 
         public async Task StartAsync()
         {
+            _logger.LogInformation("In the MainMenu");
+
             while (true)
             {
-                IMenu menu;
-
                 MenuLibrary.Clear();
+
+                _logger.LogInformation("Choosing the command");
 
                 var options = new string[] { "Authorization", "Leaderboard", "Exit" };
                 var command = MenuLibrary.InputMenuItemNumber("Main Menu", options);
 
+                _logger.LogInformation("Chose the command");
+
+
                 switch (command)
                 {
                     case 1:
-                        menu = new AuthorizationMenu(_userClient, _gameClient, _statisticClient);
-                        await menu.StartAsync();
+                        await _authMenu.StartAsync();
                         break;
                     case 2:
-                        menu = new LeaderboardMenu(_statisticClient);
-                        await menu.StartAsync();
+                        await _leaderMenu.StartAsync();
                         break;
                     case 3:
                         return;

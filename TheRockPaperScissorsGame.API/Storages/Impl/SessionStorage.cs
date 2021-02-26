@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,12 +18,10 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
 
         private readonly JsonWorker<Session> _jsonWorker;
 
-        private readonly ILogger<SessionStorage> _logger;
 
-        public SessionStorage(JsonWorker<Session> jsonWorker, ILogger<SessionStorage> logger)
+        public SessionStorage(JsonWorker<Session> jsonWorker)
         {
             _jsonWorker = jsonWorker;
-            _logger = logger;
         }
 
         private async Task UploadDataAsync()
@@ -35,8 +32,6 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
 
         public async Task<List<Session>> GetFinishedSessionsAsync()
         {
-            _logger.LogDebug("");
-
             await _lockSlim.WaitAsync();
             try
             {

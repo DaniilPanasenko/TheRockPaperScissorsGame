@@ -644,5 +644,108 @@
     "sessionFinished": "2021-02-26T03:29:07.0385574Z",
     "player1Login": "zxcvbnmas",
     "player2Login": "12345678"
+  },
+  {
+    "roomNumber": "4b9b6c62-06f1-4324-a1e3-56d13c2453c4",
+    "rounds": [
+      {
+        "player1Move": 0,
+        "player2Move": 1
+      },
+      {
+        "player1Move": 0,
+        "player2Move": 1
+      },
+      {
+        "player1Move": 0,
+        "player2Move": 0
+      },
+      {
+        "player1Move": 1,
+        "player2Move": 2
+      },
+      {
+        "player1Move": 1,
+        "player2Move": 2
+      },
+      {
+        "player1Move": 1,
+        "player2Move": 1
+      }
+    ],
+    "sessionStart": "2021-02-26T08:42:28.6741065Z",
+    "sessionFinished": "2021-02-26T08:44:20.7519478Z",
+    "player1Login": "zxcvbnmas",
+    "player2Login": "12345678"
+  },
+  {
+    "roomNumber": "abc24336-3a91-4651-8f49-e53e16b69d2d",
+    "rounds": [
+      {
+        "player1Move": 0,
+        "player2Move": 2
+      },
+      {
+        "player1Move": 1,
+        "player2Move": 2
+      },
+      {
+        "player1Move": 0,
+        "player2Move": 0
+      },
+      {
+        "player1Move": 1,
+        "player2Move": 2
+      },
+      {
+        "player1Move": 2,
+        "player2Move": 2
+      },
+      {
+        "player1Move": 1,
+        "player2Move": 1
+      },
+      {
+        "player1Move": 2,
+        "player2Move": 1
+      },
+      {
+        "player1Move": 0,
+        "player2Move": 1
+      }
+    ],
+    "sessionStart": "2021-02-26T08:59:28.1954562Z",
+    "sessionFinished": "2021-02-26T08:59:48.8491631Z",
+    "player1Login": "12345678",
+    "player2Login": null
+  },
+  {
+    "roomNumber": "7280ceca-41ff-4063-abe8-7d3fbc273209",
+    "rounds": [
+      {
+        "player1Move": 2,
+        "player2Move": 0
+      },
+      {
+        "player1Move": 1,
+        "player2Move": 1
+      },
+      {
+        "player1Move": 0,
+        "player2Move": 0
+      },
+      {
+        "player1Move": 0,
+        "player2Move": 1
+      },
+      {
+        "player1Move": 1,
+        "player2Move": 2
+      }
+    ],
+    "sessionStart": "2021-02-26T09:02:18.5551048Z",
+    "sessionFinished": "2021-02-26T09:03:10.7695205Z",
+    "player1Login": "12345678",
+    "player2Login": "zxcvbnmas"
   }
 ]

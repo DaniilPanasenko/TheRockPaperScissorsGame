@@ -12,17 +12,13 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
     {
         private readonly ISessionStorage _sessionStorage;
 
-        private readonly ILogger<RoundService> _logger;
-
-        public RoundService(ISessionStorage sessionStorage, ILogger<RoundService> logger)
+        public RoundService(ISessionStorage sessionStorage)
         {
             _sessionStorage = sessionStorage;
-            _logger = logger;
         }
 
         public async Task DoMoveAsync(string login, string id, Move move)
         {
-            _logger.LogDebug("There we can..");
             if (login == null)
             {
                 throw new ArgumentNullException();

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Net.Mime;
 using System.Threading.Tasks;
@@ -154,14 +155,11 @@ namespace TheRockPaperScissorsGame.API.Controllers
             {
                 return null;
             }
-
             var login = _tokenStorage.GetLogin(Token);
-
             if (login == null)
             {
                 return null;
             }
-
             return login;
         }
     }

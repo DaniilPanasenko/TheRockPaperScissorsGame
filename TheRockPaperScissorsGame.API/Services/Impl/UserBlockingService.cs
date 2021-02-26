@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using TheRockPaperScissorsGame.API.Models;
 
@@ -9,20 +8,15 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
     {
         private List<UserLoginAttempts> _userLoginAttemptsList;
 
-        private readonly ILogger<UserBlockingService> _logger;
-
         private readonly object locker = new object();
 
-        public UserBlockingService(ILogger<UserBlockingService> logger)
+        public UserBlockingService()
         {
             _userLoginAttemptsList = new List<UserLoginAttempts>();
-            _logger = logger;
         }
 
         public void NegativeLogin(string login)
         {
-            _logger.LogDebug("");
-
             lock (locker)
             {
                 var userLoginAttempts = _userLoginAttemptsList

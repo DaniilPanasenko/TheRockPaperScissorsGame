@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using TheRockPaperScissorsGame.API.Enums;
 using TheRockPaperScissorsGame.API.Exceptions;
 using TheRockPaperScissorsGame.API.Models;
@@ -15,19 +14,15 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
 
         private readonly IUserBlockingService _userBlockingService;
 
-        private readonly ILogger<AuthService> _logger;
-
-        public AuthService(IAccountStorage accountStorage, ITokenStorage tokenStorage, IUserBlockingService userBlockingService, ILogger<AuthService> logger)
+        public AuthService(IAccountStorage accountStorage, ITokenStorage tokenStorage, IUserBlockingService userBlockingService)
         {
             _accountStorage = accountStorage;
             _tokenStorage = tokenStorage;
             _userBlockingService = userBlockingService;
-            _logger = logger;
         }
 
         public async Task<string> LoginAsync(string login, string password)
         {
-            _logger.LogDebug("There we can log like this");
             var account = await _accountStorage.FindAccountAsync(login);
 
             if (account == null)

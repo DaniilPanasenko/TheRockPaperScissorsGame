@@ -5,6 +5,7 @@ using TheRockPaperScissorsGame.Client.Contracts;
 using TheRockPaperScissorsGame.Client.Clients;
 using TheRockPaperScissorsGame.Client.Menu.Library;
 using System.Net;
+using Microsoft.Extensions.Logging;
 
 namespace TheRockPaperScissorsGame.Client.Menu
 {
@@ -12,19 +13,31 @@ namespace TheRockPaperScissorsGame.Client.Menu
     {
         private readonly StatisticClient _statisticClient;
 
-        public PlayerStatisticsMenu(StatisticClient statisticClient)
+        private readonly IntervalResultsMenu _intervalResultsMenu;
+
+        private readonly ILogger<PlayerStatisticsMenu> _logger;
+
+        public PlayerStatisticsMenu(StatisticClient statisticClient, IntervalResultsMenu intervalResultsMenu, ILogger<PlayerStatisticsMenu> logger)
         {
             _statisticClient = statisticClient;
+            _intervalResultsMenu = intervalResultsMenu;
+            _logger = logger;
         }
 
         public async Task StartAsync()
         {
+            _logger.LogInformation("In the PlayerStatisticsMenu");
+
             while (true)
             {
+                _logger.LogInformation("Choosing the Statistics Type");
+
                 MenuLibrary.Clear();
 
                 var options = new string[] { "Total results", "Total playing time", "Moves statistics", "Results by the time", "Back" };
                 var command = MenuLibrary.InputMenuItemNumber("Player statistics Menu", options);
+
+                _logger.LogInformation("Chose the command");
 
                 switch (command)
                 {
@@ -38,8 +51,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
                         await GetMovesStatistics();
                         break;
                     case 4:
-                        IMenu menu = new IntervalResultsMenu(_statisticClient);
-                        await menu.StartAsync();
+                        await _intervalResultsMenu.StartAsync();
                         break;
                     case 5:
                         return;
@@ -50,8 +62,13 @@ namespace TheRockPaperScissorsGame.Client.Menu
         private async Task GetResults()
         {
             var response = await _statisticClient.GetUserResultsAsync();
+
+            _logger.LogInformation("Sent the request to get the statistics");
+
             if (response.StatusCode == HttpStatusCode.OK)
             {
+                _logger.LogInformation("Get the Statistics (200)");
+
                 var content = await response.Content.ReadAsStringAsync();
                 var results = JsonSerializer.Deserialize<ResultsDto>(content);
 
@@ -70,6 +87,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
             }
             else
             {
+                _logger.LogInformation("Unknown response");
                 throw new HttpListenerException();
             }
         }
@@ -77,8 +95,13 @@ namespace TheRockPaperScissorsGame.Client.Menu
         private async Task GetTotalTime()
         {
             var response = await _statisticClient.GetUserGameTimeAsync();
+
+            _logger.LogInformation("Sent the request to get the statistics");
+
             if (response.StatusCode == HttpStatusCode.OK)
             {
+                _logger.LogInformation("Get the Statistics (200)");
+
                 var time = await response.Content.ReadAsStringAsync();
                 time = JsonSerializer.Deserialize<string>(time);
 
@@ -89,6 +112,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
             }
             else
             {
+                _logger.LogInformation("Unknown response");
                 throw new HttpListenerException();
             }
         }
@@ -96,8 +120,13 @@ namespace TheRockPaperScissorsGame.Client.Menu
         private async Task GetMovesStatistics()
         {
             var response = await _statisticClient.GetUserMovesAsync();
+
+            _logger.LogInformation("Sent the request to get the statistics");
+
             if (response.StatusCode == HttpStatusCode.OK)
             {
+                _logger.LogInformation("Get the Statistics (200)");
+
                 var content = await response.Content.ReadAsStringAsync();
                 var results = JsonSerializer.Deserialize<MovesDto>(content);
 
@@ -116,6 +145,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
             }
             else
             {
+                _logger.LogInformation("Unknown response");
                 throw new HttpListenerException();
             }
         }

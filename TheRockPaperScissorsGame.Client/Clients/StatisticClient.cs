@@ -43,8 +43,13 @@ namespace TheRockPaperScissorsGame.Client.Clients
         }
 
         public async Task<HttpResponseMessage> GetUserResultByIntervalAsync(int? amount, TimeInterval interval)
+<<<<<<< HEAD
         {
             var uri = new Uri(_httpClient.BaseAddress + $"statistics/result_by_time?amount={amount}&type={interval}");
+=======
+        {
+            var uri = new Uri(_httpClient.BaseAddress + $"statistics/results_by_time?amount={amount}&timeInterval={(int)interval}");
+>>>>>>> 8f15b79f4f62d77b3948675ba70f3eabb0843599
             var response = await _httpClient.GetAsync(uri);
             return response;
         }

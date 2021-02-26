@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading;
@@ -9,6 +10,7 @@ namespace TheRockPaperScissorsGame.API.Storages
     public class JsonWorker<T> where T : class
     {
         static SemaphoreSlim _lockSlim = new SemaphoreSlim(1, 1);
+
         private readonly string _path;
 
         public JsonWorker(string path)
@@ -61,10 +63,6 @@ namespace TheRockPaperScissorsGame.API.Storages
                 {
                     WriteIndented = true,
                     PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-                //    Converters =
-                //{
-                //  new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
-                //}
                 };
 
                 var json = JsonSerializer.Serialize(listObjects, options);

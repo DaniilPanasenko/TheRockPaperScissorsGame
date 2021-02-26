@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Net;
 using System.Net.Mime;
 using System.Threading.Tasks;
@@ -30,13 +29,16 @@ namespace TheRockPaperScissorsGame.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<ActionResult<string>> RegisterAsync([FromBody] Account account)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-            bool isRegistered = await _authService.Register(account);
+            bool isRegistered = await _authService.RegisterAsync(account);
 
             if (isRegistered)
             {
-                string token = await _authService.Login(account.Login, account.Password);
+                string token = await _authService.LoginAsync(account.Login, account.Password);
                 return Ok(token);
             }
             else
@@ -52,11 +54,14 @@ namespace TheRockPaperScissorsGame.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public async Task<ActionResult<string>> LoginAsync([FromBody] Account account)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
             try
             {
-                string token = await _authService.Login(account.Login, account.Password);
+                string token = await _authService.LoginAsync(account.Login, account.Password);
                 return Ok(token);
             }
             catch (AuthorizationException ex)

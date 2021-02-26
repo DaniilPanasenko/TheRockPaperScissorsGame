@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace TheRockPaperScissorsGame.API.Exceptions
 {
     public class RoomConnectionException : Exception

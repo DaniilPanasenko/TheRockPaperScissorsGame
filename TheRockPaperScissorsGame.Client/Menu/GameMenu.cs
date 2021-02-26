@@ -14,9 +14,13 @@ namespace TheRockPaperScissorsGame.Client.Menu
     public class GameMenu : IMenu
     {
         private readonly GameClient _gameClient;
+<<<<<<< HEAD
 
         private readonly SessionResults _sessionResults;
 
+=======
+        private SessionResults _sessionResults;
+>>>>>>> 8f15b79f4f62d77b3948675ba70f3eabb0843599
         private Move _currentMove; 
 
         public GameMenu(GameClient gameClient)

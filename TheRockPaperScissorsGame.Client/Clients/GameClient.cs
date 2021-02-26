@@ -11,9 +11,15 @@ namespace TheRockPaperScissorsGame.Client.Clients
 {
     public class GameClient
     {
+<<<<<<< HEAD
         public readonly HttpClient _httpClient;
 
         public string _roomId;
+=======
+        private readonly HttpClient _httpClient;
+
+        private string _roomId;
+>>>>>>> 8f15b79f4f62d77b3948675ba70f3eabb0843599
 
         public GameClient(HttpClient httpClient)
         {

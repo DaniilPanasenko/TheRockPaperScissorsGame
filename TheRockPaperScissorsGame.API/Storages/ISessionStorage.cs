@@ -18,6 +18,6 @@ namespace TheRockPaperScissorsGame.API.Storages
 
         Task SaveSessionsAsync();
 
-        Task<List<Session>> GetFinishedSessions();
+        Task<List<Session>> GetFinishedSessionsAsync();
     }
 }

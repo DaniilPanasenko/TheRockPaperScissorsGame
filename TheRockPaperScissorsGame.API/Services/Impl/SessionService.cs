@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
 using TheRockPaperScissorsGame.API.Enums;
 using TheRockPaperScissorsGame.API.Exceptions;
@@ -9,15 +10,19 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
 {
     public class SessionService : ISessionService
     {
-        private ISessionStorage _sessionStorage;
+        private readonly ISessionStorage _sessionStorage;
 
-        public SessionService(ISessionStorage sessionStorage)
+        private readonly ILogger<SessionService> _logger;
+
+        public SessionService(ISessionStorage sessionStorage, ILogger<SessionService> logger)
         {
             _sessionStorage = sessionStorage;
+            _logger = logger;
         }
 
         public async Task<string> CheckSessionAsync(string roomId, string login)
         {
+            _logger.LogDebug("");
             var session = await _sessionStorage.FindSessionAsync(roomId);
             if (session == null)
             {

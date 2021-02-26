@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,21 +12,26 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
 {
     public class StatisticsService : IStatisticsService
     {
-        private ISessionStorage _sessionStorage;
+        private readonly ISessionStorage _sessionStorage;
 
-        public StatisticsService(ISessionStorage sessionStorage)
+        private readonly ILogger<StatisticsService> _logger;
+
+        public StatisticsService(ISessionStorage sessionStorage, ILogger<StatisticsService> logger)
         {
             _sessionStorage = sessionStorage;
+            _logger = logger;
         }
 
         public async Task<List<UserResultDto>> GetWinsLeaderboardAsync(int amount)
         {
+            _logger.LogDebug("");
+
             if (amount < 0)
             {
                 throw new ArgumentException();
             }
 
-            var sessions = await _sessionStorage.GetFinishedSessions();
+            var sessions = await _sessionStorage.GetFinishedSessionsAsync();
 
             var users = GetUsers(sessions);
 
@@ -52,7 +58,7 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
                 throw new ArgumentException();
             }
 
-            var sessions = await _sessionStorage.GetFinishedSessions();
+            var sessions = await _sessionStorage.GetFinishedSessionsAsync();
 
             var users = GetUsers(sessions);
 
@@ -79,7 +85,7 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
                 throw new ArgumentException();
             }
 
-            var sessions = await _sessionStorage.GetFinishedSessions();
+            var sessions = await _sessionStorage.GetFinishedSessionsAsync();
 
             var users = GetUsers(sessions);
 
@@ -107,7 +113,7 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
                 throw new ArgumentNullException();
             }
 
-            var sessions = await _sessionStorage.GetFinishedSessions();
+            var sessions = await _sessionStorage.GetFinishedSessionsAsync();
             ResultsDto results = new ResultsDto
             {
                 WinCount = GetWinsCount(sessions, login),
@@ -125,7 +131,7 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
                 throw new ArgumentNullException();
             }
 
-            var sessions = await _sessionStorage.GetFinishedSessions();
+            var sessions = await _sessionStorage.GetFinishedSessionsAsync();
 
             TimeSpan gameTime = default;
 
@@ -142,7 +148,7 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
                 throw new ArgumentNullException();
             }
 
-            var sessions = await _sessionStorage.GetFinishedSessions();
+            var sessions = await _sessionStorage.GetFinishedSessionsAsync();
 
 
             MovesDto moves = new MovesDto
@@ -162,7 +168,7 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
                 throw new ArgumentNullException();
             }
 
-            var sessions = await _sessionStorage.GetFinishedSessions();
+            var sessions = await _sessionStorage.GetFinishedSessionsAsync();
             sessions = sessions.Where(x => x.Player1Login == login || x.Player2Login == login).OrderByDescending(x=>x.SessionStart).ToList();
 
             var results = new List<ResultsByTimeDto>();
@@ -187,6 +193,7 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
                     interval = TimeSpan.FromMinutes(1);
                     break;
             }
+
             var fromTime = new DateTime(DateTime.UtcNow.Ticks + 1000 - DateTime.UtcNow.Ticks % interval.Ticks);
             results.Add(new ResultsByTimeDto(fromTime.ToString()));
             foreach(var session in sessions)
@@ -268,7 +275,5 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
 
             return users.Distinct().Where(user => sessions.Where(session => session.Player1Login == user || session.Player2Login == user).Select(y => y.Rounds.Count).Sum() >= 10).ToList();
         }
-
-
     }
 }

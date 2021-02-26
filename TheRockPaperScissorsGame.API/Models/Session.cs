@@ -11,9 +11,9 @@ namespace TheRockPaperScissorsGame.API.Models
 {
     public class Session
     {
-        private TimeSpan _connectionTimeOut = TimeSpan.FromMinutes(1);
+        private TimeSpan _connectionTimeOut = TimeSpan.FromMinutes(5);
 
-        private TimeSpan _roundTimeOut = TimeSpan.FromSeconds(2000);
+        private TimeSpan _roundTimeOut = TimeSpan.FromSeconds(20);
 
         static SemaphoreSlim _lockSlim = new SemaphoreSlim(1, 1);
 

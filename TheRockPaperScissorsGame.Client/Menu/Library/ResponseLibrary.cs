@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
@@ -15,7 +14,7 @@ namespace TheRockPaperScissorsGame.Client.Menu.Library
             var textResponse = JsonSerializer.Deserialize<T>(jsonResponse).ToString();
             if (typeof(T).Equals(typeof(string)))
             {
-                textResponse = ParseEnumStringToString(textResponse);
+                textResponse = ParseEnumStringToSring(textResponse);
             }
             MenuLibrary.WriteLineColor($"\n{textResponse}", ConsoleColor.Red);
             MenuLibrary.WriteLineColor("Please repeat operation.", ConsoleColor.White);
@@ -38,18 +37,18 @@ namespace TheRockPaperScissorsGame.Client.Menu.Library
         {
             var exception = await response.Content.ReadAsStringAsync();
             exception = JsonSerializer.Deserialize<string>(exception);
-            exception = ParseEnumStringToString(exception);
+            exception = ParseEnumStringToSring(exception);
             MenuLibrary.WriteLineColor($"\nSorry, your game is finished because of {exception}\n", ConsoleColor.Red);
             Thread.Sleep(3000);
         }
 
-        public static string ParseEnumStringToString(string enumString)
+        public static string ParseEnumStringToSring(string enumSring)
         {
             string result = "";
             bool isFirst = true;
-            foreach(var ch in enumString)
+            foreach(var ch in enumSring)
             {
-                if (char.IsUpper(ch) && !isFirst)
+                if(char.IsUpper(ch) && !isFirst)
                 {
                     result += " " + char.ToLower(ch);
                 }

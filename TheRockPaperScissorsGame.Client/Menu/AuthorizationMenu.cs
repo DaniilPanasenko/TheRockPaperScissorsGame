@@ -88,7 +88,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
             {
                 ResponseLibrary.SuccessfullyOperation(operation);
 
-                IMenu menu = new UserMenu(_gameClient, _statisticClient);
+                IMenu menu = new UserMenu(_userClient, _gameClient, _statisticClient);
                 await menu.StartAsync();
 
                 return true;

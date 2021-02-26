@@ -16,6 +16,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
         private readonly GameClient _gameClient;
 
         private readonly SessionResults _sessionResults;
+
         private Move _currentMove; 
 
         public GameMenu(GameClient gameClient)

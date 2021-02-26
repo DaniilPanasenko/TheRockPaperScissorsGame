@@ -90,13 +90,12 @@ namespace TheRockPaperScissorsGame.Client.Menu
 
                 IMenu menu = new UserMenu(_gameClient, _statisticClient);
                 await menu.StartAsync();
-
                 return true;
             }
             else if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 await ResponseLibrary.RepeatOperationWithMessageAsync<string>(response);
-                return false;
+                return true;
             }
             else if (response.StatusCode == HttpStatusCode.BadRequest)
             {

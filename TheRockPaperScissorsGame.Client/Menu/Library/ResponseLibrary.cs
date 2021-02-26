@@ -18,7 +18,7 @@ namespace TheRockPaperScissorsGame.Client.Menu.Library
             }
             MenuLibrary.WriteLineColor($"\n{textResponse}", ConsoleColor.Red);
             MenuLibrary.WriteLineColor("Please repeat operation.", ConsoleColor.White);
-            Thread.Sleep(1000);
+            Thread.Sleep(2000);
         }
 
         public static void UnknownResponse()
@@ -48,7 +48,10 @@ namespace TheRockPaperScissorsGame.Client.Menu.Library
             bool isFirst = true;
             foreach (var ch in enumString)
             {
-                if (char.IsUpper(ch) && !isFirst)
+                if (!isFirst &&
+                    (char.IsUpper(ch) ||
+                        (char.IsDigit(ch) &&
+                            !char.IsDigit(result[result.Length-1]))))
                 {
                     result += " " + char.ToLower(ch);
                 }

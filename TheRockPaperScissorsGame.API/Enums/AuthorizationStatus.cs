@@ -5,7 +5,7 @@
         OK,
         IncorrectLogin,
         IncorrectPassword,
-        BlockedAccount,
+        BlockedAccountFor1Minute,
         LoginAlreadyExist,
         Undefined
     }

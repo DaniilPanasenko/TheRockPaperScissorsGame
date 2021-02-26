@@ -36,7 +36,7 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
             }
             if (_userBlockingService.IsBlocked(login))
             {
-                throw new AuthorizationException(AuthorizationStatus.BlockedAccount);
+                throw new AuthorizationException(AuthorizationStatus.BlockedAccountFor1Minute);
             }
             if (account.Password != password)
             {

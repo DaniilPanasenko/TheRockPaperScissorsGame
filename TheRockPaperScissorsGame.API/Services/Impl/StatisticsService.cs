@@ -192,7 +192,7 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
             results.Add(new ResultsByTimeDto(fromTime.ToString()));
             foreach(var session in sessions)
             {
-                if (session.SessionStart < fromTime)
+                while (session.SessionStart < fromTime)
                 {
                     if (results.Count == amount) break;
                     fromTime = new DateTime(fromTime.Ticks - interval.Ticks);

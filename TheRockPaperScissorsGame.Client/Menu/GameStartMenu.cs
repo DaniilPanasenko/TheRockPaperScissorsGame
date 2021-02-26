@@ -109,7 +109,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
                     name = JsonSerializer.Deserialize<string>(name);
 
                     MenuLibrary.WriteLineColor($"\nYour opponent is {name}\n", ConsoleColor.Green);
-                    MenuLibrary.PressAnyKey();
+                    Thread.Sleep(2000);
 
                     IMenu menu = new GameMenu(_gameClient);
                     await menu.StartAsync();

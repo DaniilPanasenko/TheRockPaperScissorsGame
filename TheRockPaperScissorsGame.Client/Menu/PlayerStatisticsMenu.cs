@@ -26,7 +26,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
 
         public async Task StartAsync()
         {
-            _logger.LogInformation("In the PlayerStatisticsMenu");
+            _logger.LogInformation("class PlayerStatisticsMenu. StartAsync()");
 
             while (true)
             {
@@ -61,13 +61,15 @@ namespace TheRockPaperScissorsGame.Client.Menu
 
         private async Task GetResults()
         {
+            _logger.LogInformation("class PlayerStatisticsMenu. GetResults()");
+
             var response = await _statisticClient.GetUserResultsAsync();
 
-            _logger.LogInformation("Sent the request to get the statistics");
+            _logger.LogInformation("REQUEST: Sent the request to get the statistics");
 
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                _logger.LogInformation("Get the Statistics (200)");
+                _logger.LogInformation("RESPONSE: Get the Statistics (200)");
 
                 var content = await response.Content.ReadAsStringAsync();
                 var results = JsonSerializer.Deserialize<ResultsDto>(content);
@@ -87,20 +89,22 @@ namespace TheRockPaperScissorsGame.Client.Menu
             }
             else
             {
-                _logger.LogInformation("Unknown response");
+                _logger.LogInformation("RESPONSE: Unknown response");
                 throw new HttpListenerException();
             }
         }
 
         private async Task GetTotalTime()
         {
+            _logger.LogInformation("class PlayerStatisticsMenu. GetTotalTime()");
+
             var response = await _statisticClient.GetUserGameTimeAsync();
 
-            _logger.LogInformation("Sent the request to get the statistics");
+            _logger.LogInformation("REQUEST: Sent the request to get the statistics");
 
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                _logger.LogInformation("Get the Statistics (200)");
+                _logger.LogInformation("RESPONSE: Get the Statistics (200)");
 
                 var time = await response.Content.ReadAsStringAsync();
                 time = JsonSerializer.Deserialize<string>(time);
@@ -112,20 +116,22 @@ namespace TheRockPaperScissorsGame.Client.Menu
             }
             else
             {
-                _logger.LogInformation("Unknown response");
+                _logger.LogInformation("RESPONSE: Unknown response");
                 throw new HttpListenerException();
             }
         }
 
         private async Task GetMovesStatistics()
         {
+            _logger.LogInformation("class PlayerStatisticsMenu. GetMovesStatistics()");
+
             var response = await _statisticClient.GetUserMovesAsync();
 
-            _logger.LogInformation("Sent the request to get the statistics");
+            _logger.LogInformation("REQUEST: Sent the request to get the statistics");
 
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                _logger.LogInformation("Get the Statistics (200)");
+                _logger.LogInformation("RESPONSE: Get the Statistics (200)");
 
                 var content = await response.Content.ReadAsStringAsync();
                 var results = JsonSerializer.Deserialize<MovesDto>(content);
@@ -145,7 +151,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
             }
             else
             {
-                _logger.LogInformation("Unknown response");
+                _logger.LogInformation("RESPONSE: Unknown response");
                 throw new HttpListenerException();
             }
         }

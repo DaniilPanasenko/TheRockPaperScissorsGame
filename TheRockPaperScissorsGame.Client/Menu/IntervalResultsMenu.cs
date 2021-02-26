@@ -24,7 +24,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
 
         public async Task StartAsync()
         {
-            _logger.LogInformation("In the IntervalResultsMenu");
+            _logger.LogInformation("class IntervalResultsMenu. StartAsync()");
 
             while (true)
             {
@@ -68,6 +68,8 @@ namespace TheRockPaperScissorsGame.Client.Menu
 
         private async Task<string> GetResultByIntervalAsync(TimeInterval timeInterval)
         {
+            _logger.LogInformation("class IntervalResultsMenu. GetResultByIntervalAsync()");
+
             var options = new string[] { "Set the amount of last days/hours/minutes for statistics", "Show all days/hours/minutes for statistics" };
             var command = MenuLibrary.InputMenuItemNumber("Please, choose", options);
 
@@ -77,18 +79,18 @@ namespace TheRockPaperScissorsGame.Client.Menu
 
             var response = await _statisticClient.GetUserResultByIntervalAsync(amount, timeInterval);
 
-            _logger.LogInformation("Sent the response to get the statistics");
+            _logger.LogInformation("REQUEST: Sent the response to get the statistics");
 
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                _logger.LogInformation("Get the statistics (200)");
+                _logger.LogInformation("RESPONSE: Get the statistics (200)");
 
                 var content = await response.Content.ReadAsStringAsync();
                 return content;
             }
             else
             {
-                _logger.LogInformation("Unknown response");
+                _logger.LogInformation("RESPONSE: Unknown response");
                 throw new HttpListenerException();
             }
         }

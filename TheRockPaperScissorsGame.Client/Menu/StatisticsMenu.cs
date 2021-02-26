@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
-using TheRockPaperScissorsGame.Client.Clients;
 using TheRockPaperScissorsGame.Client.Menu.Library;
 
 namespace TheRockPaperScissorsGame.Client.Menu
@@ -22,7 +21,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
 
         public async Task StartAsync()
         {
-            _logger.LogInformation("In the StatisticsMenu");
+            _logger.LogInformation("class StatisticsMenu. StartAsync()");
 
             while (true)
             {

@@ -1,7 +1,5 @@
 ﻿using System.Threading.Tasks;
-using TheRockPaperScissorsGame.Client.Clients;
 using TheRockPaperScissorsGame.Client.Menu.Library;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace TheRockPaperScissorsGame.Client.Menu
@@ -21,7 +19,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
 
         public async Task StartAsync()
         {
-            _logger.LogInformation("In the MainMenu");
+            _logger.LogInformation("class MainMenu. StartAsync()");
 
             while (true)
             {
@@ -33,7 +31,6 @@ namespace TheRockPaperScissorsGame.Client.Menu
                 var command = MenuLibrary.InputMenuItemNumber("Main Menu", options);
 
                 _logger.LogInformation("Chose the command");
-
 
                 switch (command)
                 {

@@ -12,14 +12,10 @@ namespace TheRockPaperScissorsGame.Client.Menu
 {
     public class LeaderboardMenu : IMenu
     {
-        private UserClient _userClient;
-        private GameClient _gameClient;
-        private StatisticClient _statisticClient;
+        private readonly StatisticClient _statisticClient;
 
-        public LeaderboardMenu(UserClient userClient, GameClient gameClient, StatisticClient statisticClient)
+        public LeaderboardMenu(StatisticClient statisticClient)
         {
-            _userClient = userClient;
-            _gameClient = gameClient;
             _statisticClient = statisticClient;
         }
 

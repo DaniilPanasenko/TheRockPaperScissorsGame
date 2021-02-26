@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -13,17 +14,22 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
         
         private List<Account> _accounts = new List<Account>();
 
-        private JsonWorker<Account> _jsonWorker;
+        private readonly JsonWorker<Account> _jsonWorker;
+
+        private readonly ILogger<AccountStorage> _logger;
 
         private bool _isUploaded = false;
 
-        public AccountStorage(JsonWorker<Account> jsonWorker)
+        public AccountStorage(JsonWorker<Account> jsonWorker, ILogger<AccountStorage> logger)
         {
             _jsonWorker = jsonWorker;
+            _logger = logger;
         }
 
         public async Task<bool> AddAccountAsync(Account newAccount)
         {
+            _logger.LogDebug("");
+
             if (newAccount == null)
             {
                 throw new ArgumentNullException(nameof(newAccount));
@@ -34,7 +40,7 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
             {
                 if (!_isUploaded)
                 {
-                    await LoadData();
+                    await LoadDataAsync();
                 }
                 if (_accounts.Any(account => account.Login == newAccount.Login))
                 {
@@ -59,7 +65,7 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
             {
                 if (!_isUploaded)
                 {
-                    await LoadData();
+                    await LoadDataAsync();
                 }
                 return _accounts.FirstOrDefault(account =>
                     account.Login == login);
@@ -70,7 +76,7 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
             }
         }
 
-        private async Task LoadData()
+        private async Task LoadDataAsync()
         {
             _accounts = await _jsonWorker.ReadDataFromFileAsync();
             _isUploaded = true;

@@ -27,7 +27,6 @@ namespace TheRockPaperScissorsGame.API.Controllers
         [FromHeader(Name = "Token")]
         public string Token { get; set; }
 
-
         [HttpGet]
         [Route("leaderboard")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
@@ -89,7 +88,7 @@ namespace TheRockPaperScissorsGame.API.Controllers
         [Route("user_time")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        public async Task<ActionResult> GetUserGameTime()
+        public async Task<ActionResult> GetUserGameTimeAsync()
         {
             var login = GetLogin();
 
@@ -155,11 +154,14 @@ namespace TheRockPaperScissorsGame.API.Controllers
             {
                 return null;
             }
+
             var login = _tokenStorage.GetLogin(Token);
+
             if (login == null)
             {
                 return null;
             }
+
             return login;
         }
     }

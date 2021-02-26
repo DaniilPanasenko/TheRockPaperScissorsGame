@@ -10,9 +10,9 @@ namespace TheRockPaperScissorsGame.Client.Menu
 {
     public class AuthorizationMenu : IMenu
     {
-        private UserClient _userClient;
-        private GameClient _gameClient;
-        private StatisticClient _statisticClient;
+        private readonly UserClient _userClient;
+        private readonly GameClient _gameClient;
+        private readonly StatisticClient _statisticClient;
 
         public AuthorizationMenu(UserClient userClient, GameClient gameClient, StatisticClient statisticClient)
         {
@@ -88,7 +88,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
             {
                 ResponseLibrary.SuccessfullyOperation(operation);
 
-                IMenu menu = new UserMenu(_userClient, _gameClient, _statisticClient);
+                IMenu menu = new UserMenu(_gameClient, _statisticClient);
                 await menu.StartAsync();
 
                 return true;

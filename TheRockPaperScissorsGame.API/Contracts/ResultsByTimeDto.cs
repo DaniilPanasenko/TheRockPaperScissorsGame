@@ -1,5 +1,4 @@
-﻿using System;
-namespace TheRockPaperScissorsGame.API.Contracts
+﻿namespace TheRockPaperScissorsGame.API.Contracts
 {
     public class ResultsByTimeDto
     {

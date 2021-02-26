@@ -1,9 +1,17 @@
 ﻿using System;
+
 namespace TheRockPaperScissorsGame.API.Models
 {
     public class UserLoginAttempts
     {
         private TimeSpan _blockingTime = TimeSpan.FromMinutes(1);
+
+        public UserLoginAttempts(string login)
+        {
+            UserLogin = login;
+            AttemptsCount = 1;
+            LastAttempt = DateTime.UtcNow;
+        }
 
         public string UserLogin { get; private set; }
 
@@ -13,12 +21,6 @@ namespace TheRockPaperScissorsGame.API.Models
 
         public bool IsBlocked => AttemptsCount >= 3 && DateTime.UtcNow - LastAttempt < _blockingTime;
 
-        public UserLoginAttempts(string login)
-        {
-            UserLogin = login;
-            AttemptsCount = 1;
-            LastAttempt = DateTime.UtcNow;
-        }
 
         public void AddAttempt()
         {

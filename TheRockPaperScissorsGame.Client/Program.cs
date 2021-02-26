@@ -23,10 +23,8 @@ namespace TheRockPaperScissorsGame.Client
             var options = JsonSerializer.Deserialize<ClientOptions>(json);
             httpClient.BaseAddress = new Uri(options.BaseAddress);
 
-            var storage = new ValuesStorage();
-
             _userClient = new UserClient(httpClient);
-            _gameClient = new GameClient(httpClient, storage);
+            _gameClient = new GameClient(httpClient);
             _statisticClient = new StatisticClient(httpClient);
         }
 

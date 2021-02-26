@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +17,14 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
 
         private ConcurrentQueue<Session> _connectionQueue = new ConcurrentQueue<Session>();
 
-        private JsonWorker<Session> _jsonWorker;
+        private readonly JsonWorker<Session> _jsonWorker;
 
-        public SessionStorage(JsonWorker<Session> jsonWorker)
+        private readonly ILogger<SessionStorage> _logger;
+
+        public SessionStorage(JsonWorker<Session> jsonWorker, ILogger<SessionStorage> logger)
         {
             _jsonWorker = jsonWorker;
+            _logger = logger;
         }
 
         private async Task UploadDataAsync()
@@ -29,8 +33,10 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
                 _session.ForEach(session => session.IsFinished = true);
         }
 
-        public async Task<List<Session>> GetFinishedSessions()
+        public async Task<List<Session>> GetFinishedSessionsAsync()
         {
+            _logger.LogDebug("");
+
             await _lockSlim.WaitAsync();
             try
             {
@@ -142,7 +148,6 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
             }
 
             return null;
-
         }
 
         public async Task<bool> ConnectToPrivateRoomAsync(string roomNumber, string login)
@@ -200,7 +205,7 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
             {
                 _lockSlim.Release();
             }
-            await _jsonWorker.WriteDataIntoFileAsync(await GetFinishedSessions());
+            await _jsonWorker.WriteDataIntoFileAsync(await GetFinishedSessionsAsync());
         }
     }
 }

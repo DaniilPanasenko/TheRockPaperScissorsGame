@@ -11,14 +11,13 @@ namespace TheRockPaperScissorsGame.Client.Clients
 {
     public class GameClient
     {
-        public HttpClient _httpClient;
+        private readonly HttpClient _httpClient;
 
-        public ValuesStorage _valuesStorage;
+        private string _roomId;
 
-        public GameClient(HttpClient httpClient, ValuesStorage valuesStorage)
+        public GameClient(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            _valuesStorage = valuesStorage;
         }
 
         public async Task<HttpResponseMessage> StartSessionAsync(RoomType roomType, string roomId)
@@ -31,7 +30,7 @@ namespace TheRockPaperScissorsGame.Client.Clients
             {
                 var room = await response.Content.ReadAsStringAsync();
                 room = JsonSerializer.Deserialize<string>(room);
-                _valuesStorage.RoomId = room;
+                _roomId = room;
             }
 
             return response;
@@ -39,28 +38,28 @@ namespace TheRockPaperScissorsGame.Client.Clients
 
         public async Task<HttpResponseMessage> CheckSessionAsync()
         {
-            var uri = new Uri(_httpClient.BaseAddress + "game/check_session/" + _valuesStorage.RoomId);
+            var uri = new Uri(_httpClient.BaseAddress + "game/check_session/" + _roomId);
             var response = await _httpClient.GetAsync(uri);
             return response;
         }
 
         public async Task<HttpResponseMessage> DoMoveAsync(Move move)
         {
-            var uri = new Uri(_httpClient.BaseAddress + "game/do_move/" + _valuesStorage.RoomId);
+            var uri = new Uri(_httpClient.BaseAddress + "game/do_move/" + _roomId);
             var response = await _httpClient.PostAsync(uri, move, new JsonMediaTypeFormatter());
             return response;
         }
 
         public async Task<HttpResponseMessage> CheckMoveAsync()
         {
-            var uri = new Uri(_httpClient.BaseAddress + "game/check_move/" + _valuesStorage.RoomId);
+            var uri = new Uri(_httpClient.BaseAddress + "game/check_move/" + _roomId);
             var response = await _httpClient.GetAsync(uri);
             return response;
         }
 
         public async Task<HttpResponseMessage> FinishSessionAsync()
         {
-            var uri = new Uri(_httpClient.BaseAddress + "game/finish_session/" + _valuesStorage.RoomId);
+            var uri = new Uri(_httpClient.BaseAddress + "game/finish_session/" + _roomId);
             var response = await _httpClient.PostAsync(uri, null);
             return response;
         }

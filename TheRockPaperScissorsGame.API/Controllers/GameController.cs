@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Net;
 using System.Net.Mime;
 using System.Threading.Tasks;
@@ -33,21 +32,6 @@ namespace TheRockPaperScissorsGame.API.Controllers
         [FromHeader(Name = "Token")]
         public string Token { get; set; }
 
-        [NonAction]
-        private string GetLogin()
-        {
-            if (Token == null)
-            {
-                return null;
-            }
-            var login = _tokenStorage.GetLogin(Token);
-            if (login == null)
-            {
-                return null;
-            }
-            return login;
-        }
-
         [HttpPost]
         [Route("start_session")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
@@ -57,7 +41,11 @@ namespace TheRockPaperScissorsGame.API.Controllers
         public async Task<ActionResult<string>> StartSessionAsync([FromBody] GameOptions options)
         {
             var login = GetLogin();
-            if (login == null) return Unauthorized();
+            if (login == null)
+            {
+                return Unauthorized();
+            }
+
             try
             {
                 var roomNumber = await _sessionService.StartSessionAsync(login, options);
@@ -72,7 +60,6 @@ namespace TheRockPaperScissorsGame.API.Controllers
                 await _sessionService.FinishSessionAsync(options.RoomNumber);
                 return Conflict(ex.Message);
             }
-
         }
 
         [HttpGet]
@@ -85,13 +72,19 @@ namespace TheRockPaperScissorsGame.API.Controllers
         public async Task<ActionResult> CheckSessionAsync(string roomId)
         {
             var login = GetLogin();
-            if (login == null) return Unauthorized();
+            if (login == null)
+            {
+                return Unauthorized();
+            }
 
             try
             {
                 var playerName = await _sessionService.CheckSessionAsync(roomId, login);
 
-                if (playerName == null) return NotFound();
+                if (playerName == null)
+                {
+                    return NotFound();
+                }
                 
                 return Ok(playerName);
             }
@@ -99,7 +92,7 @@ namespace TheRockPaperScissorsGame.API.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            catch(GameFinishedException ex)
+            catch (GameFinishedException ex)
             {
                 await _sessionService.FinishSessionAsync(roomId);
                 return Conflict(ex.Status.ToString());
@@ -114,7 +107,10 @@ namespace TheRockPaperScissorsGame.API.Controllers
         public async Task<ActionResult> DoMoveAsync([FromRoute]string roomId, [FromBody] Move move)
         {
             var login = GetLogin();
-            if (login == null) return Unauthorized();
+            if (login == null)
+            {
+                return Unauthorized();
+            }
 
             try
             {
@@ -141,7 +137,10 @@ namespace TheRockPaperScissorsGame.API.Controllers
         public async Task<ActionResult> CheckMoveAsync(string roomId)
         {
             var login = GetLogin();
-            if (login == null) return Unauthorized();
+            if (login == null)
+            {
+                return Unauthorized();
+            }
 
             try
             {
@@ -174,7 +173,12 @@ namespace TheRockPaperScissorsGame.API.Controllers
         public async Task<ActionResult<string>> FinishSessionAsync(string roomId)
         {
             var login = GetLogin();
-            if (login == null) return Unauthorized();
+
+            if (login == null)
+            {
+                return Unauthorized();
+            }
+
             try
             {
                 await _sessionService.FinishSessionAsync(roomId);
@@ -184,6 +188,21 @@ namespace TheRockPaperScissorsGame.API.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [NonAction]
+        private string GetLogin()
+        {
+            if (Token == null)
+            {
+                return null;
+            }
+            var login = _tokenStorage.GetLogin(Token);
+            if (login == null)
+            {
+                return null;
+            }
+            return login;
         }
     }
 }

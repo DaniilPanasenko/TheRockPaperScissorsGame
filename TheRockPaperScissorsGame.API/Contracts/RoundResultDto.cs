@@ -1,5 +1,4 @@
-﻿using System;
-using TheRockPaperScissorsGame.API.Enums;
+﻿using TheRockPaperScissorsGame.API.Enums;
 
 namespace TheRockPaperScissorsGame.API.Contracts
 {

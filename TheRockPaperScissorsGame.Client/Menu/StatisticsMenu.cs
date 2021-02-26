@@ -6,14 +6,10 @@ namespace TheRockPaperScissorsGame.Client.Menu
 {
     class StatisticsMenu : IMenu
     {
-        private UserClient _userClient;
-        private GameClient _gameClient;
-        private StatisticClient _statisticClient;
+        private readonly StatisticClient _statisticClient;
 
-        public StatisticsMenu(UserClient userClient, GameClient gameClient, StatisticClient statisticClient)
+        public StatisticsMenu(StatisticClient statisticClient)
         {
-            _userClient = userClient;
-            _gameClient = gameClient;
             _statisticClient = statisticClient;
         }
 
@@ -29,11 +25,11 @@ namespace TheRockPaperScissorsGame.Client.Menu
                 switch (command)
                 {
                     case 1:
-                        menu = new LeaderboardMenu(_userClient, _gameClient, _statisticClient);
+                        menu = new LeaderboardMenu(_statisticClient);
                         await menu.StartAsync();
                         break;
                     case 2:
-                        menu = new PlayerStatisticsMenu(_userClient, _gameClient, _statisticClient);
+                        menu = new PlayerStatisticsMenu(_statisticClient);
                         await menu.StartAsync();
                         break;
                     case 3:

@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
 using TheRockPaperScissorsGame.API.Contracts;
 using TheRockPaperScissorsGame.API.Enums;
@@ -11,15 +10,19 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
 {
     public class RoundService: IRoundService
     {
-        private ISessionStorage _sessionStorage;
+        private readonly ISessionStorage _sessionStorage;
 
-        public RoundService(ISessionStorage sessionStorage)
+        private readonly ILogger<RoundService> _logger;
+
+        public RoundService(ISessionStorage sessionStorage, ILogger<RoundService> logger)
         {
             _sessionStorage = sessionStorage;
+            _logger = logger;
         }
 
         public async Task DoMoveAsync(string login, string id, Move move)
         {
+            _logger.LogDebug("There we can..");
             if (login == null)
             {
                 throw new ArgumentNullException();

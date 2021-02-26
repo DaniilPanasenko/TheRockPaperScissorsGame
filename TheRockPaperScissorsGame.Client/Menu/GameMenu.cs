@@ -13,18 +13,13 @@ namespace TheRockPaperScissorsGame.Client.Menu
 {
     public class GameMenu : IMenu
     {
-        private UserClient _userClient;
-        private GameClient _gameClient;
-        private StatisticClient _statisticClient;
-
+        private readonly GameClient _gameClient;
         private SessionResults _sessionResults;
         private Move _currentMove; 
 
-        public GameMenu(UserClient userClient, GameClient gameClient, StatisticClient statisticClient)
+        public GameMenu(GameClient gameClient)
         {
-            _userClient = userClient;
             _gameClient = gameClient;
-            _statisticClient = statisticClient;
             _sessionResults = new SessionResults();
         }
 

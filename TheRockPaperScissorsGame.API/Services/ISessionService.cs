@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using TheRockPaperScissorsGame.API.Models;
 
 namespace TheRockPaperScissorsGame.API.Services

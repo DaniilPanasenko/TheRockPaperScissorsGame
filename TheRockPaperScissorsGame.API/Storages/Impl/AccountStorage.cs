@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -16,20 +15,15 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
 
         private readonly JsonWorker<Account> _jsonWorker;
 
-        private readonly ILogger<AccountStorage> _logger;
-
         private bool _isUploaded = false;
 
-        public AccountStorage(JsonWorker<Account> jsonWorker, ILogger<AccountStorage> logger)
+        public AccountStorage(JsonWorker<Account> jsonWorker)
         {
             _jsonWorker = jsonWorker;
-            _logger = logger;
         }
 
         public async Task<bool> AddAccountAsync(Account newAccount)
-        {
-            _logger.LogDebug("");
-
+        { 
             if (newAccount == null)
             {
                 throw new ArgumentNullException(nameof(newAccount));
@@ -49,7 +43,7 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
 
                 _accounts.Add(newAccount);
                 await _jsonWorker.WriteDataIntoFileAsync(_accounts);
-                
+
                 return true;
             }
             finally
@@ -67,6 +61,7 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
                 {
                     await LoadDataAsync();
                 }
+
                 return _accounts.FirstOrDefault(account =>
                     account.Login == login);
             }

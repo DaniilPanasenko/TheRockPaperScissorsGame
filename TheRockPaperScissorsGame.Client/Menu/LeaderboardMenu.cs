@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text.Json;
@@ -14,21 +15,30 @@ namespace TheRockPaperScissorsGame.Client.Menu
     {
         private readonly StatisticClient _statisticClient;
 
-        public LeaderboardMenu(StatisticClient statisticClient)
+        private readonly ILogger<LeaderboardMenu> _logger;
+
+        public LeaderboardMenu(StatisticClient statisticClient, ILogger<LeaderboardMenu> logger)
         {
             _statisticClient = statisticClient;
+            _logger = logger;
         }
 
         public async Task StartAsync()
         {
+            _logger.LogInformation("In the LeaderboardMenu");
+            
             while (true)
             {
+                _logger.LogInformation("Choosing Statistics Type");
+
                 StatisticsType statisticsType = StatisticsType.WinStatistics;
 
                 MenuLibrary.Clear();
 
                 var options = new string[] { "Win statistics", "Time statistics", "Wins statistics(in persents)", "Back" };
                 var command = MenuLibrary.InputMenuItemNumber("Leaderboard Menu", options);
+
+                _logger.LogInformation("Chose the command");
 
                 switch (command)
                 {
@@ -66,15 +76,20 @@ namespace TheRockPaperScissorsGame.Client.Menu
                 : int.MaxValue;
 
             var response = await _statisticClient.GetLeaderboardAsync(amount, type);
+
+            _logger.LogInformation("Sent the request for statistics");
+
             if (response.StatusCode == HttpStatusCode.OK)
             {
+                _logger.LogInformation("Got the statistics (200)");
+
                 var content = await response.Content.ReadAsStringAsync();
                 return content;
             }
             else
             {
-                ResponseLibrary.UnknownResponse();
-                return null;
+                _logger.LogInformation("Unknown response");
+                throw new HttpListenerException();
             }
         }
 

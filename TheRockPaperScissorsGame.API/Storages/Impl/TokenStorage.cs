@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
 
@@ -9,19 +8,14 @@ namespace TheRockPaperScissorsGame.API.Storages.Impl
     {
         private readonly ConcurrentDictionary<string, string> _tokens = new ConcurrentDictionary<string, string>();
 
-        private readonly ILogger<TokenStorage> _logger;
-
-        public TokenStorage(ILogger<TokenStorage> logger)
+        public TokenStorage()
         {
-            _logger = logger;
         }
 
         public string GenerateToken(string login)
         {
-            _logger.LogDebug("");
-
             var token = Guid.NewGuid().ToString();
-            
+
             if (_tokens.TryAdd(login, token))
             {
                 return token;

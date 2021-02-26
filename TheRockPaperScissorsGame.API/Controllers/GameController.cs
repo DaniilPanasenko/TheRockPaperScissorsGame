@@ -58,6 +58,7 @@ namespace TheRockPaperScissorsGame.API.Controllers
             catch (GameFinishedException ex)
             {
                 await _sessionService.FinishSessionAsync(options.RoomNumber);
+                
                 return Conflict(ex.Message);
             }
         }

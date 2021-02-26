@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,18 +13,13 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
     {
         private readonly ISessionStorage _sessionStorage;
 
-        private readonly ILogger<StatisticsService> _logger;
-
-        public StatisticsService(ISessionStorage sessionStorage, ILogger<StatisticsService> logger)
+        public StatisticsService(ISessionStorage sessionStorage)
         {
             _sessionStorage = sessionStorage;
-            _logger = logger;
         }
 
         public async Task<List<UserResultDto>> GetWinsLeaderboardAsync(int amount)
         {
-            _logger.LogDebug("");
-
             if (amount < 0)
             {
                 throw new ArgumentException();

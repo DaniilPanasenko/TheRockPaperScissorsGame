@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Net;
 using System.Text.Json;
 using System.Threading;
@@ -12,20 +13,30 @@ namespace TheRockPaperScissorsGame.Client.Menu
     public class GameStartMenu : IMenu
     {
         private readonly GameClient _gameClient;
+        private readonly GameMenu _gameMenu;
+        private readonly ILogger<GameStartMenu> _logger;
 
-        public GameStartMenu(GameClient gameClient)
+        public GameStartMenu(GameClient gameClient, GameMenu gameMenu, ILogger<GameStartMenu> logger)
         {
             _gameClient = gameClient;
+            _gameMenu = gameMenu;
+            _logger = logger;
         }
 
         public async Task StartAsync()
         {
+            _logger.LogInformation("In the GameStartMenu");
+
             while (true)
             {
+                _logger.LogInformation("Choosing the game type");
+
                 MenuLibrary.Clear();
 
                 var options = new string[] { "Public game", "Private game", "Train game", "Back" };
                 var command = MenuLibrary.InputMenuItemNumber("Game Menu", options);
+
+                _logger.LogInformation("Chose the command");
 
                 RoomType roomType;
                 string roomId = null;
@@ -46,6 +57,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
                     default:
                         return;
                 }
+
                 await GameStartAsync(roomType, roomId);
             }
         }
@@ -67,10 +79,16 @@ namespace TheRockPaperScissorsGame.Client.Menu
 
         private async Task GameStartAsync(RoomType roomType, string roomId)
         {
+            _logger.LogInformation("Starting the game");
+
             var response = await _gameClient.StartSessionAsync(roomType, roomId);
+
+            _logger.LogInformation("Sent the request to the server to start the game");
 
             if (response.StatusCode == HttpStatusCode.OK)
             {
+                _logger.LogInformation("Game successfully started");
+
                 MenuLibrary.WriteLineColor("\nSuccessfully started game\n", ConsoleColor.Green);
 
                 if (roomType == RoomType.Private && roomId == null)
@@ -89,42 +107,51 @@ namespace TheRockPaperScissorsGame.Client.Menu
             else if (response.StatusCode == HttpStatusCode.BadRequest ||
                      response.StatusCode == HttpStatusCode.Conflict)
             {
+
+                _logger.LogInformation("Did not manage to start the game (400, 409)");
                 await ResponseLibrary.RepeatOperationWithMessageAsync<string>(response);
             }
             else
             {
+                _logger.LogInformation("Unknown response");
                 throw new HttpListenerException();
             }
         }
 
         private async Task WaitPlayerAsync()
         {
+            _logger.LogInformation("Waiting for the opponent");
             while (true)
             {
                 var response = await _gameClient.CheckSessionAsync();
 
+                _logger.LogInformation("Sent the request to check the opponent");
+
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
+                    _logger.LogInformation("Opponent was found (200)");
+
                     var name = await response.Content.ReadAsStringAsync();
                     name = JsonSerializer.Deserialize<string>(name);
 
                     MenuLibrary.WriteLineColor($"\nYour opponent is {name}\n", ConsoleColor.Green);
                     Thread.Sleep(2000);
 
-                    IMenu menu = new GameMenu(_gameClient);
-                    await menu.StartAsync();
+                    await _gameMenu.StartAsync();
                     return;
                 }
                 else if(response.StatusCode == HttpStatusCode.Conflict)
                 {
+                    _logger.LogInformation("Game is over (409)");
                     await ResponseLibrary.GameFinishedResponseAsync(response);
                     return;
                 }
                 else if(response.StatusCode != HttpStatusCode.NotFound)
                 {
+                    _logger.LogInformation("Unknown response");
                     throw new HttpListenerException();
                 }
-
+                _logger.LogInformation("Opponnent was not found (404)");
                 Thread.Sleep(200);
             }
         }

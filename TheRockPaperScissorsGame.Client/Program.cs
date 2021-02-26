@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Serilog;
+using System;
 using System.IO;
 using System.Net.Http;
 using System.Text.Json;
@@ -16,20 +18,55 @@ namespace TheRockPaperScissorsGame.Client
         private static GameClient _gameClient;
         private static StatisticClient _statisticClient;
 
-        private static void Setup()
+
+
+        private static HttpClient GetHttpClient()
         {
             var httpClient = new HttpClient();
             var json = File.ReadAllText("clientOptions.json");
             var options = JsonSerializer.Deserialize<ClientOptions>(json);
             httpClient.BaseAddress = new Uri(options.BaseAddress);
 
-            _userClient = new UserClient(httpClient);
-            _gameClient = new GameClient(httpClient);
-            _statisticClient = new StatisticClient(httpClient);
+            return httpClient;
+        }
+
+        private static IServiceProvider GetServiceProvider()
+        {
+            var services = new ServiceCollection();
+
+            var httpClient = GetHttpClient();
+
+            services.AddSingleton(provider => new UserClient(httpClient))
+                .AddSingleton(provider => new GameClient(httpClient))
+                .AddSingleton(provider => new StatisticClient(httpClient));
+
+            services.AddTransient<MainMenu>()
+                .AddTransient<AuthorizationMenu>()
+                .AddTransient<GameMenu>()
+                .AddTransient<GameStartMenu>()
+                .AddTransient<IntervalResultsMenu>()
+                .AddTransient<LeaderboardMenu>()
+                .AddTransient<PlayerStatisticsMenu>()
+                .AddTransient<StatisticsMenu>()
+                .AddTransient<UserMenu>();
+
+            var serilogLogger = new LoggerConfiguration()
+           .WriteTo.File("clientLog.log")
+           .CreateLogger();
+
+            var provider = services.AddLogging(builder =>
+            {
+                builder.AddSerilog(logger: serilogLogger, dispose: true);
+            }).BuildServiceProvider();
+
+            return provider;
+
         }
 
         private static async Task<int> Main()
         {
+            var provider = GetServiceProvider();
+
             while (true)
             {
                 try
@@ -39,10 +76,10 @@ namespace TheRockPaperScissorsGame.Client
 
                     MenuLibrary.PressAnyKey();
 
-                    Setup();
-
-                    IMenu mainMenu = new MainMenu(_userClient, _gameClient, _statisticClient);
-                    await mainMenu.StartAsync();
+                    GetHttpClient();
+                    
+                    var mainMemu = provider.GetRequiredService<MainMenu>();
+                    await mainMemu.StartAsync();
 
                     return 0;
                 }
@@ -53,5 +90,7 @@ namespace TheRockPaperScissorsGame.Client
                 }
             }
         }
+
+        
     }
 }

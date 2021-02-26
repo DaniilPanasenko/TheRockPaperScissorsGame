@@ -1,36 +1,47 @@
-﻿using System.Threading.Tasks;
+﻿using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 using TheRockPaperScissorsGame.Client.Clients;
 using TheRockPaperScissorsGame.Client.Menu.Library;
 
 namespace TheRockPaperScissorsGame.Client.Menu
 {
-    class StatisticsMenu : IMenu
+    public class StatisticsMenu : IMenu
     {
-        private readonly StatisticClient _statisticClient;
+        private readonly LeaderboardMenu _leaderboardMenu;
 
-        public StatisticsMenu(StatisticClient statisticClient)
+        private readonly PlayerStatisticsMenu _playerStatisticsMenu;
+
+        private readonly ILogger<StatisticsMenu> _logger;
+
+        public StatisticsMenu(LeaderboardMenu leaderboardMenu, PlayerStatisticsMenu playerStatisticsMenu, ILogger<StatisticsMenu> logger)
         {
-            _statisticClient = statisticClient;
+            _leaderboardMenu = leaderboardMenu;
+            _playerStatisticsMenu = playerStatisticsMenu;
+            _logger = logger;
         }
 
         public async Task StartAsync()
         {
+            _logger.LogInformation("In the StatisticsMenu");
+
             while (true)
             {
+                _logger.LogInformation("Choosing the Statistics");
+
                 MenuLibrary.Clear();
-                IMenu menu;
 
                 var options = new string[] { "Leaderboard", "Player statistics", "Back" };
                 var command = MenuLibrary.InputMenuItemNumber("Statistics Menu", options);
+
+                _logger.LogInformation("Chose the command");
+
                 switch (command)
                 {
                     case 1:
-                        menu = new LeaderboardMenu(_statisticClient);
-                        await menu.StartAsync();
+                        await _leaderboardMenu.StartAsync();
                         break;
                     case 2:
-                        menu = new PlayerStatisticsMenu(_statisticClient);
-                        await menu.StartAsync();
+                        await _playerStatisticsMenu.StartAsync();
                         break;
                     case 3:
                         return;

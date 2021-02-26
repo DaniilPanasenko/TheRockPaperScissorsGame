@@ -7,7 +7,7 @@ namespace TheRockPaperScissorsGame.Client.Clients
 {
     public class StatisticClient
     {
-        public HttpClient _httpClient;
+        public readonly HttpClient _httpClient;
 
         public StatisticClient(HttpClient httpClient)
         {

@@ -11,15 +11,11 @@ namespace TheRockPaperScissorsGame.Client.Menu
 {
     public class GameStartMenu : IMenu
     {
-        private UserClient _userClient;
-        private GameClient _gameClient;
-        private StatisticClient _statisticClient;
+        private readonly GameClient _gameClient;
 
-        public GameStartMenu(UserClient userClient, GameClient gameClient, StatisticClient statisticClient)
+        public GameStartMenu(GameClient gameClient)
         {
-            _userClient = userClient;
             _gameClient = gameClient;
-            _statisticClient = statisticClient;
         }
 
         public async Task StartAsync()
@@ -115,7 +111,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
                     MenuLibrary.WriteLineColor($"\nYour opponent is {name}\n", ConsoleColor.Green);
                     MenuLibrary.PressAnyKey();
 
-                    IMenu menu = new GameMenu(_userClient, _gameClient, _statisticClient);
+                    IMenu menu = new GameMenu(_gameClient);
                     await menu.StartAsync();
                     return;
                 }

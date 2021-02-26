@@ -6,9 +6,9 @@ namespace TheRockPaperScissorsGame.Client.Menu
 {
     public class MainMenu : IMenu
     {
-        private UserClient _userClient;
-        private GameClient _gameClient;
-        private StatisticClient _statisticClient;
+        private readonly UserClient _userClient;
+        private readonly GameClient _gameClient;
+        private readonly StatisticClient _statisticClient;
 
         public MainMenu(UserClient userClient, GameClient gameClient, StatisticClient statisticClient)
         {
@@ -35,7 +35,7 @@ namespace TheRockPaperScissorsGame.Client.Menu
                         await menu.StartAsync();
                         break;
                     case 2:
-                        menu = new LeaderboardMenu(_userClient, _gameClient, _statisticClient);
+                        menu = new LeaderboardMenu(_statisticClient);
                         await menu.StartAsync();
                         break;
                     case 3:

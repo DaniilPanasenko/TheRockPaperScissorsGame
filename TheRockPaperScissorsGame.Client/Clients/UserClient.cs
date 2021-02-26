@@ -10,7 +10,7 @@ namespace TheRockPaperScissorsGame.Client.Clients
 {
     public class UserClient
     {
-        public HttpClient _httpClient;
+        public readonly HttpClient _httpClient;
 
         public UserClient(HttpClient httpClient)
         {

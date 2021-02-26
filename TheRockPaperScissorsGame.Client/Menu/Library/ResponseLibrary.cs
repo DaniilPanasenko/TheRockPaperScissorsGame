@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
@@ -11,7 +12,11 @@ namespace TheRockPaperScissorsGame.Client.Menu.Library
         public static async Task RepeatOperationWithMessageAsync<T>(HttpResponseMessage response)
         {
             var jsonResponse = await response.Content.ReadAsStringAsync();
-            var textResponse = JsonSerializer.Deserialize<T>(jsonResponse);
+            var textResponse = JsonSerializer.Deserialize<T>(jsonResponse).ToString();
+            if (typeof(T).Equals(typeof(string)))
+            {
+                textResponse = ParseEnumStringToString(textResponse);
+            }
             MenuLibrary.WriteLineColor($"\n{textResponse}", ConsoleColor.Red);
             MenuLibrary.WriteLineColor("Please repeat operation.", ConsoleColor.White);
             Thread.Sleep(1000);
@@ -33,8 +38,28 @@ namespace TheRockPaperScissorsGame.Client.Menu.Library
         {
             var exception = await response.Content.ReadAsStringAsync();
             exception = JsonSerializer.Deserialize<string>(exception);
+            exception = ParseEnumStringToString(exception);
             MenuLibrary.WriteLineColor($"\nSorry, your game is finished because of {exception}\n", ConsoleColor.Red);
             Thread.Sleep(3000);
+        }
+
+        public static string ParseEnumStringToString(string enumString)
+        {
+            string result = "";
+            bool isFirst = true;
+            foreach(var ch in enumString)
+            {
+                if (char.IsUpper(ch) && !isFirst)
+                {
+                    result += " " + char.ToLower(ch);
+                }
+                else
+                {
+                    result += ch;
+                    isFirst = false;
+                }
+            }
+            return result;
         }
     }
 }

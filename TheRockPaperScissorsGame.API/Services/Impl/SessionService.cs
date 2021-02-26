@@ -40,7 +40,10 @@ namespace TheRockPaperScissorsGame.API.Services.Impl
             }
             else
             {
-                if (session.IsBot) return "bot";
+                if (session.IsBot)
+                {
+                    return "bot";
+                }
                 else
                 {
                     if (session.Player2Login == null || session.Player1Login == null)
